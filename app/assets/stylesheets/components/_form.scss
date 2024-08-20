@@ -1,0 +1,41 @@
+.form-container {
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 143px);
+}
+
+.form-header {
+  color: white;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.form-inputs {
+  background-color: white;
+  border-radius: 75px;
+  color: #171506;
+  font-weight: 500;
+  margin-top: 20px;
+  max-width: 1200px;
+  padding: 50px;
+  width: 70vw;
+}
+
+.form-text {
+  color: #5A8FCB;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 991px) {
+  .form-inputs {
+    width: 90vw;
+  }
+  .btn-form {
+    font-size: 20px;
+    width: 80%;
+  }
+}
