@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
       :first_name,
       :last_name,
       :school,
-      :class
       ]
     )
 
@@ -18,7 +17,6 @@ class ApplicationController < ActionController::Base
       :first_name,
       :last_name,
       :school,
-      :class
       ]
     )
   end

@@ -30,6 +30,24 @@
   justify-content: center;
 }
 
+// For the `Login` modal
+.modal-content {
+  background-color: transparent;
+  border: none;
+}
+
+.form-inputs-modal {
+  color: white;
+  background-color: #0b0a03;
+  border-radius: 0 0 75px 75px;
+  max-width: 600px;
+}
+
+.form-header-modal {
+  color: #70c9e8;
+  margin-top: -20px;
+}
+
 @media (max-width: 991px) {
   .form-inputs {
     width: 90vw;
@@ -37,5 +55,11 @@
   .btn-form {
     font-size: 20px;
     width: 80%;
+  }
+}
+
+@media (max-width: 575px) {
+  .form-inputs-modal {
+    margin-top: 42px;
   }
 }

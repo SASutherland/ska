@@ -10,17 +10,28 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <%= render "shared/navbar" %>
-
   <body>
+    <%= render "shared/navbar" %>
+
     <%= yield %>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <%= render "devise/sessions/new", resource: User.new, resource_name: :user, devise_mapping: Devise.mappings[:user] %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= render "shared/flashes" %>
+    <%= render "shared/footer" %>
+
+    <%# if controller_name == 'pages' && action_name == 'home' %>
+      <%#= render 'shared/footer' %>
+    <%# end %>
+
   </body>
-
-  <%= render "shared/flashes" %>
-  <%= render "shared/footer" %>
-
-  <%# if controller_name == 'pages' && action_name == 'home' %>
-    <%#= render 'shared/footer' %>
-  <%# end %>
-
 </html>
