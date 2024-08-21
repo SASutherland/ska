@@ -15,30 +15,30 @@
             <%= link_to "Dashboard", "#", class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Courses", "#", class: "nav-link" %>
+            <%= link_to "Cursussen", "#", class: "nav-link" %>
           </li>
           <li class="nav-item active">
-            <%= link_to "Progress", "#", class: "nav-link" %>
+            <%= link_to "Voortgang", "#", class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <%= link_to "My Account", "#", class: "nav-link" %>
+            <%= link_to "Mijn Account", "#", class: "nav-link" %>
           </li>
           <li class="nav-item dropdown">
           <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= image_tag "avatar-green.png", class: "avatar", alt: "dropdown menu" %>
+            <%= image_tag "avatar-blue.png", class: "avatar", alt: "dropdown menu" %>
           </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Action", "#", class: "dropdown-item" %>
-              <%= link_to "Another action", "#", class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
+              <%= link_to "Actie", "#", class: "dropdown-item" %>
+              <%= link_to "Nog een actie", "#", class: "dropdown-item" %>
+              <%= link_to "Uitloggen", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
             </div>
           </li>
         <% else %>
           <li class="nav-item">
-            <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
+            <%= link_to "Aanmelden", new_user_registration_path, class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Login", "#loginModal", class: "nav-link", "data-bs-toggle" => "modal", "data-bs-target" => "#loginModal" %>
+            <%= link_to "Inloggen", "#loginModal", class: "nav-link", "data-bs-toggle" => "modal", "data-bs-target" => "#loginModal" %>
           </li>
         <% end %>
       </ul>

@@ -10,24 +10,29 @@
       <div class="form-inputs">
 
       <%= f.input :first_name,
+                  label: "Voornaam",
                   required: true,
                   input_html: { autocomplete: "given-name" } %>
 
       <%= f.input :last_name,
+                  label: "Achternaam",
                   required: true,
                   input_html: { autocomplete: "family-name" } %>
 
       <%= f.input :email,
+                  label: "E-mail",
                   required: true,
                   autofocus: true,
                   input_html: { autocomplete: "email" }%>
 
       <%= f.input :password,
+                  label: "Wachtwoord",
                   required: true,
-                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                  hint: ("Minimaal #{@minimum_password_length} tekens" if @minimum_password_length),
                   input_html: { autocomplete: "new-password" } %>
 
       <%= f.input :password_confirmation,
+                  label: "Bevestig wachtwoord",
                   required: true,
                   input_html: { autocomplete: "new-password" } %>
 

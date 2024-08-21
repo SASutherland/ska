@@ -5,22 +5,28 @@
     <div class="form-inputs form-inputs-modal">
 
       <div class="form-header form-header-modal">
-        <h1>LOGIN</h1>
+        <h1>INLOGGEN</h1>
       </div>
 
       <%= f.input :email,
+                  label: "E-mail",
                   required: true,
                   autofocus: true,
                   input_html: { autocomplete: "email" } %>
+
       <%= f.input :password,
+                  label: "Wachtwoord",
                   required: true,
                   input_html: { autocomplete: "current-password" } %>
-      <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+
+      <%= f.input :remember_me,
+                  label: "Onthoud mij",
+                  as: :boolean if devise_mapping.rememberable? %>
 
       <%#= render "devise/shared/links" %>
 
       <div class="form-actions">
-        <%= f.button :submit, "LOGIN", class: "btn btn-azure btn-form" %>
+        <%= f.button :submit, "INLOGGEN", class: "btn btn-azure btn-form" %>
       </div>
 
     </div>
