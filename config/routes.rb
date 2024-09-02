@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root to: "pages#home"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get 'dashboards/index'
+  post 'register_for_course', to: 'dashboards#register_for_course', as: 'register_for_course'
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  resources :courses do
+    resources :questions, only: [:show]
+  end
+
+  root to: "pages#home"
 end
