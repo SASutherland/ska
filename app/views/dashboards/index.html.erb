@@ -14,10 +14,10 @@
 
     <div class="d-flex align-items-center mb-4">
       <div class="dropdown me-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCourseButton" data-bs-toggle="dropdown" aria-expanded="false">
           Select Course
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <ul class="dropdown-menu" aria-labelledby="dropdownCourseButton">
           <% @courses.each do |course| %>
             <% unless current_user.courses.include?(course) %>
               <li>
@@ -32,7 +32,7 @@
 
       <%= form_with url: register_for_course_path, method: :post, local: true do |f| %>
         <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id' %>
-        <%= f.submit 'Register', class: 'btn btn-primary', id: 'registerButton', disabled: true %>
+        <%= f.submit 'Add', id: 'registerButton', disabled: true %>
       <% end %>
     </div>
 
@@ -73,7 +73,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const dropdownItems = document.querySelectorAll('.dropdown-item');
-    const dropdownButton = document.getElementById('dropdownMenuButton');
+    const dropdownButton = document.getElementById('dropdownCourseButton');
     const registerButton = document.getElementById('registerButton');
     const selectedCourseInput = document.getElementById('selected_course_id');
 

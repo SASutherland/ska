@@ -66,3 +66,33 @@
   background-color: #BF2237;
   border-color: #BF2237;
 }
+
+#dropdownCourseButton {
+  background-color: transparent;
+  border: 2px solid #136F63;
+  border-radius: 8px;
+  color: #136F63;
+  font-weight: bold;
+  padding: 10px 20px;
+  transition: ease 0.3s;
+}
+
+#dropdownCourseButton:hover {
+  background-color: #136F63;
+  color: white;
+}
+
+#registerButton {
+  background-color: #5A8FCB;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#registerButton:hover {
+  background-color: #4580C4;
+}
