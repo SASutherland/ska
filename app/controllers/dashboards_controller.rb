@@ -2,6 +2,7 @@ class DashboardsController < ApplicationController
   def index
     @courses = Course.all
     @registered_courses = current_user.courses.includes(:questions)
+    @attempts = current_user.attempts.includes(:question)
   end
 
   def register_for_course

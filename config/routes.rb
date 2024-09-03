@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   post 'register_for_course', to: 'dashboards#register_for_course', as: 'register_for_course'
 
   resources :courses do
-    resources :questions, only: [:show]
+    resources :questions, only: [:show] do
+      post 'submit_answer', on: :member
+    end
   end
 
   root to: "pages#home"

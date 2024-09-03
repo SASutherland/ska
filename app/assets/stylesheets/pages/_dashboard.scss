@@ -1,11 +1,19 @@
 .dashboard-container {
-  background-color: white;
-  min-height: calc(100vh - 143px);
-  padding: 30px;
+  background-color: #EDF8FC;
+  min-height: calc(100vh - 66px);
 }
 
 .dashboard-container h1 {
   color: #70C9E8;
+  font-size: 32px;
+}
+
+.dashboard-container h4 {
+  font-size: 18px;
+}
+
+.main-content {
+  padding: 20px 30px;
 }
 
 .course-progress {
@@ -20,18 +28,41 @@
 
 .question-number {
   display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
+  border: 2px solid #CCCCCC;
   border-radius: 50%;
-  border: 2px solid #007bff;
-  color: #007bff;
-  text-decoration: none;
+  color: #CCCCCC;
   font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  transition: ease 0.3s;
 }
 
 .question-number:hover {
-  background-color: #007bff;
+  background-color: #CCCCCC;
   color: #fff;
+}
+
+.correct-answer {
+  background-color: #136F63;
+  border-color: #136F63;
+  color: white;
+}
+
+.correct-answer:hover {
+  background-color: #0F574E;
+  border-color: #0F574E;
+}
+
+.incorrect-answer {
+  background-color: #D7263D;
+  border-color: #D7263D;
+  color: white;
+}
+
+.incorrect-answer:hover {
+  background-color: #BF2237;
+  border-color: #BF2237;
 }

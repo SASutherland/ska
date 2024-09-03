@@ -1,0 +1,16 @@
+<div class="sidebar">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'index' %>" href="<%= dashboards_index_path %>">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Profile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Courses</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Settings</a>
+    </li>
+  </ul>
+</div>
