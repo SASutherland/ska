@@ -12,7 +12,7 @@
         <div class="course-item mb-4">
           <h2><%= course.title %></h2>
           <p><%= course.description %></p>
-          <%= button_to 'Leave Course', unenroll_course_path(course), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          <%= button_to 'Leave Course', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
         </div>
         <hr>
       <% end %>
