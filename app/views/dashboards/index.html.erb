@@ -10,6 +10,34 @@
 
     <hr class="my-5">
 
+    <h1>Add Course</h1>
+
+    <div class="d-flex align-items-center mb-4">
+      <div class="dropdown me-2">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          Select Course
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <% @courses.each do |course| %>
+            <% unless current_user.courses.include?(course) %>
+              <li>
+                <a class="dropdown-item" href="#" data-course-id="<%= course.id %>">
+                  <%= course.title %>
+                </a>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+
+      <%= form_with url: register_for_course_path, method: :post, local: true do |f| %>
+        <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id' %>
+        <%= f.submit 'Register', class: 'btn btn-primary', id: 'registerButton', disabled: true %>
+      <% end %>
+    </div>
+
+    <hr class="my-5">
+
     <h1>Courses</h1>
 
     <% @registered_courses.each do |course| %>
@@ -41,7 +69,6 @@
   </div>
 
 </div>
-
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
