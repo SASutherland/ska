@@ -30,7 +30,7 @@ student = User.create(
   last_name: "Sutherland",
   email: "shawnsutherland@hotmail.com",
   password: "111111",
-  role: :user
+  role: :student
 )
 
 # Example trivia questions and answers

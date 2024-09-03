@@ -7,6 +7,7 @@
   <div class="main-content flex-grow-1">
     <h1>Hi, <%= current_user.first_name %>!</h1>
     <h4><%= current_user.email %></h4>
+    <h4>Signed in as: <strong><%= current_user.role.capitalize %></strong></h4>
 
     <hr class="my-5">
 
@@ -19,13 +20,11 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownCourseButton">
           <% @courses.each do |course| %>
-            <% unless current_user.courses.include?(course) %>
-              <li>
-                <a class="dropdown-item" href="#" data-course-id="<%= course.id %>">
-                  <%= course.title %>
-                </a>
-              </li>
-            <% end %>
+            <li>
+              <a class="dropdown-item" href="#" data-course-id="<%= course.id %>" data-course-title="<%= course.title %>">
+                <%= course.title %>
+              </a>
+            </li>
           <% end %>
         </ul>
       </div>
@@ -81,10 +80,15 @@
       item.addEventListener('click', function(event) {
         event.preventDefault();
         const courseId = this.getAttribute('data-course-id');
-        const courseTitle = this.textContent.trim();
+        const courseTitle = this.getAttribute('data-course-title');
 
+        // Update the hidden input field with the selected course ID
         selectedCourseInput.value = courseId;
+
+        // Update the dropdown button text with the selected course title
         dropdownButton.textContent = courseTitle;
+
+        // Enable the register button
         registerButton.disabled = false;
       });
     });

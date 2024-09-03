@@ -4,13 +4,12 @@
       <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'index' %>" href="<%= dashboards_index_path %>">Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Profile</a>
+      <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Registered Courses</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Courses</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Settings</a>
-    </li>
+    <% if current_user.teacher? %>
+      <li class="nav-item">
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'new' %>" href="<%= new_course_path %>">Create Course</a>
+      </li>
+    <% end %>
   </ul>
 </div>

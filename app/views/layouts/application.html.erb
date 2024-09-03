@@ -26,7 +26,9 @@
       </div>
     </div>
 
-    <%= render "shared/flashes" %>
+    <%= turbo_frame_tag 'flash' do %>
+      <%= render "shared/flashes" %>
+    <% end %>
 
     <% if controller_name == 'pages' && action_name == 'home' || devise_controller? %>
       <%= render "shared/footer" %>
