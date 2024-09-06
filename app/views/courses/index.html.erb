@@ -12,6 +12,11 @@
         <div class="course-item mb-4">
           <h2><%= course.title %></h2>
           <p><%= course.description %></p>
+
+          <!-- Flex container to align questions and Unenroll button -->
+          <div class="course-content d-flex align-items-start justify-content-between">
+
+            <!-- Questions -->
             <div class="questions">
               <% course.questions.each_with_index do |question, index| %>
                 <% attempt = @attempts.find { |a| a.question_id == question.id } %>
@@ -32,7 +37,13 @@
                 <% end %>
               <% end %>
             </div>
-          <%= button_to 'Leave Course', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger mt-3' %>
+
+            <!-- Unenroll button -->
+            <div class="unenroll-button">
+              <%= button_to 'Unenroll', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            </div>
+
+          </div> <!-- End of course-content flexbox -->
         </div>
         <hr>
       <% end %>
@@ -40,5 +51,4 @@
       <p>You are not enrolled in any courses.</p>
     <% end %>
   </div>
-
 </div>

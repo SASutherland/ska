@@ -41,7 +41,7 @@
     <% @registered_courses.each do |course| %>
       <div class="course-progress mb-4">
         <h4><%= course.title %></h4>
-        <div class="questions">
+        <div class="questions-progress">
           <% course.questions.each_with_index do |question, index| %>
             <% attempt = @attempts.find { |a| a.question_id == question.id } %>
             <% if attempt %>

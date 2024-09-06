@@ -16,3 +16,27 @@
   margin-top: 42px;
   width: 50%;
 }
+
+.btn-primary, .btn-danger {
+  background-color: #5A8FCB;
+  border: 1px solid #4580C4;
+  border-radius: 16px;
+  font-weight: bold;
+  padding: 8px 32px;
+  transition: ease 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #4580C4;
+}
+
+.btn-danger {
+  color: white;
+  background-color: #EC0B43;
+  border: 1px solid #C30938;
+}
+
+.btn-danger:hover {
+  color: white;
+  background-color: #C30938;
+}

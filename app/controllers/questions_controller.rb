@@ -3,6 +3,10 @@ class QuestionsController < ApplicationController
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
     @answers = @question.answers
+    @attempts = current_user.attempts.joins(:question).where(questions: { course_id: @course.id })
+    @question_number = @course.questions.order(:id).pluck(:id).index(@question.id) + 1
+    @previous_question = @course.questions.where("id < ?", @question.id).order(id: :desc).first
+    @next_question = @course.questions.where("id > ?", @question.id).order(id: :asc).first
   end
 
   def submit_answer
@@ -24,8 +28,6 @@ class QuestionsController < ApplicationController
           chosen_answer_id: chosen_answer_id
         )
       end
-
-      # flash[:notice] = "Your answer has been recorded."
 
       # Find the next question in the course
       next_question = @course.questions.where("id > ?", @question.id).first

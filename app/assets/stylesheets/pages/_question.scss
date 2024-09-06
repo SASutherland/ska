@@ -9,3 +9,68 @@
 .answer {
   margin-bottom: 10px;
 }
+
+.question-title {
+  color: #171506 !important;
+  font-size: 40px !important;
+}
+
+.question-box {
+  background-color: white;
+  border-radius: 18px;
+  margin: 0 auto;
+  margin-top: 30px;
+  padding: 40px;
+  width: 80%;
+}
+
+.progress-box {
+  // background-color: white;
+  // border-radius: 18px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 20px 24px;
+  width: 80%;
+}
+
+.navigation-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.previous-button, .next-button {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  width: 40px;
+}
+
+.questions-progress-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.questions-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chevron-btn {
+  color: #CCCCCC;
+  font-size: 20px;
+  padding: 0;
+  text-decoration: none;
+}
+
+.chevron-btn:hover {
+  color: #999999;
+}
+
+.fa-chevron-left,
+.fa-chevron-right {
+  font-size: 20px;
+  transition: color 0.3s ease;
+}
