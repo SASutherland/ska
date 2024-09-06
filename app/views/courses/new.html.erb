@@ -12,18 +12,16 @@
       <%= f.input :title, label: "Course Title", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
       <%= f.input :description, label: "Course Description", input_html: { maxlength: 250, class: 'form-control', style: 'max-width: 600px;' } %>
 
-      <h2>Questions</h2>
-
       <div id="questions-container">
         <!-- This container will hold the dynamically added questions -->
       </div>
 
       <!-- Add Question Button -->
       <div class="my-4">
-        <button type="button" id="add-question-button" class="btn btn-success">+ Add Question</button>
+        <button type="button" id="add-question-button" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
       </div>
 
-      <%= f.submit "Create Course", class: "btn btn-primary" %>
+      <%= f.submit "Create Course", class: "btn btn-primary mb-5" %>
     <% end %>
 
   </div>
@@ -43,14 +41,14 @@
 
       const questionHTML = `
         <div class="question-fields mb-4">
-          <h4>Question ${questionNumber}</h4>
+          <h4 class="new-question">Question ${questionNumber}</h4>
           <div class="form-group">
             <label for="course_questions_attributes_${questionNumber}_content">Question</label>
             <input type="text" name="course[questions_attributes][${questionNumber}][content]" id="course_questions_attributes_${questionNumber}_content" class="form-control" style="max-width: 600px;">
           </div>
           <input type="hidden" name="course[questions_attributes][${questionNumber}][question_type]" value="multiple_choice">
           <div class="answers mt-2">
-            <h5>Answers</h5>
+            <h4 class="new-question">Answers</h4>
             ${[...Array(4)].map((_, i) => `
               <div class="answer-fields mb-2">
                 <div class="form-group">

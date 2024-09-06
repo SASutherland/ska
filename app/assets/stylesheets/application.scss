@@ -28,6 +28,11 @@ h1 {
   font-weight: bold;
 }
 
-h3, h4, p {
+h3, h4, p, .form-label {
   font-family: "Lato", sans-serif;
+}
+
+.form-control {
+  background-color: white;
+  border-radius: 8px;
 }
