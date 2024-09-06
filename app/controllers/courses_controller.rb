@@ -19,6 +19,7 @@ class CoursesController < ApplicationController
 
   def index
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course)
+    @attempts = current_user.attempts.includes(:question)
   end
 
   def unenroll

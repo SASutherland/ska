@@ -90,4 +90,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # For Postmark emails. Add API token to .env file and change host site below.
+  # Also remember to change @url in `app/mailers/user_mailer.rb`
+  config.action_mailer.delivery_method = :postmark
+  config.action_mailer.postmark_settings = { api_token: ENV['POSTMARK_API_TOKEN'] }
+  config.action_mailer.default_url_options = { host: 'yourdomain.com' }
 end

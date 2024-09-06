@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  after_create :send_welcome_email
   after_initialize :set_default_role, if: :new_record?
 
   enum role: { student: 0, teacher: 1 }
@@ -19,5 +20,8 @@ class User < ApplicationRecord
   def teacher?
     role == "teacher"
   end
-end
 
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver_later
+  end
+end

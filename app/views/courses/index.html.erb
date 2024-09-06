@@ -12,7 +12,27 @@
         <div class="course-item mb-4">
           <h2><%= course.title %></h2>
           <p><%= course.description %></p>
-          <%= button_to 'Leave Course', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <div class="questions">
+              <% course.questions.each_with_index do |question, index| %>
+                <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+                <% if attempt %>
+                  <% if attempt.chosen_answer.correct? %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
+                <% else %>
+                  <a href="<%= course_question_path(course, question) %>" class="question-number">
+                    <%= index + 1 %>
+                  </a>
+                <% end %>
+              <% end %>
+            </div>
+          <%= button_to 'Leave Course', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger mt-3' %>
         </div>
         <hr>
       <% end %>

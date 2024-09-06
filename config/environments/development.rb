@@ -67,4 +67,11 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # For Postmark emails. Add API token to .env file and change host site below.
+  # Also remember to change @url in `app/mailers/user_mailer.rb`
+  config.action_mailer.delivery_method = :postmark
+  config.action_mailer.postmark_settings = { api_token: ENV['POSTMARK_API_TOKEN'] }
+  config.action_mailer.default_url_options = { host: 'yourdomain.com' }
+
 end

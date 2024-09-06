@@ -1,11 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
-
 # Clear all existing data
 puts "Clearing existing data. . ."
 Answer.delete_all
@@ -57,6 +49,78 @@ trivia_data = [
           { content: "Mark Twain", correct: false }
         ]
       },
+      {
+        content: "Which element has the chemical symbol 'O'?",
+        answers: [
+          { content: "Oxygen", correct: true },
+          { content: "Gold", correct: false },
+          { content: "Osmium", correct: false },
+          { content: "Oganesson", correct: false }
+        ]
+      },
+      {
+        content: "Which planet is known as the 'Morning Star'?",
+        answers: [
+          { content: "Venus", correct: true },
+          { content: "Mars", correct: false },
+          { content: "Mercury", correct: false },
+          { content: "Saturn", correct: false }
+        ]
+      },
+      {
+        content: "In which year did the Berlin Wall fall?",
+        answers: [
+          { content: "1989", correct: true },
+          { content: "1991", correct: false },
+          { content: "1985", correct: false },
+          { content: "1979", correct: false }
+        ]
+      },
+      {
+        content: "What is the largest mammal in the world?",
+        answers: [
+          { content: "Blue Whale", correct: true },
+          { content: "Elephant", correct: false },
+          { content: "Giraffe", correct: false },
+          { content: "Hippopotamus", correct: false }
+        ]
+      },
+      {
+        content: "How many continents are there on Earth?",
+        answers: [
+          { content: "Seven", correct: true },
+          { content: "Five", correct: false },
+          { content: "Six", correct: false },
+          { content: "Eight", correct: false }
+        ]
+      },
+      {
+        content: "What is the hardest natural substance on Earth?",
+        answers: [
+          { content: "Diamond", correct: true },
+          { content: "Gold", correct: false },
+          { content: "Iron", correct: false },
+          { content: "Graphite", correct: false }
+        ]
+      },
+      {
+        content: "What is the smallest country in the world?",
+        answers: [
+          { content: "Vatican City", correct: true },
+          { content: "Monaco", correct: false },
+          { content: "San Marino", correct: false },
+          { content: "Liechtenstein", correct: false }
+        ]
+      },
+      {
+        content: "What is the longest river in the world?",
+        answers: [
+          { content: "Nile", correct: true },
+          { content: "Amazon", correct: false },
+          { content: "Yangtze", correct: false },
+          { content: "Mississippi", correct: false }
+        ]
+      }
     ]
   },
   {
@@ -81,6 +145,78 @@ trivia_data = [
           { content: "Saturn", correct: false }
         ]
       },
+      {
+        content: "What is the most abundant gas in the Earth's atmosphere?",
+        answers: [
+          { content: "Nitrogen", correct: true },
+          { content: "Oxygen", correct: false },
+          { content: "Carbon Dioxide", correct: false },
+          { content: "Hydrogen", correct: false }
+        ]
+      },
+      {
+        content: "Which planet is closest to the sun?",
+        answers: [
+          { content: "Mercury", correct: true },
+          { content: "Venus", correct: false },
+          { content: "Earth", correct: false },
+          { content: "Mars", correct: false }
+        ]
+      },
+      {
+        content: "What is the human body's largest organ?",
+        answers: [
+          { content: "Skin", correct: true },
+          { content: "Heart", correct: false },
+          { content: "Liver", correct: false },
+          { content: "Lungs", correct: false }
+        ]
+      },
+      {
+        content: "How many bones are there in the adult human body?",
+        answers: [
+          { content: "206", correct: true },
+          { content: "195", correct: false },
+          { content: "210", correct: false },
+          { content: "215", correct: false }
+        ]
+      },
+      {
+        content: "What force keeps us anchored to the Earth?",
+        answers: [
+          { content: "Gravity", correct: true },
+          { content: "Magnetism", correct: false },
+          { content: "Friction", correct: false },
+          { content: "Electromagnetism", correct: false }
+        ]
+      },
+      {
+        content: "What is the powerhouse of the cell?",
+        answers: [
+          { content: "Mitochondria", correct: true },
+          { content: "Nucleus", correct: false },
+          { content: "Ribosome", correct: false },
+          { content: "Golgi apparatus", correct: false }
+        ]
+      },
+      {
+        content: "Which element is the most abundant in the Earth's crust?",
+        answers: [
+          { content: "Oxygen", correct: true },
+          { content: "Silicon", correct: false },
+          { content: "Aluminum", correct: false },
+          { content: "Iron", correct: false }
+        ]
+      },
+      {
+        content: "What is the speed of light?",
+        answers: [
+          { content: "299,792,458 meters per second", correct: true },
+          { content: "150,000,000 meters per second", correct: false },
+          { content: "1,000,000 meters per second", correct: false },
+          { content: "3,000,000 meters per second", correct: false }
+        ]
+      }
     ]
   },
   {
@@ -105,6 +241,78 @@ trivia_data = [
           { content: "1898", correct: false }
         ]
       },
+      {
+        content: "Who discovered America?",
+        answers: [
+          { content: "Christopher Columbus", correct: true },
+          { content: "Ferdinand Magellan", correct: false },
+          { content: "Leif Erikson", correct: false },
+          { content: "James Cook", correct: false }
+        ]
+      },
+      {
+        content: "Which war was fought between the North and South regions in the United States?",
+        answers: [
+          { content: "The Civil War", correct: true },
+          { content: "The Revolutionary War", correct: false },
+          { content: "World War I", correct: false },
+          { content: "The Korean War", correct: false }
+        ]
+      },
+      {
+        content: "Who was the first man to step on the moon?",
+        answers: [
+          { content: "Neil Armstrong", correct: true },
+          { content: "Buzz Aldrin", correct: false },
+          { content: "Michael Collins", correct: false },
+          { content: "Yuri Gagarin", correct: false }
+        ]
+      },
+      {
+        content: "In which year did World War II end?",
+        answers: [
+          { content: "1945", correct: true },
+          { content: "1939", correct: false },
+          { content: "1941", correct: false },
+          { content: "1949", correct: false }
+        ]
+      },
+      {
+        content: "Which empire was known as the 'Sun Never Sets' empire?",
+        answers: [
+          { content: "The British Empire", correct: true },
+          { content: "The Roman Empire", correct: false },
+          { content: "The Ottoman Empire", correct: false },
+          { content: "The Mongol Empire", correct: false }
+        ]
+      },
+      {
+        content: "Who was the first woman to fly solo across the Atlantic Ocean?",
+        answers: [
+          { content: "Amelia Earhart", correct: true },
+          { content: "Bessie Coleman", correct: false },
+          { content: "Harriet Quimby", correct: false },
+          { content: "Jacqueline Cochran", correct: false }
+        ]
+      },
+      {
+        content: "Which ancient civilization built the pyramids?",
+        answers: [
+          { content: "The Egyptians", correct: true },
+          { content: "The Romans", correct: false },
+          { content: "The Mayans", correct: false },
+          { content: "The Incas", correct: false }
+        ]
+      },
+      {
+        content: "What document was signed in 1215 limiting the power of the king of England?",
+        answers: [
+          { content: "Magna Carta", correct: true },
+          { content: "The Bill of Rights", correct: false },
+          { content: "The Declaration of Independence", correct: false },
+          { content: "The Constitution", correct: false }
+        ]
+      }
     ]
   },
   {
@@ -129,6 +337,78 @@ trivia_data = [
           { content: "Mississippi", correct: false }
         ]
       },
+      {
+        content: "Which country is known as the Land of the Rising Sun?",
+        answers: [
+          { content: "Japan", correct: true },
+          { content: "China", correct: false },
+          { content: "South Korea", correct: false },
+          { content: "Thailand", correct: false }
+        ]
+      },
+      {
+        content: "What is the smallest continent by land area?",
+        answers: [
+          { content: "Australia", correct: true },
+          { content: "Europe", correct: false },
+          { content: "Antarctica", correct: false },
+          { content: "South America", correct: false }
+        ]
+      },
+      {
+        content: "Which ocean is the largest?",
+        answers: [
+          { content: "Pacific Ocean", correct: true },
+          { content: "Atlantic Ocean", correct: false },
+          { content: "Indian Ocean", correct: false },
+          { content: "Arctic Ocean", correct: false }
+        ]
+      },
+      {
+        content: "Which is the tallest mountain in the world?",
+        answers: [
+          { content: "Mount Everest", correct: true },
+          { content: "K2", correct: false },
+          { content: "Kangchenjunga", correct: false },
+          { content: "Lhotse", correct: false }
+        ]
+      },
+      {
+        content: "Which desert is the largest in the world?",
+        answers: [
+          { content: "Sahara Desert", correct: true },
+          { content: "Gobi Desert", correct: false },
+          { content: "Kalahari Desert", correct: false },
+          { content: "Atacama Desert", correct: false }
+        ]
+      },
+      {
+        content: "Which river flows through Paris?",
+        answers: [
+          { content: "Seine", correct: true },
+          { content: "Thames", correct: false },
+          { content: "Danube", correct: false },
+          { content: "Rhine", correct: false }
+        ]
+      },
+      {
+        content: "Which country is the most populous?",
+        answers: [
+          { content: "China", correct: true },
+          { content: "India", correct: false },
+          { content: "United States", correct: false },
+          { content: "Indonesia", correct: false }
+        ]
+      },
+      {
+        content: "What is the capital city of Australia?",
+        answers: [
+          { content: "Canberra", correct: true },
+          { content: "Sydney", correct: false },
+          { content: "Melbourne", correct: false },
+          { content: "Brisbane", correct: false }
+        ]
+      }
     ]
   },
   {
@@ -153,6 +433,78 @@ trivia_data = [
           { content: "Claude Monet", correct: false }
         ]
       },
+      {
+        content: "Who is known as the 'King of Pop'?",
+        answers: [
+          { content: "Michael Jackson", correct: true },
+          { content: "Elvis Presley", correct: false },
+          { content: "Prince", correct: false },
+          { content: "Freddie Mercury", correct: false }
+        ]
+      },
+      {
+        content: "Which movie won the first Academy Award for Best Picture?",
+        answers: [
+          { content: "Wings", correct: true },
+          { content: "The Jazz Singer", correct: false },
+          { content: "Sunrise", correct: false },
+          { content: "Metropolis", correct: false }
+        ]
+      },
+      {
+        content: "Who wrote the novel '1984'?",
+        answers: [
+          { content: "George Orwell", correct: true },
+          { content: "Aldous Huxley", correct: false },
+          { content: "Ray Bradbury", correct: false },
+          { content: "Arthur C. Clarke", correct: false }
+        ]
+      },
+      {
+        content: "Which band released the album 'Abbey Road'?",
+        answers: [
+          { content: "The Beatles", correct: true },
+          { content: "The Rolling Stones", correct: false },
+          { content: "Led Zeppelin", correct: false },
+          { content: "The Who", correct: false }
+        ]
+      },
+      {
+        content: "In which year was the first Harry Potter book published?",
+        answers: [
+          { content: "1997", correct: true },
+          { content: "1995", correct: false },
+          { content: "2000", correct: false },
+          { content: "1999", correct: false }
+        ]
+      },
+      {
+        content: "Which actress played the lead role in the movie 'Pretty Woman'?",
+        answers: [
+          { content: "Julia Roberts", correct: true },
+          { content: "Sandra Bullock", correct: false },
+          { content: "Meg Ryan", correct: false },
+          { content: "Meryl Streep", correct: false }
+        ]
+      },
+      {
+        content: "Who won the Grammy for Album of the Year in 2021?",
+        answers: [
+          { content: "Taylor Swift", correct: true },
+          { content: "Beyoncé", correct: false },
+          { content: "Billie Eilish", correct: false },
+          { content: "Post Malone", correct: false }
+        ]
+      },
+      {
+        content: "Which television series is known for the phrase 'Winter is Coming'?",
+        answers: [
+          { content: "Game of Thrones", correct: true },
+          { content: "The Witcher", correct: false },
+          { content: "Breaking Bad", correct: false },
+          { content: "Stranger Things", correct: false }
+        ]
+      }
     ]
   }
 ]
