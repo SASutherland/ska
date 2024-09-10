@@ -12,36 +12,65 @@ class QuestionsController < ApplicationController
   def submit_answer
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
-    chosen_answer_id = params[:answer]
 
-    if chosen_answer_id.present?
-      # Find the existing attempt for this question or create a new one
-      attempt = current_user.attempts.find_by(question_id: @question.id)
-
-      if attempt
-        # Update the existing attempt
-        attempt.update(chosen_answer_id: chosen_answer_id)
-      else
-        # Create a new attempt if one doesn't exist
-        current_user.attempts.create(
-          question_id: @question.id,
-          chosen_answer_id: chosen_answer_id
-        )
-      end
-
-      # Find the next question in the course
-      next_question = @course.questions.where("id > ?", @question.id).first
-
-      if next_question
-        # Redirect to the next question
-        redirect_to course_question_path(@course, next_question)
-      else
-        # If no more questions, redirect to the dashboard
-        redirect_to dashboards_index_path, notice: "You have completed the course!"
-      end
+    if @question.question_type == 'open_answer'
+      handle_open_answer_submission(@question)
     else
-      flash[:alert] = "Please select an answer before submitting."
-      redirect_to course_question_path(@course, @question)
+      chosen_answer_id = params[:answer]
+
+      if chosen_answer_id.present?
+        handle_multiple_choice_or_true_false_submission(chosen_answer_id)
+      else
+        flash[:alert] = "Please select an answer before submitting."
+        redirect_to course_question_path(@course, @question)
+        return
+      end
     end
+
+    # Find the next question in the course
+    next_question = @course.questions.where("id > ?", @question.id).first
+
+    if next_question
+      # Redirect to the next question
+      redirect_to course_question_path(@course, next_question)
+    else
+      # If no more questions, redirect to the dashboard
+      redirect_to dashboards_index_path, notice: "You have completed the course!"
+    end
+  end
+
+  private
+
+  # Handle submission for multiple-choice and true/false questions
+  def handle_multiple_choice_or_true_false_submission(chosen_answer_id)
+    attempt = current_user.attempts.find_by(question_id: @question.id)
+
+    if attempt
+      # Update the existing attempt
+      attempt.update(chosen_answer_id: chosen_answer_id)
+    else
+      # Create a new attempt if one doesn't exist
+      current_user.attempts.create(
+        question_id: @question.id,
+        chosen_answer_id: chosen_answer_id
+      )
+    end
+  end
+
+  # Handle submission for open_answer questions
+  def handle_open_answer_submission(question)
+    user_answer_content = params[:answer_content]
+
+    # Find or initialize an attempt for this question
+    attempt = current_user.attempts.find_or_initialize_by(question: question)
+
+    # Find or create the user's answer based on input
+    user_answer = question.answers.find_or_initialize_by(content: user_answer_content, correct: false)
+    user_answer.save if user_answer.new_record?
+
+    # Check if the user's answer matches the correct answer
+    correct_answer = question.answers.find_by(correct: true)
+    is_correct = user_answer.content.strip.downcase == correct_answer.content.strip.downcase
+    attempt.update(chosen_answer: user_answer, correct: is_correct)
   end
 end

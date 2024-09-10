@@ -11,12 +11,21 @@
       <h2><%= @question.content %></h2>
 
       <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true do |f| %>
+
         <div class="answers">
-          <% @answers.each_with_index do |answer, index| %>
-            <div class="answer">
-              <%= f.radio_button :answer, answer.id, id: "answer_#{answer.id}" %>
-              <%= f.label "answer_#{answer.id}", answer.content %>
+          <% if @question.question_type == 'open_answer' %>
+            <!-- Input field for open_answer type questions -->
+            <div class="form-group">
+              <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
             </div>
+          <% else %>
+            <!-- Radio buttons for other types of questions -->
+            <% @answers.each_with_index do |answer, index| %>
+              <div class="answer">
+                <%= f.radio_button :answer, answer.id, id: "answer_#{answer.id}" %>
+                <%= f.label "answer_#{answer.id}", answer.content %>
+              </div>
+            <% end %>
           <% end %>
         </div>
 
@@ -25,7 +34,6 @@
     </div>
 
     <div class="progress-box">
-
       <!-- Navigation buttons with the progress bar in the middle -->
       <div class="navigation-wrapper">
         <div class="previous-button">
@@ -44,15 +52,28 @@
           <div class="questions-progress">
             <% @course.questions.each_with_index do |question, index| %>
               <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+
               <% if attempt %>
-                <% if attempt.chosen_answer.correct? %>
-                  <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
-                    <%= index + 1 %>
-                  </a>
+                <% if question.question_type == 'open_answer' %>
+                  <% if attempt.correct? %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
                 <% else %>
-                  <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
-                    <%= index + 1 %>
-                  </a>
+                  <% if attempt.chosen_answer&.correct? %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
                 <% end %>
               <% else %>
                 <a href="<%= course_question_path(@course, question) %>" class="question-number">
@@ -75,7 +96,6 @@
           <% end %>
         </div>
       </div>
-
     </div>
   </div>
 </div>

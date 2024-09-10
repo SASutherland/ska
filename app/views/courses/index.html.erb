@@ -1,5 +1,4 @@
 <div class="dashboard-container d-flex">
-
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
 
@@ -16,19 +15,31 @@
           <!-- Flex container to align questions and Unenroll button -->
           <div class="course-content d-flex align-items-start justify-content-between">
 
-            <!-- Questions -->
-            <div class="questions">
+            <!-- Questions Progress -->
+            <div class="questions-progress">
               <% course.questions.each_with_index do |question, index| %>
                 <% attempt = @attempts.find { |a| a.question_id == question.id } %>
                 <% if attempt %>
-                  <% if attempt.chosen_answer.correct? %>
-                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
-                      <%= index + 1 %>
-                    </a>
+                  <% if question.question_type == 'open_answer' %>
+                    <% if attempt.correct? %>
+                      <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                        <%= index + 1 %>
+                      </a>
+                    <% else %>
+                      <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                        <%= index + 1 %>
+                      </a>
+                    <% end %>
                   <% else %>
-                    <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
-                      <%= index + 1 %>
-                    </a>
+                    <% if attempt.chosen_answer&.correct? %>
+                      <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                        <%= index + 1 %>
+                      </a>
+                    <% else %>
+                      <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                        <%= index + 1 %>
+                      </a>
+                    <% end %>
                   <% end %>
                 <% else %>
                   <a href="<%= course_question_path(course, question) %>" class="question-number">

@@ -88,7 +88,7 @@ export default class extends Controller {
   // Helper method to generate HTML for Open Answer questions
   generateOpenAnswerHTML(questionNumber) {
     return `
-      <div class="answer-fields mb-2">
+      <div class="answer-fields">
         <div class="form-group">
           <label for="course_questions_attributes_${questionNumber}_answers_attributes_0_content">Answer</label>
           <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][0][content]" id="course_questions_attributes_${questionNumber}_answers_attributes_0_content" class="form-control" style="max-width: 600px;">
