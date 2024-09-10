@@ -41,7 +41,11 @@
                       </a>
                     <% end %>
                   <% else %>
-                    <% if attempt.chosen_answers.first&.correct? %>
+                    <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
+                      <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                        <%= index + 1 %>
+                      </a>
+                    <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
                       <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
                         <%= index + 1 %>
                       </a>

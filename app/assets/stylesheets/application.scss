@@ -28,8 +28,12 @@ h1 {
   font-weight: bold;
 }
 
-h3, h4, p, .form-label {
+h2, h3, h4, p, .form-label {
   font-family: "Lato", sans-serif;
+}
+
+.main-content h2 {
+  font-size: 22px;
 }
 
 .form-control {

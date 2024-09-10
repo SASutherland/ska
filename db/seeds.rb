@@ -1,5 +1,7 @@
 # Clear all existing data
 puts "Clearing existing data. . ."
+ActiveRecord::Base.connection.execute("DELETE FROM attempts_answers")
+Attempt.delete_all
 Answer.delete_all
 Question.delete_all
 Registration.delete_all
@@ -22,7 +24,7 @@ student = User.create(
   last_name: "Sutherland",
   email: "shawnsutherland@hotmail.com",
   password: "111111",
-  role: :student
+  role: :teacher
 )
 
 # Example trivia questions and answers
@@ -33,6 +35,7 @@ trivia_data = [
     questions: [
       {
         content: "What is the capital of France?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Paris", correct: true },
           { content: "London", correct: false },
@@ -42,6 +45,7 @@ trivia_data = [
       },
       {
         content: "Who wrote 'Romeo and Juliet'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "William Shakespeare", correct: true },
           { content: "Charles Dickens", correct: false },
@@ -50,7 +54,13 @@ trivia_data = [
         ]
       },
       {
+        content: "What is 5 + 7?",
+        question_type: "open_answer",
+        correct_answer: "12"
+      },
+      {
         content: "Which element has the chemical symbol 'O'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Oxygen", correct: true },
           { content: "Gold", correct: false },
@@ -60,6 +70,7 @@ trivia_data = [
       },
       {
         content: "Which planet is known as the 'Morning Star'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Venus", correct: true },
           { content: "Mars", correct: false },
@@ -68,7 +79,16 @@ trivia_data = [
         ]
       },
       {
+        content: "The Earth is flat.",
+        question_type: "true_false",
+        answers: [
+          { content: "True", correct: false },
+          { content: "False", correct: true }
+        ]
+      },
+      {
         content: "In which year did the Berlin Wall fall?",
+        question_type: "multiple_choice",
         answers: [
           { content: "1989", correct: true },
           { content: "1991", correct: false },
@@ -78,6 +98,7 @@ trivia_data = [
       },
       {
         content: "What is the largest mammal in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Blue Whale", correct: true },
           { content: "Elephant", correct: false },
@@ -86,7 +107,18 @@ trivia_data = [
         ]
       },
       {
+        content: "Which of these are primary colors?",
+        question_type: "multiple_answer",
+        answers: [
+          { content: "Red", correct: true },
+          { content: "Green", correct: false },
+          { content: "Blue", correct: true },
+          { content: "Yellow", correct: true }
+        ]
+      },
+      {
         content: "How many continents are there on Earth?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Seven", correct: true },
           { content: "Five", correct: false },
@@ -96,6 +128,7 @@ trivia_data = [
       },
       {
         content: "What is the hardest natural substance on Earth?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Diamond", correct: true },
           { content: "Gold", correct: false },
@@ -105,6 +138,7 @@ trivia_data = [
       },
       {
         content: "What is the smallest country in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Vatican City", correct: true },
           { content: "Monaco", correct: false },
@@ -114,6 +148,7 @@ trivia_data = [
       },
       {
         content: "What is the longest river in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Nile", correct: true },
           { content: "Amazon", correct: false },
@@ -129,6 +164,7 @@ trivia_data = [
     questions: [
       {
         content: "What is the chemical symbol for water?",
+        question_type: "multiple_choice",
         answers: [
           { content: "H2O", correct: true },
           { content: "O2", correct: false },
@@ -137,7 +173,13 @@ trivia_data = [
         ]
       },
       {
+        content: "What is the freezing point of water in Celsius?",
+        question_type: "open_answer",
+        correct_answer: "0"
+      },
+      {
         content: "What planet is known as the Red Planet?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Mars", correct: true },
           { content: "Venus", correct: false },
@@ -147,6 +189,7 @@ trivia_data = [
       },
       {
         content: "What is the most abundant gas in the Earth's atmosphere?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Nitrogen", correct: true },
           { content: "Oxygen", correct: false },
@@ -155,7 +198,16 @@ trivia_data = [
         ]
       },
       {
+        content: "Water boils at 100 degrees Celsius.",
+        question_type: "true_false",
+        answers: [
+          { content: "True", correct: true },
+          { content: "False", correct: false }
+        ]
+      },
+      {
         content: "Which planet is closest to the sun?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Mercury", correct: true },
           { content: "Venus", correct: false },
@@ -165,6 +217,7 @@ trivia_data = [
       },
       {
         content: "What is the human body's largest organ?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Skin", correct: true },
           { content: "Heart", correct: false },
@@ -174,6 +227,7 @@ trivia_data = [
       },
       {
         content: "How many bones are there in the adult human body?",
+        question_type: "multiple_choice",
         answers: [
           { content: "206", correct: true },
           { content: "195", correct: false },
@@ -183,6 +237,7 @@ trivia_data = [
       },
       {
         content: "What force keeps us anchored to the Earth?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Gravity", correct: true },
           { content: "Magnetism", correct: false },
@@ -192,6 +247,7 @@ trivia_data = [
       },
       {
         content: "What is the powerhouse of the cell?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Mitochondria", correct: true },
           { content: "Nucleus", correct: false },
@@ -201,6 +257,7 @@ trivia_data = [
       },
       {
         content: "Which element is the most abundant in the Earth's crust?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Oxygen", correct: true },
           { content: "Silicon", correct: false },
@@ -210,6 +267,7 @@ trivia_data = [
       },
       {
         content: "What is the speed of light?",
+        question_type: "multiple_choice",
         answers: [
           { content: "299,792,458 meters per second", correct: true },
           { content: "150,000,000 meters per second", correct: false },
@@ -225,6 +283,7 @@ trivia_data = [
     questions: [
       {
         content: "Who was the first President of the United States?",
+        question_type: "multiple_choice",
         answers: [
           { content: "George Washington", correct: true },
           { content: "Thomas Jefferson", correct: false },
@@ -233,7 +292,18 @@ trivia_data = [
         ]
       },
       {
+        content: "Select all the U.S. Presidents from the list:",
+        question_type: "multiple_answer",
+        answers: [
+          { content: "George Washington", correct: true },
+          { content: "Benjamin Franklin", correct: false },
+          { content: "John Adams", correct: true },
+          { content: "Thomas Edison", correct: false }
+        ]
+      },
+      {
         content: "In which year did the Titanic sink?",
+        question_type: "multiple_choice",
         answers: [
           { content: "1912", correct: true },
           { content: "1905", correct: false },
@@ -243,6 +313,7 @@ trivia_data = [
       },
       {
         content: "Who discovered America?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Christopher Columbus", correct: true },
           { content: "Ferdinand Magellan", correct: false },
@@ -252,6 +323,7 @@ trivia_data = [
       },
       {
         content: "Which war was fought between the North and South regions in the United States?",
+        question_type: "multiple_choice",
         answers: [
           { content: "The Civil War", correct: true },
           { content: "The Revolutionary War", correct: false },
@@ -261,6 +333,7 @@ trivia_data = [
       },
       {
         content: "Who was the first man to step on the moon?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Neil Armstrong", correct: true },
           { content: "Buzz Aldrin", correct: false },
@@ -270,6 +343,7 @@ trivia_data = [
       },
       {
         content: "In which year did World War II end?",
+        question_type: "multiple_choice",
         answers: [
           { content: "1945", correct: true },
           { content: "1939", correct: false },
@@ -279,6 +353,7 @@ trivia_data = [
       },
       {
         content: "Which empire was known as the 'Sun Never Sets' empire?",
+        question_type: "multiple_choice",
         answers: [
           { content: "The British Empire", correct: true },
           { content: "The Roman Empire", correct: false },
@@ -288,6 +363,7 @@ trivia_data = [
       },
       {
         content: "Who was the first woman to fly solo across the Atlantic Ocean?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Amelia Earhart", correct: true },
           { content: "Bessie Coleman", correct: false },
@@ -297,6 +373,7 @@ trivia_data = [
       },
       {
         content: "Which ancient civilization built the pyramids?",
+        question_type: "multiple_choice",
         answers: [
           { content: "The Egyptians", correct: true },
           { content: "The Romans", correct: false },
@@ -306,6 +383,7 @@ trivia_data = [
       },
       {
         content: "What document was signed in 1215 limiting the power of the king of England?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Magna Carta", correct: true },
           { content: "The Bill of Rights", correct: false },
@@ -321,6 +399,7 @@ trivia_data = [
     questions: [
       {
         content: "Which country has the largest land area?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Russia", correct: true },
           { content: "Canada", correct: false },
@@ -330,6 +409,7 @@ trivia_data = [
       },
       {
         content: "What is the longest river in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Nile", correct: true },
           { content: "Amazon", correct: false },
@@ -339,6 +419,7 @@ trivia_data = [
       },
       {
         content: "Which country is known as the Land of the Rising Sun?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Japan", correct: true },
           { content: "China", correct: false },
@@ -348,6 +429,7 @@ trivia_data = [
       },
       {
         content: "What is the smallest continent by land area?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Australia", correct: true },
           { content: "Europe", correct: false },
@@ -357,6 +439,7 @@ trivia_data = [
       },
       {
         content: "Which ocean is the largest?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Pacific Ocean", correct: true },
           { content: "Atlantic Ocean", correct: false },
@@ -366,6 +449,7 @@ trivia_data = [
       },
       {
         content: "Which is the tallest mountain in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Mount Everest", correct: true },
           { content: "K2", correct: false },
@@ -375,6 +459,7 @@ trivia_data = [
       },
       {
         content: "Which desert is the largest in the world?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Sahara Desert", correct: true },
           { content: "Gobi Desert", correct: false },
@@ -384,6 +469,7 @@ trivia_data = [
       },
       {
         content: "Which river flows through Paris?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Seine", correct: true },
           { content: "Thames", correct: false },
@@ -393,6 +479,7 @@ trivia_data = [
       },
       {
         content: "Which country is the most populous?",
+        question_type: "multiple_choice",
         answers: [
           { content: "China", correct: true },
           { content: "India", correct: false },
@@ -402,6 +489,7 @@ trivia_data = [
       },
       {
         content: "What is the capital city of Australia?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Canberra", correct: true },
           { content: "Sydney", correct: false },
@@ -417,6 +505,7 @@ trivia_data = [
     questions: [
       {
         content: "Who directed the movie 'Inception'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Christopher Nolan", correct: true },
           { content: "Steven Spielberg", correct: false },
@@ -426,6 +515,7 @@ trivia_data = [
       },
       {
         content: "Which artist painted the Mona Lisa?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Leonardo da Vinci", correct: true },
           { content: "Vincent van Gogh", correct: false },
@@ -435,6 +525,7 @@ trivia_data = [
       },
       {
         content: "Who is known as the 'King of Pop'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Michael Jackson", correct: true },
           { content: "Elvis Presley", correct: false },
@@ -444,6 +535,7 @@ trivia_data = [
       },
       {
         content: "Which movie won the first Academy Award for Best Picture?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Wings", correct: true },
           { content: "The Jazz Singer", correct: false },
@@ -453,6 +545,7 @@ trivia_data = [
       },
       {
         content: "Who wrote the novel '1984'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "George Orwell", correct: true },
           { content: "Aldous Huxley", correct: false },
@@ -462,6 +555,7 @@ trivia_data = [
       },
       {
         content: "Which band released the album 'Abbey Road'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "The Beatles", correct: true },
           { content: "The Rolling Stones", correct: false },
@@ -471,6 +565,7 @@ trivia_data = [
       },
       {
         content: "In which year was the first Harry Potter book published?",
+        question_type: "multiple_choice",
         answers: [
           { content: "1997", correct: true },
           { content: "1995", correct: false },
@@ -480,6 +575,7 @@ trivia_data = [
       },
       {
         content: "Which actress played the lead role in the movie 'Pretty Woman'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Julia Roberts", correct: true },
           { content: "Sandra Bullock", correct: false },
@@ -489,6 +585,7 @@ trivia_data = [
       },
       {
         content: "Who won the Grammy for Album of the Year in 2021?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Taylor Swift", correct: true },
           { content: "Beyoncé", correct: false },
@@ -498,6 +595,7 @@ trivia_data = [
       },
       {
         content: "Which television series is known for the phrase 'Winter is Coming'?",
+        question_type: "multiple_choice",
         answers: [
           { content: "Game of Thrones", correct: true },
           { content: "The Witcher", correct: false },
@@ -520,16 +618,24 @@ trivia_data.each_with_index do |course_data, course_index|
   course_data[:questions].each_with_index do |question_data, question_index|
     question = Question.create(
       content: question_data[:content],
-      question_type: "multiple_choice",
+      question_type: question_data[:question_type] || "multiple_choice",
       course_id: course.id
     )
 
-    question_data[:answers].each do |answer_data|
+    if question_data[:question_type] == "open_answer"
       Answer.create(
-        content: answer_data[:content],
-        correct: answer_data[:correct],
+        content: question_data[:correct_answer],
+        correct: true,
         question_id: question.id
       )
+    else
+      question_data[:answers]&.each do |answer_data|
+        Answer.create(
+          content: answer_data[:content],
+          correct: answer_data[:correct],
+          question_id: question.id
+        )
+      end
     end
   end
 end

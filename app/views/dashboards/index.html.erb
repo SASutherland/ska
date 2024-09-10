@@ -44,10 +44,11 @@
         <div class="questions-progress">
           <% course.questions.each_with_index do |question, index| %>
             <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+
             <% if attempt %>
               <% if question.question_type == 'multiple_answer' %>
                 <!-- Handle multiple answers -->
-                <% if attempt.chosen_answers.all?(&:correct?) %>
+                <% if attempt.chosen_answers.any? && attempt.chosen_answers.all?(&:correct?) %>
                   <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
                     <%= index + 1 %>
                   </a>
@@ -56,9 +57,26 @@
                     <%= index + 1 %>
                   </a>
                 <% end %>
+
+              <% elsif question.question_type == 'open_answer' %>
+                <!-- Handle open answer questions -->
+                <% if attempt.correct? %> <!-- Check the 'correct' attribute of the attempt -->
+                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                    <%= index + 1 %>
+                  </a>
+                <% else %>
+                  <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                    <%= index + 1 %>
+                  </a>
+                <% end %>
+
               <% else %>
-                <!-- Handle single-answer questions -->
-                <% if attempt.chosen_answers.first&.correct? %>
+                <!-- Handle multiple_choice and true_false -->
+                <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
+                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                    <%= index + 1 %>
+                  </a>
+                <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
                   <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
                     <%= index + 1 %>
                   </a>
@@ -68,13 +86,16 @@
                   </a>
                 <% end %>
               <% end %>
+
             <% else %>
+              <!-- No attempt made yet -->
               <a href="<%= course_question_path(course, question) %>" class="question-number">
                 <%= index + 1 %>
               </a>
             <% end %>
           <% end %>
         </div>
+
       </div>
     <% end %>
   </div>

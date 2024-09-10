@@ -67,14 +67,19 @@ class QuestionsController < ApplicationController
     attempt = current_user.attempts.find_or_initialize_by(question: question)
 
     # Find or create the user's answer based on input
-    user_answer = question.answers.find_or_initialize_by(content: user_answer_content, correct: false)
+    user_answer = question.answers.find_or_initialize_by(content: user_answer_content)
     user_answer.save if user_answer.new_record?
 
-    # Check if the user's answer matches the correct answer
+    # Find the correct answer
     correct_answer = question.answers.find_by(correct: true)
-    is_correct = user_answer.content.strip.downcase == correct_answer.content.strip.downcase
-    attempt.update(chosen_answer: user_answer, correct: is_correct)
+
+    # Check if the user's answer matches the correct answer
+    is_correct = user_answer_content.strip.downcase == correct_answer.content.strip.downcase
+
+    # Update the attempt with the user's written answer and correctness
+    attempt.update(written_answer: user_answer_content, correct: is_correct)
   end
+
 
   # Handle submission for multiple_answer questions
   def handle_multiple_answer_submission(question)

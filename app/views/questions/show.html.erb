@@ -62,6 +62,7 @@
               <% attempt = @attempts.find { |a| a.question_id == question.id } %>
 
               <% if attempt %>
+                <!-- For open_answer type -->
                 <% if question.question_type == 'open_answer' %>
                   <% if attempt.correct? %>
                     <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
@@ -72,6 +73,8 @@
                       <%= index + 1 %>
                     </a>
                   <% end %>
+
+                <!-- For multiple_answer type -->
                 <% elsif question.question_type == 'multiple_answer' %>
                   <% if attempt.chosen_answers.any? && attempt.chosen_answers.all?(&:correct?) %>
                     <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
@@ -82,8 +85,14 @@
                       <%= index + 1 %>
                     </a>
                   <% end %>
+
+                <!-- For multiple_choice and true_false types -->
                 <% else %>
-                  <% if attempt.chosen_answer&.correct? %>
+                  <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
                     <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
                       <%= index + 1 %>
                     </a>
@@ -93,7 +102,9 @@
                     </a>
                   <% end %>
                 <% end %>
+
               <% else %>
+                <!-- No attempt made yet -->
                 <a href="<%= course_question_path(@course, question) %>" class="question-number">
                   <%= index + 1 %>
                 </a>
