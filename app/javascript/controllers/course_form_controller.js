@@ -36,10 +36,10 @@ export default class extends Controller {
       questionHTML += this.generateOpenAnswerHTML(questionNumber);
     } else if (selectedQuestionType === 'true_false') {
       questionHTML += this.generateTrueFalseHTML(questionNumber);
-    } else if (selectedQuestionType === 'matching') {
-      questionHTML += this.generateMatchingHTML(questionNumber);
-    } else if (selectedQuestionType === 'ordering') {
-      questionHTML += this.generateOrderingHTML(questionNumber);
+    // } else if (selectedQuestionType === 'matching') {
+    //   questionHTML += this.generateMatchingHTML(questionNumber);
+    // } else if (selectedQuestionType === 'ordering') {
+    //   questionHTML += this.generateOrderingHTML(questionNumber);
     }
 
     questionHTML += `</div></div>`;
@@ -112,27 +112,27 @@ export default class extends Controller {
       </div>`;
   }
 
-  // Helper method to generate HTML for Matching
-  generateMatchingHTML(questionNumber) {
-    return [...Array(4)].map((_, i) => `
-      <div class="answer-fields d-flex align-items-center mb-2">
-        <div class="form-group d-flex justify-content-between align-items-center" style="max-width: 600px; width: 100%;">
-          <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" placeholder="Item to match" style="max-width: 45%;">
-          <span style="margin: 0 10px;">⇔</span>
-          <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][match]" class="form-control" placeholder="Matching pair" style="max-width: 45%;">
-        </div>
-      </div>
-    `).join('');
-  }
+  // // Helper method to generate HTML for Matching
+  // generateMatchingHTML(questionNumber) {
+  //   return [...Array(4)].map((_, i) => `
+  //     <div class="answer-fields d-flex align-items-center mb-2">
+  //       <div class="form-group d-flex justify-content-between align-items-center" style="max-width: 600px; width: 100%;">
+  //         <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" placeholder="Item to match" style="max-width: 45%;">
+  //         <span style="margin: 0 10px;">⇔</span>
+  //         <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][match]" class="form-control" placeholder="Matching pair" style="max-width: 45%;">
+  //       </div>
+  //     </div>
+  //   `).join('');
+  // }
 
-  // Helper method to generate HTML for Ordering
-  generateOrderingHTML(questionNumber) {
-    return [...Array(4)].map((_, i) => `
-      <div class="answer-fields mb-2">
-        <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" style="max-width: 600px;" placeholder="Order item ${i + 1}">
-      </div>
-    `).join('');
-  }
+  // // Helper method to generate HTML for Ordering
+  // generateOrderingHTML(questionNumber) {
+  //   return [...Array(4)].map((_, i) => `
+  //     <div class="answer-fields mb-2">
+  //       <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" style="max-width: 600px;" placeholder="Order item ${i + 1}">
+  //     </div>
+  //   `).join('');
+  // }
 
   // Ensure only one "Correct" checkbox is selected for Multiple-Choice questions
   enforceSingleChoice(questionNumber) {
