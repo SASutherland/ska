@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   def show
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
-    @answers = @question.answers
+    @answers = @question.answers.shuffle
     @attempts = current_user.attempts.joins(:question).where(questions: { course_id: @course.id })
     @question_number = @course.questions.order(:id).pluck(:id).index(@question.id) + 1
     @previous_question = @course.questions.where("id < ?", @question.id).order(id: :desc).first

@@ -1,4 +1,21 @@
+.form-select {
+  background-color: white;
+  border-radius: 8px;
+}
+
 .new-question {
   font-weight: bold;
   margin: 30px 0 18px 0;
+}
+
+.fa-circle-xmark {
+  background: none;
+  border: none;
+  color: #EC0B43;
+  font-size: 18px;
+  transition: ease 0.3s;
+}
+
+.fa-circle-xmark:hover {
+  color: #C30938;
 }
