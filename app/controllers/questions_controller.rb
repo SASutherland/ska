@@ -15,6 +15,8 @@ class QuestionsController < ApplicationController
 
     if @question.question_type == 'open_answer'
       handle_open_answer_submission(@question)
+    elsif @question.question_type == 'multiple_answer'
+      handle_multiple_answer_submission(@question)
     else
       chosen_answer_id = params[:answer]
 
@@ -72,5 +74,26 @@ class QuestionsController < ApplicationController
     correct_answer = question.answers.find_by(correct: true)
     is_correct = user_answer.content.strip.downcase == correct_answer.content.strip.downcase
     attempt.update(chosen_answer: user_answer, correct: is_correct)
+  end
+
+  # Handle submission for multiple_answer questions
+  def handle_multiple_answer_submission(question)
+    chosen_answer_ids = params[:answer_ids] || []
+
+    if chosen_answer_ids.any?
+      # Check which answers are correct and update or create the attempt
+      correct_answer_ids = question.answers.where(correct: true).pluck(:id)
+      is_correct = (chosen_answer_ids.map(&:to_i) - correct_answer_ids).empty?
+
+      attempt = current_user.attempts.find_or_initialize_by(question: question)
+
+      # Update the attempt with the chosen answers
+      attempt.chosen_answers = Answer.where(id: chosen_answer_ids)  # Save multiple chosen answers
+      attempt.update(correct: is_correct)  # Update the correctness of the attempt
+    else
+      flash[:alert] = "Please select at least one answer before submitting."
+      redirect_to course_question_path(@course, @question)
+      return
+    end
   end
 end

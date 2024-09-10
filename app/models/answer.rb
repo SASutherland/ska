@@ -1,4 +1,4 @@
 class Answer < ApplicationRecord
   belongs_to :question
-  has_many :attempts, foreign_key: :chosen_answer_id, dependent: :destroy
+  has_many :attempts, through: :attempts_answers, dependent: :destroy
 end

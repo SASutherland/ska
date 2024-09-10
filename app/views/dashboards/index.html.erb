@@ -45,8 +45,9 @@
           <% course.questions.each_with_index do |question, index| %>
             <% attempt = @attempts.find { |a| a.question_id == question.id } %>
             <% if attempt %>
-              <% if question.question_type == 'open_answer' %>
-                <% if attempt.correct? %>
+              <% if question.question_type == 'multiple_answer' %>
+                <!-- Handle multiple answers -->
+                <% if attempt.chosen_answers.all?(&:correct?) %>
                   <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
                     <%= index + 1 %>
                   </a>
@@ -56,7 +57,8 @@
                   </a>
                 <% end %>
               <% else %>
-                <% if attempt.chosen_answer&.correct? %>
+                <!-- Handle single-answer questions -->
+                <% if attempt.chosen_answers.first&.correct? %>
                   <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
                     <%= index + 1 %>
                   </a>
@@ -75,7 +77,6 @@
         </div>
       </div>
     <% end %>
-
   </div>
 </div>
 

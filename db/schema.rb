@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_10_161058) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_10_215553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_10_161058) do
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
+  create_table "answers_attempts", id: false, force: :cascade do |t|
+    t.bigint "attempt_id", null: false
+    t.bigint "answer_id", null: false
+  end
+
+  create_table "attempt_answers", force: :cascade do |t|
+    t.bigint "attempt_id", null: false
+    t.bigint "answer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answer_id"], name: "index_attempt_answers_on_answer_id"
+    t.index ["attempt_id"], name: "index_attempt_answers_on_attempt_id"
+  end
+
   create_table "attempts", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "question_id"
@@ -31,9 +45,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_10_161058) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "correct"
+    t.string "written_answer"
     t.index ["chosen_answer_id"], name: "index_attempts_on_chosen_answer_id"
     t.index ["question_id"], name: "index_attempts_on_question_id"
     t.index ["user_id"], name: "index_attempts_on_user_id"
+  end
+
+  create_table "attempts_answers", id: false, force: :cascade do |t|
+    t.bigint "attempt_id", null: false
+    t.bigint "answer_id", null: false
+    t.index ["answer_id"], name: "index_attempts_answers_on_answer_id"
+    t.index ["attempt_id"], name: "index_attempts_answers_on_attempt_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -79,9 +101,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_10_161058) do
   end
 
   add_foreign_key "answers", "questions"
+  add_foreign_key "attempt_answers", "answers"
+  add_foreign_key "attempt_answers", "attempts"
   add_foreign_key "attempts", "answers", column: "chosen_answer_id"
   add_foreign_key "attempts", "questions"
   add_foreign_key "attempts", "users"
+  add_foreign_key "attempts_answers", "answers"
+  add_foreign_key "attempts_answers", "attempts"
   add_foreign_key "courses", "users", column: "teacher_id"
   add_foreign_key "questions", "courses"
   add_foreign_key "registrations", "courses"

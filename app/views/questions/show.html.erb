@@ -18,6 +18,14 @@
             <div class="form-group">
               <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
             </div>
+          <% elsif @question.question_type == 'multiple_answer' %>
+            <!-- Checkboxes for multiple_answer type questions -->
+            <% @answers.each_with_index do |answer, index| %>
+              <div class="answer">
+                <%= f.check_box :answer_ids, { multiple: true }, answer.id, id: "answer_#{answer.id}" %>
+                <%= f.label "answer_#{answer.id}", answer.content %>
+              </div>
+            <% end %>
           <% else %>
             <!-- Radio buttons for other types of questions -->
             <% @answers.each_with_index do |answer, index| %>
@@ -56,6 +64,16 @@
               <% if attempt %>
                 <% if question.question_type == 'open_answer' %>
                   <% if attempt.correct? %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
+                <% elsif question.question_type == 'multiple_answer' %>
+                  <% if attempt.chosen_answers.any? && attempt.chosen_answers.all?(&:correct?) %>
                     <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
                       <%= index + 1 %>
                     </a>
