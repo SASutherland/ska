@@ -9,6 +9,7 @@ class CoursesController < ApplicationController
   def create
     @course = current_user.courses.build(course_params)
     if @course.save
+      handle_true_false_questions(@course)
       flash[:notice] = "Course created successfully!"
       redirect_to dashboards_index_path
     else
@@ -46,5 +47,18 @@ class CoursesController < ApplicationController
 
   def authorize_teacher
     redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.teacher?
+  end
+
+  def handle_true_false_questions(course)
+    course.questions.each do |question|
+      if question.question_type == 'true_false'
+        # Fetch the correct answer for true/false questions from the params
+        correct_answer = params[:course][:questions_attributes].values.find { |q| q['content'] == question.content }['correct']
+
+        # Create True/False answers and mark the correct one
+        question.answers.create!(content: 'True', correct: correct_answer == 'true')
+        question.answers.create!(content: 'False', correct: correct_answer == 'false')
+      end
+    end
   end
 end

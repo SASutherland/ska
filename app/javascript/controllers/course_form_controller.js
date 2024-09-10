@@ -30,24 +30,21 @@ export default class extends Controller {
         <input type="hidden" name="course[questions_attributes][${questionNumber}][question_type]" value="${selectedQuestionType}">
         <div class="answers mt-2">`;
 
+    // Generate the input fields based on the selected question type
     if (selectedQuestionType === 'multiple_choice' || selectedQuestionType === 'multiple_answer') {
       questionHTML += this.generateMultipleChoiceHTML(questionNumber, selectedQuestionType);
     } else if (selectedQuestionType === 'open_answer') {
       questionHTML += this.generateOpenAnswerHTML(questionNumber);
     } else if (selectedQuestionType === 'true_false') {
       questionHTML += this.generateTrueFalseHTML(questionNumber);
-    // } else if (selectedQuestionType === 'matching') {
-    //   questionHTML += this.generateMatchingHTML(questionNumber);
-    // } else if (selectedQuestionType === 'ordering') {
-    //   questionHTML += this.generateOrderingHTML(questionNumber);
     }
 
     questionHTML += `</div></div>`;
 
-    // Insert the question HTML into the questions container
+    // Insert the generated HTML for the question into the container
     this.questionsContainerTarget.insertAdjacentHTML('beforeend', questionHTML);
 
-    // Add checkbox enforcement for Multiple-Choice
+    // If it's a multiple-choice question, enforce only one checkbox can be selected
     if (selectedQuestionType === 'multiple_choice') {
       this.enforceSingleChoice(questionNumber);
     }
@@ -72,7 +69,7 @@ export default class extends Controller {
     this.questionCount = questionFields.length;
   }
 
-  // Helper method to generate HTML for Multiple-Choice and Multiple-Answer
+  // Helper method to generate HTML for Multiple-Choice and Multiple-Answer questions
   generateMultipleChoiceHTML(questionNumber, selectedQuestionType) {
     const isMultipleChoice = selectedQuestionType === 'multiple_choice';
     return [...Array(4)].map((_, i) => `
@@ -88,7 +85,7 @@ export default class extends Controller {
     `).join('');
   }
 
-  // Helper method to generate HTML for Open Answer
+  // Helper method to generate HTML for Open Answer questions
   generateOpenAnswerHTML(questionNumber) {
     return `
       <div class="answer-fields mb-2">
@@ -99,40 +96,18 @@ export default class extends Controller {
       </div>`;
   }
 
-  // Helper method to generate HTML for True/False
+  // Helper method to generate HTML for True/False questions
   generateTrueFalseHTML(questionNumber) {
     return `
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="true" class="form-check-input">
-        <label class="form-check-label">True</label>
+        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="true" class="form-check-input" id="true_${questionNumber}">
+        <label class="form-check-label" for="true_${questionNumber}">True</label>
       </div>
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="false" class="form-check-input">
-        <label class="form-check-label">False</label>
+        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="false" class="form-check-input" id="false_${questionNumber}">
+        <label class="form-check-label" for="false_${questionNumber}">False</label>
       </div>`;
   }
-
-  // // Helper method to generate HTML for Matching
-  // generateMatchingHTML(questionNumber) {
-  //   return [...Array(4)].map((_, i) => `
-  //     <div class="answer-fields d-flex align-items-center mb-2">
-  //       <div class="form-group d-flex justify-content-between align-items-center" style="max-width: 600px; width: 100%;">
-  //         <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" placeholder="Item to match" style="max-width: 45%;">
-  //         <span style="margin: 0 10px;">⇔</span>
-  //         <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][match]" class="form-control" placeholder="Matching pair" style="max-width: 45%;">
-  //       </div>
-  //     </div>
-  //   `).join('');
-  // }
-
-  // // Helper method to generate HTML for Ordering
-  // generateOrderingHTML(questionNumber) {
-  //   return [...Array(4)].map((_, i) => `
-  //     <div class="answer-fields mb-2">
-  //       <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][${i}][content]" class="form-control" style="max-width: 600px;" placeholder="Order item ${i + 1}">
-  //     </div>
-  //   `).join('');
-  // }
 
   // Ensure only one "Correct" checkbox is selected for Multiple-Choice questions
   enforceSingleChoice(questionNumber) {
