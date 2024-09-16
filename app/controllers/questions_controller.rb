@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
       redirect_to course_question_path(@course, next_question)
     else
       # If no more questions, redirect to the dashboard
-      redirect_to dashboards_index_path, notice: "You have completed the course!"
+      redirect_to dashboard_path, notice: "You have completed the course!"
     end
   end
 

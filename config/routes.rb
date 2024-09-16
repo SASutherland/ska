@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  get 'dashboards/index'
+  get 'dashboard', to: 'dashboards#index', as: 'dashboard'
+
   post 'register_for_course', to: 'dashboards#register_for_course', as: 'register_for_course'
 
   resources :courses, only: [:new, :create, :index] do

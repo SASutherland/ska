@@ -8,10 +8,10 @@ class DashboardsController < ApplicationController
   def register_for_course
     course = Course.find(params[:selected_course_id])
     if current_user.registrations.exists?(course: course)
-      redirect_to dashboards_index_path, alert: "You are already registered for #{course.title}."
+      redirect_to dashboard_path, alert: "You are already registered for #{course.title}."
     else
       current_user.registrations.create(course: course)
-      redirect_to dashboards_index_path, notice: "You have successfully registered for #{course.title}."
+      redirect_to dashboard_path, notice: "You have successfully registered for #{course.title}."
     end
   end
 end

@@ -12,7 +12,7 @@ class CoursesController < ApplicationController
       handle_true_false_questions(@course)
       handle_open_answer_questions(@course) # New method for handling open_answer questions
       flash[:notice] = "Course created successfully!"
-      redirect_to dashboards_index_path
+      redirect_to dashboard_path
     else
       flash[:alert] = "There was an issue creating the course."
       render :new
