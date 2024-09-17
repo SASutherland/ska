@@ -3,6 +3,10 @@
   background-color: #136F63;
   padding: 20px;
   width: 250px;
+  position: fixed;
+  height: calc(100vh - 66px);
+  top: 66px;
+  left: 0;
 }
 
 .sidebar .nav-link {

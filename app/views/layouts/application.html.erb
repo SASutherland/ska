@@ -13,7 +13,13 @@
   <body>
     <%= render "shared/navbar" %>
 
-    <%= yield %>
+    <!-- Container to hold content and footer -->
+    <div class="content-scroll-container">
+      <%= yield %>
+      <% if controller_name == 'pages' && action_name == 'home' || devise_controller? %>
+        <%= render "shared/footer" %>
+      <% end %>
+    </div>
 
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -28,10 +34,6 @@
 
     <%= turbo_frame_tag 'flash' do %>
       <%= render "shared/flashes" %>
-    <% end %>
-
-    <% if controller_name == 'pages' && action_name == 'home' || devise_controller? %>
-      <%= render "shared/footer" %>
     <% end %>
 
   </body>

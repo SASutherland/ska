@@ -21,6 +21,12 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
+  overflow: hidden;
+}
+
+.content-scroll-container {
+  height: calc(100vh - 66px);
+  overflow-y: auto;
 }
 
 h1 {
