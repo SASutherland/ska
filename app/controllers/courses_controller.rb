@@ -98,10 +98,10 @@ class CoursesController < ApplicationController
   def handle_true_false_questions(course)
     course.questions.each do |question|
       if question.question_type == 'true_false'
-        correct_answer = params[:course][:questions_attributes].values.find { |q| q['content'] == question.content }['correct']
-
-        question.answers.create!(content: 'True', correct: correct_answer == 'true') if question.answers.empty?
-        question.answers.create!(content: 'False', correct: correct_answer == 'false') if question.answers.empty?
+        unless question.answers.exists?(content: 'True') && question.answers.exists?(content: 'False')
+          question.answers.create!(content: 'True', correct: true) unless question.answers.exists?(content: 'True')
+          question.answers.create!(content: 'False', correct: false) unless question.answers.exists?(content: 'False')
+        end
       end
     end
   end

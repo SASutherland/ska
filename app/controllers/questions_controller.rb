@@ -45,18 +45,17 @@ class QuestionsController < ApplicationController
 
   # Handle submission for multiple-choice and true/false questions
   def handle_multiple_choice_or_true_false_submission(chosen_answer_id)
-    attempt = current_user.attempts.find_by(question_id: @question.id)
+    attempt = current_user.attempts.find_or_initialize_by(question_id: @question.id)
 
-    if attempt
-      # Update the existing attempt
-      attempt.update(chosen_answer_id: chosen_answer_id)
-    else
-      # Create a new attempt if one doesn't exist
-      current_user.attempts.create(
-        question_id: @question.id,
-        chosen_answer_id: chosen_answer_id
-      )
-    end
+    # Find the selected answer and the correct answer
+    chosen_answer = Answer.find(chosen_answer_id)
+    correct_answer = @question.answers.find_by(correct: true)
+
+    # Determine if the chosen answer is correct
+    is_correct = (chosen_answer == correct_answer)
+
+    # Update or create the attempt
+    attempt.update(chosen_answer_id: chosen_answer_id, correct: is_correct)
   end
 
   # Handle submission for open_answer questions

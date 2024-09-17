@@ -100,13 +100,16 @@ export default class extends Controller {
   generateTrueFalseHTML(questionNumber) {
     return `
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="true" class="form-check-input" id="true_${questionNumber}">
+        <input type="radio" name="course[questions_attributes][${questionNumber}][answers_attributes][0][correct]" value="true" class="form-check-input" id="true_${questionNumber}">
         <label class="form-check-label" for="true_${questionNumber}">True</label>
+        <input type="hidden" name="course[questions_attributes][${questionNumber}][answers_attributes][0][content]" value="True">
       </div>
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][correct]" value="false" class="form-check-input" id="false_${questionNumber}">
+        <input type="radio" name="course[questions_attributes][${questionNumber}][answers_attributes][1][correct]" value="true" class="form-check-input" id="false_${questionNumber}">
         <label class="form-check-label" for="false_${questionNumber}">False</label>
-      </div>`;
+        <input type="hidden" name="course[questions_attributes][${questionNumber}][answers_attributes][1][content]" value="False">
+      </div>
+    `;
   }
 
   // Ensure only one "Correct" checkbox is selected for Multiple-Choice questions
