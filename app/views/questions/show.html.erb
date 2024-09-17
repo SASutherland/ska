@@ -76,7 +76,7 @@
 
                 <!-- For multiple_answer type -->
                 <% elsif question.question_type == 'multiple_answer' %>
-                  <% if attempt.chosen_answers.any? && attempt.chosen_answers.all?(&:correct?) %>
+                  <% if attempt.chosen_answers.map(&:id).sort == question.answers.where(correct: true).pluck(:id).sort %>
                     <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
                       <%= index + 1 %>
                     </a>

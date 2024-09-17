@@ -92,20 +92,18 @@ class QuestionsController < ApplicationController
   def handle_multiple_answer_submission(question)
     chosen_answer_ids = params[:answer_ids] || []
 
-    if chosen_answer_ids.any?
-      # Check which answers are correct and update or create the attempt
-      correct_answer_ids = question.answers.where(correct: true).pluck(:id)
-      is_correct = (chosen_answer_ids.map(&:to_i) - correct_answer_ids).empty?
+    # Get the IDs of the correct answers
+    correct_answer_ids = question.answers.where(correct: true).pluck(:id)
 
-      attempt = current_user.attempts.find_or_initialize_by(question: question)
+    # Check if all correct answers are chosen and no incorrect answers are chosen
+    is_correct = (chosen_answer_ids.map(&:to_i).sort == correct_answer_ids.sort)
 
-      # Update the attempt with the chosen answers
-      attempt.chosen_answers = Answer.where(id: chosen_answer_ids)  # Save multiple chosen answers
-      attempt.update(correct: is_correct)  # Update the correctness of the attempt
-    else
-      flash[:alert] = "Please select at least one answer before submitting."
-      redirect_to course_question_path(@course, @question)
-      return
-    end
+    # Find or initialize the attempt
+    attempt = current_user.attempts.find_or_initialize_by(question: question)
+
+    # Update the attempt with the chosen answers and whether they are correct
+    attempt.chosen_answers = Answer.where(id: chosen_answer_ids)
+    attempt.update(correct: is_correct)
   end
+
 end
