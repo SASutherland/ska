@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   post 'register_for_course', to: 'dashboards#register_for_course', as: 'register_for_course'
 
-  resources :courses, only: [:new, :create, :index] do
+  resources :courses, only: [:new, :create, :index, :edit, :update] do
     member do
       delete 'unenroll', to: 'courses#unenroll'
     end
