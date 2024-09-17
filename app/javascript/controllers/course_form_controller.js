@@ -20,7 +20,7 @@ export default class extends Controller {
         <h4 class="new-question">
           Question ${questionNumber}
           <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
-            <i class="fa-solid fa-circle-xmark"></i>
+            <i class="fa-solid fa-trash-can"></i>
           </button>
         </h4>
         <div class="form-group">
@@ -63,7 +63,7 @@ export default class extends Controller {
       const questionNumberSpan = field.querySelector(".new-question");
       questionNumberSpan.innerHTML = `Question ${index + 1}
         <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
-          <i class="fa-solid fa-circle-xmark"></i>
+          <i class="fa-solid fa-trash-can"></i>
         </button>`;
     });
     this.questionCount = questionFields.length;

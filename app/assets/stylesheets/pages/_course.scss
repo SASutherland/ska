@@ -8,14 +8,15 @@
   margin: 30px 0 18px 0;
 }
 
-.fa-circle-xmark {
+.fa-trash-can {
   background: none;
   border: none;
   color: #EC0B43;
-  font-size: 18px;
+  font-size: 16px;
   transition: ease 0.3s;
+  vertical-align: text-top;
 }
 
-.fa-circle-xmark:hover {
+.fa-trash-can:hover {
   color: #C30938;
 }
