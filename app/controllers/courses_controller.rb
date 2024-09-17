@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_teacher, only: [:new, :create, :edit, :update]
-  before_action :set_course, only: [:edit, :update]
+  before_action :authorize_teacher, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_course, only: [:edit, :update, :destroy]
 
   def new
     @course = Course.new
@@ -33,6 +33,16 @@ class CoursesController < ApplicationController
     else
       flash[:alert] = "There was an issue updating the course."
       render :edit
+    end
+  end
+
+  def destroy
+    if @course.destroy
+      flash[:notice] = "Course deleted successfully."
+      redirect_to dashboard_path
+    else
+      flash[:alert] = "There was an issue deleting the course."
+      redirect_to dashboard_path
     end
   end
 
