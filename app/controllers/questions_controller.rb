@@ -2,7 +2,15 @@ class QuestionsController < ApplicationController
   def show
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
-    @answers = @question.answers.shuffle
+
+    # Only shuffle answers for multiple_choice questions
+    if @question.question_type == 'multiple_choice'
+      @answers = @question.answers.shuffle
+    else
+      # For true_false and multiple_answer questions, don't shuffle answers
+      @answers = @question.answers.order(:id)
+    end
+
     @attempts = current_user.attempts.joins(:question).where(questions: { course_id: @course.id })
     @question_number = @course.questions.order(:id).pluck(:id).index(@question.id) + 1
     @previous_question = @course.questions.where("id < ?", @question.id).order(id: :desc).first
