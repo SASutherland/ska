@@ -37,6 +37,14 @@ class CoursesController < ApplicationController
   end
 
   def destroy
+    @course.questions.each do |question|
+      # Destroy attempts associated with the question's answers first
+      question.answers.each do |answer|
+        answer.attempts.destroy_all
+      end
+      question.attempts.destroy_all
+    end
+
     if @course.destroy
       flash[:notice] = "Course deleted successfully."
       redirect_to dashboard_path
