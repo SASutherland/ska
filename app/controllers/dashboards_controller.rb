@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
   def index
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course)
-    @courses = Course.where.not(id: @registered_courses.pluck(:id))
+    @courses = Course.where.not(id: @registered_courses.pluck(:id)).order(:title)
     @attempts = current_user.attempts.includes(:question)
   end
 

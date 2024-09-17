@@ -1,4 +1,4 @@
-<div class="dashboard-container d-flex">
+<div class="dashboard-container d-flex" data-controller="add-course">
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
 
@@ -14,13 +14,13 @@
 
     <div class="d-flex align-items-center mb-4">
       <div class="dropdown me-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCourseButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCourseButton" data-bs-toggle="dropdown" aria-expanded="false" data-add-course-target="dropdownButton">
           Select Course
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownCourseButton">
           <% @courses.each do |course| %>
             <li>
-              <a class="dropdown-item" href="#" data-course-id="<%= course.id %>" data-course-title="<%= course.title %>">
+              <a class="dropdown-item" href="#" data-course-id="<%= course.id %>" data-course-title="<%= course.title %>" data-action="click->add-course#selectCourse" data-add-course-target="dropdownItem">
                 <%= course.title %>
               </a>
             </li>
@@ -29,8 +29,8 @@
       </div>
 
       <%= form_with url: register_for_course_path, method: :post, data: { turbo: false }, id: 'registerForm' do |f| %>
-        <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id' %>
-        <%= f.submit 'Add', id: 'registerButton', disabled: true %>
+        <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id', data: { add_course_target: 'selectedCourseInput' } %>
+        <%= f.submit 'Add', id: 'registerButton', disabled: true, data: { add_course_target: 'registerButton' } %>
       <% end %>
     </div>
 
@@ -100,38 +100,3 @@
     <% end %>
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
-    const dropdownButton = document.getElementById('dropdownCourseButton');
-    const registerButton = document.getElementById('registerButton');
-    const selectedCourseInput = document.getElementById('selected_course_id');
-    const form = document.getElementById('registerForm');
-
-    // Handle dropdown item selection
-    dropdownItems.forEach(function(item) {
-      item.addEventListener('click', function(event) {
-        event.preventDefault();
-        const courseId = this.getAttribute('data-course-id');
-        const courseTitle = this.getAttribute('data-course-title');
-
-        // Update the hidden input field with the selected course ID
-        selectedCourseInput.value = courseId;
-
-        // Update the dropdown button text with the selected course title
-        dropdownButton.textContent = courseTitle;
-
-        // Enable the register button
-        registerButton.disabled = false;
-      });
-    });
-
-    // Handle form submission and refresh the page
-    form.addEventListener('submit', function() {
-      form.addEventListener('ajax:complete', function() {
-        window.location.reload();
-      });
-    });
-  });
-</script>
