@@ -22,17 +22,16 @@
             </h4>
 
             <div class="form-group">
-              <%= question_form.input :content, label: "Question", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
+              <%= question_form.input :content, label: false, input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
             </div>
 
             <%= question_form.input :question_type, as: :hidden %>
 
             <div class="answers mt-2">
-              <h4>Answers</h4>
               <%= question_form.simple_fields_for :answers do |answer_form| %>
                 <div class="answer-fields d-flex align-items-center mb-2">
                   <div class="form-group d-flex align-items-center" style="width: 100%;">
-                    <%= answer_form.input :content, input_html: { class: 'form-control', style: 'max-width: 495px; margin-right: 10px;' } %>
+                    <%= answer_form.input :content, label: false, input_html: { class: 'form-control', style: 'max-width: 495px; margin-right: 10px;' } %>
                     <div class="form-check">
                       <%= answer_form.check_box :correct, input_html: { class: 'form-check-input' } %>
                       <%= answer_form.label :correct, "Correct", class: "form-check-label" %>
@@ -46,7 +45,7 @@
       </div>
 
       <!-- Question Type Dropdown and Add Question Button -->
-      <div class="d-flex align-items-center my-4">
+      <div class="d-flex align-items-center mt-5 my-4">
         <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
           <option value="multiple_choice">Multiple Choice</option>
           <option value="open_answer">Open Answer</option>
@@ -60,7 +59,6 @@
       <!-- Update and Delete Buttons -->
       <div class="d-flex gap-3 mb-5">
         <%= f.submit "Update Course", class: "btn btn-primary" %>
-        <%= button_to 'Delete Course', course_path(@course), method: :delete, data: { confirm: "Are you sure?", turbo: false }, class: 'btn btn-danger' %>
       </div>
 
     <% end %>
