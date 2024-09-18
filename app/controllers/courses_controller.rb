@@ -8,7 +8,11 @@ class CoursesController < ApplicationController
     if @course.save
       handle_true_false_questions(@course)
       handle_open_answer_questions(@course)
-      flash[:notice] = "Course created successfully!"
+
+      # Automatically register the current user for the course
+      current_user.registrations.create(course: @course)
+
+      flash[:notice] = "Course created and you have been automatically enrolled!"
       redirect_to dashboard_path
     else
       flash[:alert] = "There was an issue creating the course."
@@ -119,13 +123,27 @@ class CoursesController < ApplicationController
   def handle_open_answer_submission(question)
     user_answer_content = params[:answer_content]
 
+    # Find or initialize an attempt for this question
     attempt = current_user.attempts.find_or_initialize_by(question: question)
 
-    user_answer = question.answers.find_or_initialize_by(content: user_answer_content, correct: false)
+    # Find or create the user's answer based on input
+    user_answer = question.answers.find_or_initialize_by(content: user_answer_content)
     user_answer.save if user_answer.new_record?
 
+    # Find the correct answer
     correct_answer = question.answers.find_by(correct: true)
-    attempt.update(chosen_answer: user_answer, correct: user_answer.content.downcase == correct_answer.content.downcase)
+
+    # Check if the correct answer exists
+    if correct_answer.present?
+      # Check if the user's answer matches the correct answer
+      is_correct = user_answer_content.strip.downcase == correct_answer.content.strip.downcase
+
+      # Update the attempt with the user's written answer and correctness
+      attempt.update(written_answer: user_answer_content, correct: is_correct)
+    else
+      flash[:alert] = "Correct answer not found for this question."
+      redirect_to course_question_path(question.course, question)
+    end
   end
 
   def handle_true_false_questions(course)

@@ -92,6 +92,7 @@ export default class extends Controller {
         <div class="form-group">
           <label for="course_questions_attributes_${questionNumber}_answers_attributes_0_content">Answer</label>
           <input type="text" name="course[questions_attributes][${questionNumber}][answers_attributes][0][content]" id="course_questions_attributes_${questionNumber}_answers_attributes_0_content" class="form-control" style="max-width: 600px;">
+          <input type="hidden" name="course[questions_attributes][${questionNumber}][answers_attributes][0][correct]" value="true">
         </div>
       </div>`;
   }
