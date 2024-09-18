@@ -54,7 +54,7 @@
     <h3 class="mt-5 text-center">Account annuleren</h3>
 
     <div class="text-center mt-3">
-      Ontevreden? <%= button_to "Account annuleren", registration_path(resource_name), data: { confirm: "Weet je het zeker?", turbo_confirm: "Weet je het zeker?" }, method: :delete, class: "btn btn-danger mx-3" %>
+      Ontevreden? <%= button_to "Account annuleren", registration_path(resource_name), data: { confirm: "Weet je het zeker?", turbo: false }, method: :delete, class: "btn btn-danger mx-3" %>
     </div>
 
   <% end %>
