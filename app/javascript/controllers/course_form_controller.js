@@ -44,9 +44,12 @@ export default class extends Controller {
     // Insert the generated HTML for the question into the container
     this.questionsContainerTarget.insertAdjacentHTML('beforeend', questionHTML);
 
-    // If it's a multiple-choice question, enforce only one checkbox can be selected
+    // If it's a multiple-choice or true-false question, enforce only one checkbox can be selected
     if (selectedQuestionType === 'multiple_choice') {
       this.enforceSingleChoice(questionNumber);
+    }
+    if (selectedQuestionType === 'true_false') {
+      this.enforceSingleTrueFalseSelection();
     }
   }
 
@@ -101,12 +104,12 @@ export default class extends Controller {
   generateTrueFalseHTML(questionNumber) {
     return `
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][answers_attributes][0][correct]" value="true" class="form-check-input" id="true_${questionNumber}">
+        <input type="checkbox" name="course[questions_attributes][${questionNumber}][answers_attributes][0][correct]" class="form-check-input" id="true_${questionNumber}">
         <label class="form-check-label" for="true_${questionNumber}">True</label>
         <input type="hidden" name="course[questions_attributes][${questionNumber}][answers_attributes][0][content]" value="True">
       </div>
       <div class="form-check">
-        <input type="radio" name="course[questions_attributes][${questionNumber}][answers_attributes][1][correct]" value="true" class="form-check-input" id="false_${questionNumber}">
+        <input type="checkbox" name="course[questions_attributes][${questionNumber}][answers_attributes][1][correct]" class="form-check-input" id="false_${questionNumber}">
         <label class="form-check-label" for="false_${questionNumber}">False</label>
         <input type="hidden" name="course[questions_attributes][${questionNumber}][answers_attributes][1][content]" value="False">
       </div>
@@ -126,6 +129,22 @@ export default class extends Controller {
               otherCheckbox.checked = false;
             }
           });
+        }
+      });
+    });
+  }
+
+  // Add this to ensure only one checkbox can be selected
+  enforceSingleTrueFalseSelection() {
+    const checkboxes = document.querySelectorAll('.true-false-checkbox');
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        const questionNumber = this.getAttribute('data-question-number');
+        const otherCheckbox = document.querySelector(`#course_questions_attributes_${questionNumber}_answers_attributes_${this.id === 'true_' + questionNumber ? '1' : '0'}_correct`);
+
+        if (this.checked) {
+          otherCheckbox.checked = false;
         }
       });
     });
