@@ -28,16 +28,29 @@
             <%= question_form.input :question_type, as: :hidden %>
 
             <div class="answers mt-2">
-              <%= question_form.simple_fields_for :answers do |answer_form| %>
-                <div class="answer-fields d-flex align-items-center mb-2">
-                  <div class="form-group d-flex align-items-center" style="width: 100%;">
-                    <%= answer_form.input :content, label: false, input_html: { class: 'form-control', style: 'max-width: 495px; margin-right: 10px;' } %>
-                    <div class="form-check">
-                      <%= answer_form.check_box :correct, input_html: { class: 'form-check-input' } %>
-                      <%= answer_form.label :correct, "Correct", class: "form-check-label" %>
+              <% if question_form.object.question_type == 'open_answer' %>
+                <!-- Show only one input field for open_answer questions -->
+                <%= question_form.simple_fields_for :answers do |answer_form| %>
+                  <% if answer_form.object.correct? %>
+                    <div class="form-group">
+                      <%= answer_form.input :content, label: false, input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
+                      <!-- We ensure there's no checkbox for correct in open_answer -->
+                    </div>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <!-- Display fields for other question types like multiple_choice, true_false, multiple_answer -->
+                <%= question_form.simple_fields_for :answers do |answer_form| %>
+                  <div class="answer-fields d-flex align-items-center mb-2">
+                    <div class="form-group d-flex align-items-center" style="width: 100%;">
+                      <%= answer_form.input :content, label: false, input_html: { class: 'form-control', style: 'max-width: 495px; margin-right: 10px;' } %>
+                      <div class="form-check">
+                        <%= answer_form.check_box :correct, input_html: { class: 'form-check-input' } %>
+                        <%= answer_form.label :correct, "Correct", class: "form-check-label" %>
+                      </div>
                     </div>
                   </div>
-                </div>
+                <% end %>
               <% end %>
             </div>
           </div>
@@ -53,10 +66,12 @@
           <option value="multiple_answer">Multiple Answer</option>
         </select>
 
-        <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion"><i class="fa-solid fa-plus"></i> Add Question</button>
+        <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion">
+          <i class="fa-solid fa-plus"></i> Add Question
+        </button>
       </div>
 
-      <!-- Update and Delete Buttons -->
+      <!-- Update button -->
       <div class="d-flex gap-3 mb-5">
         <%= f.submit "Update Course", class: "btn btn-primary" %>
       </div>

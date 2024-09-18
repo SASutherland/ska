@@ -78,7 +78,7 @@ class CoursesController < ApplicationController
       handle_open_answer_questions(@course)
       handle_true_false_questions(@course)
       flash[:notice] = "Course updated successfully!"
-      redirect_to dashboard_path
+      redirect_to my_courses_courses_path
     else
       flash[:alert] = "There was an issue updating the course."
       render :edit
@@ -125,12 +125,28 @@ class CoursesController < ApplicationController
   def handle_open_answer_questions(course)
     course.questions.each do |question|
       if question.question_type == 'open_answer'
-        correct_answer_content = params[:course][:questions_attributes].values.find { |q| q['content'] == question.content }['answers_attributes']['0']['content']
+        # Find the question attributes in the params and ensure it's present
+        question_params = params[:course][:questions_attributes].values.find { |q| q['content'] == question.content }
 
-        question.answers.create!(content: correct_answer_content, correct: true) if question.answers.empty?
+        if question_params && question_params['answers_attributes']
+          # Find the correct answer in the answers_attributes (could be any index)
+          correct_answer_params = question_params['answers_attributes'].values.find { |answer| answer['content'].present? }
+
+          if correct_answer_params
+            correct_answer_content = correct_answer_params['content']
+
+            # Create or update the answer if necessary
+            question.answers.create!(content: correct_answer_content, correct: true) if question.answers.empty?
+          else
+            flash[:alert] = "No correct answer provided for the open-answer question '#{question.content}'."
+          end
+        else
+          flash[:alert] = "No answer parameters provided for the question '#{question.content}'."
+        end
       end
     end
   end
+
 
   def handle_open_answer_submission(question)
     user_answer_content = params[:answer_content]
