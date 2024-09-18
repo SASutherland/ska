@@ -1,11 +1,7 @@
 class CoursesController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_teacher, only: [:new, :create, :edit, :update, :destroy]
+  before_action :authorize_teacher, only: [:new, :create, :edit, :update, :destroy, :my_courses]
   before_action :set_course, only: [:edit, :update, :destroy]
-
-  def new
-    @course = Course.new
-  end
 
   def create
     @course = current_user.courses.build(course_params)
@@ -20,22 +16,6 @@ class CoursesController < ApplicationController
     end
   end
 
-  def edit
-    # @course is already set by set_course
-  end
-
-  def update
-    if @course.update(course_params)
-      handle_true_false_questions(@course)
-      handle_open_answer_questions(@course)
-      flash[:notice] = "Course updated successfully!"
-      redirect_to dashboard_path
-    else
-      flash[:alert] = "There was an issue updating the course."
-      render :edit
-    end
-  end
-
   def destroy
     @course.questions.each do |question|
       # Destroy attempts associated with the question's answers first
@@ -47,11 +27,31 @@ class CoursesController < ApplicationController
 
     if @course.destroy
       flash[:notice] = "Course deleted successfully."
-      redirect_to dashboard_path
+      redirect_to request.referer || my_courses_courses_path
     else
       flash[:alert] = "There was an issue deleting the course."
-      redirect_to dashboard_path
+      redirect_to request.referer || my_courses_courses_path
     end
+  end
+
+  def edit
+    # @course is already set by set_course
+  end
+
+  def index
+    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course)
+    @attempts = current_user.attempts.includes(:question)
+
+    # Fetch the courses created by the current user
+    @created_courses = current_user.courses.order(:title) if current_user.teacher?
+  end
+
+  def my_courses
+    @created_courses = current_user.courses.order(:title)
+  end
+
+  def new
+    @course = Course.new
   end
 
   def submit_answer
@@ -68,9 +68,16 @@ class CoursesController < ApplicationController
     redirect_to course_question_path(question.course, question.next_question)
   end
 
-  def index
-    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course)
-    @attempts = current_user.attempts.includes(:question)
+  def update
+    if @course.update(course_params)
+      handle_true_false_questions(@course)
+      handle_open_answer_questions(@course)
+      flash[:notice] = "Course updated successfully!"
+      redirect_to dashboard_path
+    else
+      flash[:alert] = "There was an issue updating the course."
+      render :edit
+    end
   end
 
   def unenroll
@@ -89,29 +96,14 @@ class CoursesController < ApplicationController
 
   private
 
-  def set_course
-    @course = Course.find(params[:id])
+  def authorize_teacher
+    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.teacher?
   end
 
   def course_params
     params.require(:course).permit(:title, :description, questions_attributes: [
       :id, :content, :question_type, :_destroy, answers_attributes: [:id, :content, :correct, :_destroy]
     ])
-  end
-
-  def authorize_teacher
-    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.teacher?
-  end
-
-  def handle_true_false_questions(course)
-    course.questions.each do |question|
-      if question.question_type == 'true_false'
-        unless question.answers.exists?(content: 'True') && question.answers.exists?(content: 'False')
-          question.answers.create!(content: 'True', correct: true) unless question.answers.exists?(content: 'True')
-          question.answers.create!(content: 'False', correct: false) unless question.answers.exists?(content: 'False')
-        end
-      end
-    end
   end
 
   def handle_open_answer_questions(course)
@@ -135,4 +127,20 @@ class CoursesController < ApplicationController
     correct_answer = question.answers.find_by(correct: true)
     attempt.update(chosen_answer: user_answer, correct: user_answer.content.downcase == correct_answer.content.downcase)
   end
+
+  def handle_true_false_questions(course)
+    course.questions.each do |question|
+      if question.question_type == 'true_false'
+        unless question.answers.exists?(content: 'True') && question.answers.exists?(content: 'False')
+          question.answers.create!(content: 'True', correct: true) unless question.answers.exists?(content: 'True')
+          question.answers.create!(content: 'False', correct: false) unless question.answers.exists?(content: 'False')
+        end
+      end
+    end
+  end
+
+  def set_course
+    @course = Course.find(params[:id])
+  end
+
 end

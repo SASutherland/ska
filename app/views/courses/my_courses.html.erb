@@ -4,21 +4,21 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1>My Enrolled Courses</h1>
+    <h1>My Created Courses</h1>
 
-    <% if @registered_courses.any? %>
-      <% @registered_courses.each do |course| %>
+    <% if @created_courses.any? %>
+      <% @created_courses.each do |course| %>
         <div class="course-item mb-4">
           <h2><%= course.title %></h2>
           <p><%= course.description %></p>
 
-          <!-- Flex container to align questions, Edit, and Unenroll buttons -->
+          <!-- Flex container to align questions and Delete button -->
           <div class="course-content d-flex align-items-start justify-content-between">
 
             <!-- Questions Progress -->
             <div class="questions-progress">
               <% course.questions.each_with_index do |question, index| %>
-                <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+                <% attempt = current_user.attempts.find { |a| a.question_id == question.id } %>
                 <% if attempt %>
                   <% if question.question_type == 'open_answer' %>
                     <% if attempt.correct? %>
@@ -63,17 +63,16 @@
               <% end %>
             </div>
 
-            <!-- Unenroll and Edit buttons -->
+            <!-- Delete button for created courses -->
             <div class="action-buttons">
-              <!-- Unenroll button -->
-              <%= button_to 'Unenroll', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+              <%= button_to 'Delete Course', course_path(course), method: :delete, data: { confirm: "Are you sure?", turbo: false }, class: 'btn btn-danger' %>
             </div>
-          </div> <!-- End of course-content flexbox -->
+          </div>
         </div>
         <hr>
       <% end %>
     <% else %>
-      <p>You are not enrolled in any courses.</p>
+      <p>You have not created any courses yet.</p>
     <% end %>
   </div>
 </div>

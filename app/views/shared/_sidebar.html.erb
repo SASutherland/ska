@@ -8,6 +8,11 @@
     </li>
     <% if current_user.teacher? %>
       <li class="nav-item">
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Created Courses</a> <!-- Corrected helper -->
+      </li>
+    <% end %>
+    <% if current_user.teacher? %>
+      <li class="nav-item">
         <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'new' %>" href="<%= new_course_path %>">Create New Course</a>
       </li>
     <% end %>
