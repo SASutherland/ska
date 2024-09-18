@@ -1,4 +1,4 @@
-<div class="dashboard-container d-flex">
+<div class="dashboard-container d-flex" data-controller="answer">
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
 
@@ -10,7 +10,7 @@
     <div class="question-box">
       <h2><%= @question.content %></h2>
 
-      <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true do |f| %>
+      <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true, data: { answer_target: "form" } do |f| %>
 
         <div class="answers">
           <% if @question.question_type == 'open_answer' %>
@@ -18,26 +18,36 @@
             <div class="form-group">
               <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
             </div>
+
+            <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+
           <% elsif @question.question_type == 'multiple_answer' %>
             <!-- Checkboxes for multiple_answer type questions -->
             <% @answers.each_with_index do |answer, index| %>
-              <div class="answer">
-                <%= f.check_box :answer_ids, { multiple: true }, answer.id, id: "answer_#{answer.id}" %>
-                <%= f.label "answer_#{answer.id}", answer.content %>
+              <div class="answer-button-container">
+                <label class="answer-button">
+                  <%= f.check_box :answer_ids, { multiple: true }, answer.id, id: "answer_#{answer.id}", class: "d-none" %>
+                  <span class="answer-button-label"><%= answer.content %></span>
+                </label>
               </div>
             <% end %>
+
+            <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+
           <% else %>
-            <!-- Radio buttons for other types of questions -->
+            <!-- Answer buttons for multiple_choice and true_false questions -->
             <% @answers.each_with_index do |answer, index| %>
-              <div class="answer">
-                <%= f.radio_button :answer, answer.id, id: "answer_#{answer.id}" %>
-                <%= f.label "answer_#{answer.id}", answer.content %>
+              <div class="answer-button-container" data-answer-target="answerButton">
+                <button type="button" class="answer-button" data-answer-id="<%= answer.id %>">
+                  <%= answer.content %>
+                </button>
               </div>
             <% end %>
+
+            <!-- Hidden field to store the selected answer -->
+            <%= f.hidden_field :answer, id: "selected_answer", data: { answer_target: "hiddenAnswerField" } %>
           <% end %>
         </div>
-
-        <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
       <% end %>
     </div>
 

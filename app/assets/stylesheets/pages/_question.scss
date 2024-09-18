@@ -82,3 +82,24 @@
 .question-fields .form-group .form-control {
   margin: 12px 0;
 }
+
+.answer-button {
+  display: block;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 8.5px 10px;
+  text-align: left;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%;
+}
+
+.answer-button:hover {
+  background-color: #e0e0e0;
+}
+
+.answer-button.active {
+  background-color: #d0f0d0;
+}

@@ -74,8 +74,9 @@ class CoursesController < ApplicationController
 
   def update
     if @course.update(course_params)
-      handle_true_false_questions(@course)
+      handle_multiple_answer_questions(@course)
       handle_open_answer_questions(@course)
+      handle_true_false_questions(@course)
       flash[:notice] = "Course updated successfully!"
       redirect_to dashboard_path
     else
@@ -108,6 +109,17 @@ class CoursesController < ApplicationController
     params.require(:course).permit(:title, :description, questions_attributes: [
       :id, :content, :question_type, :_destroy, answers_attributes: [:id, :content, :correct, :_destroy]
     ])
+  end
+
+  def handle_multiple_answer_questions(course)
+    course.questions.each do |question|
+      if question.question_type == 'multiple_answer'
+        # For each answer, if `correct` is not set, set it to `false`
+        question.answers.each do |answer|
+          answer.update(correct: false) if answer.correct.nil?
+        end
+      end
+    end
   end
 
   def handle_open_answer_questions(course)
