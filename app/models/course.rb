@@ -4,4 +4,27 @@ class Course < ApplicationRecord
   has_many :registrations, dependent: :destroy
 
   accepts_nested_attributes_for :questions, allow_destroy: true
+
+  validates :title, presence: true
+  validate :validate_questions
+
+  private
+
+  def validate_questions
+    if questions.empty?
+      errors.add(:base, "The course must have at least one question.")
+    end
+
+    questions.each do |question|
+      if question.content.blank?
+        errors.add(:base, "All question fields must be filled in.")
+      end
+
+      question.answers.each do |answer|
+        if answer.content.blank?
+          errors.add(:base, "All answer fields must be filled in for each question.")
+        end
+      end
+    end
+  end
 end

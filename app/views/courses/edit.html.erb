@@ -6,7 +6,7 @@
   <div class="main-content flex-grow-1">
     <h1>Edit Course</h1>
 
-    <%= form_for @course, method: :patch do |f| %>
+    <%= form_for @course, method: :patch, data: { turbo: "false" } do |f| %>
       <div class="form-group">
         <%= f.label :title, "Course Title" %>
         <%= f.text_field :title, class: 'form-control mt-2 mb-3', style: 'max-width: 600px;' %>
@@ -20,7 +20,7 @@
       <div id="questions-container" data-course-form-target="questionsContainer">
         <!-- Existing questions will be displayed here -->
         <%= f.fields_for :questions do |question_form| %>
-          <div class="question-fields mb-4">
+          <div class="question-fields mb-4" data-question-id="<%= question_form.object.id %>">
             <h4 class="new-question">
               Question <%= question_form.index + 1 %>
               <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
@@ -33,6 +33,9 @@
             </div>
 
             <%= question_form.hidden_field :question_type %>
+
+            <!-- Add a hidden field for marking for deletion if this is an existing question -->
+            <%= question_form.hidden_field :_destroy, value: false, data: { target: "destroyField" } %>
 
             <div class="answers mt-2">
               <% if question_form.object.question_type == 'open_answer' %>

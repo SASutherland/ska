@@ -55,7 +55,19 @@ export default class extends Controller {
 
   // Method to remove a question
   removeQuestion(event) {
-    event.target.closest(".question-fields").remove();
+    const questionElement = event.target.closest(".question-fields");
+    const questionId = questionElement.dataset.questionId;
+
+    if (questionId) {
+      // If the question has an ID, it exists in the database. Mark it for deletion.
+      const destroyField = questionElement.querySelector('[data-target="destroyField"]');
+      destroyField.value = '1';  // Mark the question for deletion
+      questionElement.style.display = 'none';  // Optionally hide the question fields
+    } else {
+      // If there's no question ID, this is a new question. Simply remove the fields.
+      questionElement.remove();
+    }
+
     this.renumberQuestions();
   }
 
