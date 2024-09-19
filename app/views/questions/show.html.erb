@@ -1,4 +1,4 @@
-<div class="dashboard-container d-flex" data-controller="answer">
+<div class="dashboard-container d-flex" data-controller="answer" data-answer-course-id="<%= @course.id %>">
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
 
@@ -6,6 +6,14 @@
   <div class="main-content flex-grow-1">
     <h1><%= @course.title %></h1>
     <h1 class="question-title">QUESTION #<%= @question_number %></h1>
+
+    <%= link_to dashboard_path, class: "back-btn" do %>
+      <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to Dashboard</span></p>
+    <% end %>
+
+    <div class="time-spent">
+      <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
+    </div>
 
     <div class="question-box">
       <h2><%= @question.content %></h2>

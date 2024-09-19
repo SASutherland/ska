@@ -43,11 +43,8 @@ class CoursesController < ApplicationController
   end
 
   def index
-    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course)
+    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).sort_by(&:title)
     @attempts = current_user.attempts.includes(:question)
-
-    # Fetch the courses created by the current user
-    @created_courses = current_user.courses.order(:title) if current_user.teacher?
   end
 
   def my_courses

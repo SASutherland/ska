@@ -36,65 +36,66 @@
 
     <hr class="my-5">
 
-    <h1>Courses</h1>
+    <h1>Recent Courses</h1>
 
-    <% @registered_courses.each do |course| %>
+    <% @registered_courses_with_attempts.each do |course_with_attempt| %>
+      <% course = course_with_attempt[:course] %>
       <div class="course-progress mb-4">
         <h4><%= course.title %></h4>
-        <div class="questions-progress">
-          <% course.questions.each_with_index do |question, index| %>
-            <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+          <div class="questions-progress">
+            <% course.questions.each_with_index do |question, index| %>
+              <% attempt = @attempts.find { |a| a.question_id == question.id } %>
 
-            <% if attempt %>
-              <% if question.question_type == 'multiple_answer' %>
-                <!-- Handle multiple answers -->
-                <% if attempt.chosen_answers.map(&:id).sort == question.answers.where(correct: true).pluck(:id).sort %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
-                    <%= index + 1 %>
-                  </a>
-                <% else %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
-                    <%= index + 1 %>
-                  </a>
-                <% end %>
+              <% if attempt %>
+                <% if question.question_type == 'multiple_answer' %>
+                  <!-- Handle multiple answers -->
+                  <% if attempt.chosen_answers.map(&:id).sort == question.answers.where(correct: true).pluck(:id).sort %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
 
-              <% elsif question.question_type == 'open_answer' %>
-                <!-- Handle open answer questions -->
-                <% if attempt.correct? %> <!-- Check the 'correct' attribute of the attempt -->
-                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
-                    <%= index + 1 %>
-                  </a>
+                <% elsif question.question_type == 'open_answer' %>
+                  <!-- Handle open answer questions -->
+                  <% if attempt.correct? %> <!-- Check the 'correct' attribute of the attempt -->
+                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
+
                 <% else %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
-                    <%= index + 1 %>
-                  </a>
+                  <!-- Handle multiple_choice and true_false -->
+                  <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
                 <% end %>
 
               <% else %>
-                <!-- Handle multiple_choice and true_false -->
-                <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
-                    <%= index + 1 %>
-                  </a>
-                <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number correct-answer">
-                    <%= index + 1 %>
-                  </a>
-                <% else %>
-                  <a href="<%= course_question_path(course, question) %>" class="question-number incorrect-answer">
-                    <%= index + 1 %>
-                  </a>
-                <% end %>
+                <!-- No attempt made yet -->
+                <a href="<%= course_question_path(course, question) %>" class="question-number">
+                  <%= index + 1 %>
+                </a>
               <% end %>
-
-            <% else %>
-              <!-- No attempt made yet -->
-              <a href="<%= course_question_path(course, question) %>" class="question-number">
-                <%= index + 1 %>
-              </a>
             <% end %>
-          <% end %>
-        </div>
+          </div>
 
       </div>
     <% end %>

@@ -15,6 +15,22 @@
   font-size: 40px !important;
 }
 
+.back-btn {
+  color: #136F63;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.back-btn:hover {
+  color: #09342F;
+}
+
+.time-spent {
+  color: #136F63;
+  margin-top: -8px;
+}
+
 .question-box {
   background-color: white;
   border-radius: 18px;
