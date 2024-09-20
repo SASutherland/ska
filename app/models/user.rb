@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  after_create :send_welcome_email
+  after_commit :send_welcome_email, on: :create
   after_initialize :set_default_role, if: :new_record?
 
   enum role: { student: 0, teacher: 1 }
