@@ -40,6 +40,7 @@ class CoursesController < ApplicationController
 
   def edit
     # @course is already set by set_course
+    @groups = current_user.owned_groups
   end
 
   def index
@@ -53,12 +54,13 @@ class CoursesController < ApplicationController
 
   def new
     @course = Course.new
+    @groups = current_user.owned_groups
   end
 
   def submit_answer
     question = Question.find(params[:id])
 
-    if question.question_type == 'open_answer'
+    if question.question_type == "open_answer"
       handle_open_answer_submission(question)
     else
       chosen_answer = question.answers.find(params[:answer])
@@ -71,6 +73,9 @@ class CoursesController < ApplicationController
 
   def update
     if @course.update(course_params)
+      #   If a course is edited, it is done so through the new course form, and
+      #   the new course is saved as a new, distinct course.
+      #
       handle_multiple_answer_questions(@course)
       handle_open_answer_questions(@course)
       handle_true_false_questions(@course)
@@ -103,14 +108,14 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:title, :description, questions_attributes: [
+    params.require(:course).permit(:title, :description, group_ids: [], questions_attributes: [
       :id, :content, :question_type, :_destroy, answers_attributes: [:id, :content, :correct, :_destroy]
     ])
   end
 
   def handle_multiple_answer_questions(course)
     course.questions.each do |question|
-      if question.question_type == 'multiple_answer'
+      if question.question_type == "multiple_answer"
         # For each answer, if `correct` is not set, set it to `false`
         question.answers.each do |answer|
           answer.update(correct: false) if answer.correct.nil?
@@ -121,16 +126,16 @@ class CoursesController < ApplicationController
 
   def handle_open_answer_questions(course)
     course.questions.each do |question|
-      if question.question_type == 'open_answer'
+      if question.question_type == "open_answer"
         # Find the question attributes in the params and ensure it's present
-        question_params = params[:course][:questions_attributes].values.find { |q| q['content'] == question.content }
+        question_params = params[:course][:questions_attributes].values.find { |q| q["content"] == question.content }
 
-        if question_params && question_params['answers_attributes']
+        if question_params && question_params["answers_attributes"]
           # Find the correct answer in the answers_attributes (could be any index)
-          correct_answer_params = question_params['answers_attributes'].values.find { |answer| answer['content'].present? }
+          correct_answer_params = question_params["answers_attributes"].values.find { |answer| answer["content"].present? }
 
           if correct_answer_params
-            correct_answer_content = correct_answer_params['content']
+            correct_answer_content = correct_answer_params["content"]
 
             # Create or update the answer if necessary
             question.answers.create!(content: correct_answer_content, correct: true) if question.answers.empty?
@@ -143,7 +148,6 @@ class CoursesController < ApplicationController
       end
     end
   end
-
 
   def handle_open_answer_submission(question)
     user_answer_content = params[:answer_content]
@@ -173,10 +177,10 @@ class CoursesController < ApplicationController
 
   def handle_true_false_questions(course)
     course.questions.each do |question|
-      if question.question_type == 'true_false'
-        unless question.answers.exists?(content: 'True') && question.answers.exists?(content: 'False')
-          question.answers.create!(content: 'True', correct: true) unless question.answers.exists?(content: 'True')
-          question.answers.create!(content: 'False', correct: false) unless question.answers.exists?(content: 'False')
+      if question.question_type == "true_false"
+        unless question.answers.exists?(content: "True") && question.answers.exists?(content: "False")
+          question.answers.create!(content: "True", correct: true) unless question.answers.exists?(content: "True")
+          question.answers.create!(content: "False", correct: false) unless question.answers.exists?(content: "False")
         end
       end
     end
@@ -185,5 +189,4 @@ class CoursesController < ApplicationController
   def set_course
     @course = Course.find(params[:id])
   end
-
 end

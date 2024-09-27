@@ -13,6 +13,10 @@
             as: :text,
             input_html: { maxlength: 250, rows: 2, class: 'form-control my-2', style: 'max-width: 600px;' } %>
 
+      <div class="form-group">
+        <label for="groupSelect">Select Groups:</label>
+        <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
+      </div>
 
       <div id="questions-container" data-course-form-target="questionsContainer">
         <!-- This container will hold the dynamically added questions -->

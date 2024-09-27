@@ -6,6 +6,8 @@ Answer.delete_all
 Question.delete_all
 Registration.delete_all
 Course.delete_all
+GroupMembership.delete_all
+Group.delete_all
 User.delete_all
 puts "Existing data removed."
 
@@ -19,13 +21,45 @@ teacher = User.create(
 )
 
 # Create a student
-student = User.create(
+shawn = User.create(
   first_name: "Shawn",
   last_name: "Sutherland",
   email: "shawnsutherland@hotmail.com",
   password: "111111",
   role: :teacher
 )
+
+roel = User.create(
+  first_name: "Roel",
+  last_name: "de Jong",
+  email: "roel4811@gmail.com",
+  password: "111111",
+  role: :student
+)
+
+nour = User.create(
+  first_name: "Nour",
+  last_name: "El Ghezaoui",
+  email: "roel4811@hotmail.com",
+  password: "111111",
+  role: :student
+)
+
+groupA = Group.create(
+  name: "Group A",
+  teacher: teacher
+)
+
+groupB = Group.create(
+  name: "Group B",
+  teacher: teacher
+)
+
+groupA.students << roel
+groupA.students << nour
+
+groupB.students << roel
+groupB.students << nour
 
 # Example trivia questions and answers
 trivia_data = [

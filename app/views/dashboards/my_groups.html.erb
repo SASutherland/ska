@@ -1,0 +1,34 @@
+<div class="dashboard-container d-flex">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1">
+    <h1>Mijn groepen</h1>
+
+    <% if @groups.any? %>
+      <% @groups.each do |group| %>
+        <div class="group-item mb-4">
+          <h2><%= group.name %></h2>
+
+          <h4>Studenten:</h4>
+          <ul>
+            <% group.students.each do |user| %>
+              <li><%= user.first_name %> <%= user.last_name %></li>
+            <% end %>
+          </ul>
+
+            <!-- Delete button for created groups -->
+            <div class="action-buttons d-flex">
+              <%#= link_to 'Edit', edit_group_path(group), class: 'btn btn-primary me-2' %>
+              <%#= button_to 'Delete', group_path(group), method: :delete, data: { confirm: "Are you sure you want to delete this group? This action cannot be undone.", turbo: false }, class: 'btn btn-danger' %>
+            </div>
+          </div>
+        </div>
+        <hr>
+      <% end %>
+    <% else %>
+      <p>You have not created any groups yet.</p>
+    <% end %>
+  </div>
+</div>

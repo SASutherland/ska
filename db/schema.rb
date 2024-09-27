@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_18_114423) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_27_111225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,34 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_18_114423) do
     t.index ["teacher_id"], name: "index_courses_on_teacher_id"
   end
 
+  create_table "group_courses", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "course_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_group_courses_on_course_id"
+    t.index ["group_id", "course_id"], name: "index_group_courses_on_group_id_and_course_id", unique: true
+    t.index ["group_id"], name: "index_group_courses_on_group_id"
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "group_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_group_memberships_on_user_id_and_group_id", unique: true
+    t.index ["user_id"], name: "index_group_memberships_on_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.bigint "teacher_id", null: false
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_groups_on_teacher_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "course_id", null: false
     t.string "question_type"
@@ -93,6 +121,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_18_114423) do
   add_foreign_key "attempts_answers", "answers"
   add_foreign_key "attempts_answers", "attempts"
   add_foreign_key "courses", "users", column: "teacher_id"
+  add_foreign_key "group_courses", "courses"
+  add_foreign_key "group_courses", "groups"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "users"
+  add_foreign_key "groups", "users", column: "teacher_id"
   add_foreign_key "questions", "courses"
   add_foreign_key "registrations", "courses"
   add_foreign_key "registrations", "users"

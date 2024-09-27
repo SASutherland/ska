@@ -28,7 +28,7 @@
         </ul>
       </div>
 
-      <%= form_with url: register_for_course_path, method: :post, data: { turbo: false }, id: 'registerForm' do |f| %>
+      <%= form_with url: register_for_course_path, method: :post, data: { turbo: false }, id: 'registerForm', class: 'd-flex align-items-center' do |f| %>
         <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id', data: { add_course_target: 'selectedCourseInput' } %>
         <%= f.submit 'Add', id: 'registerButton', disabled: true, data: { add_course_target: 'registerButton' } %>
       <% end %>

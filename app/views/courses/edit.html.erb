@@ -17,6 +17,13 @@
         <%= f.text_area :description, maxlength: 250, rows: 2, class: 'form-control my-2', style: 'max-width: 600px;' %>
       </div>
 
+      <div class="form-group">
+        <label for="groupSelect">Select Groups:</label>
+        <%= f.select(:group_ids, options_from_collection_for_select(@groups, "id", "name", @course.group_ids), { prompt: "Please select" }, 
+                                    { multiple: true, class: "form-control", data: { controller: "tom-select" } }, 
+                                     ) %>
+      </div>
+
       <div id="questions-container" data-course-form-target="questionsContainer">
         <!-- Existing questions will be displayed here -->
         <%= f.fields_for :questions do |question_form| %>
