@@ -1,7 +1,10 @@
 class Course < ApplicationRecord
-  belongs_to :teacher, class_name: 'User', foreign_key: :teacher_id
+  belongs_to :teacher, class_name: "User", foreign_key: :teacher_id
   has_many :questions, dependent: :destroy
   has_many :registrations, dependent: :destroy
+
+  has_many :group_courses
+  has_many :groups, through: :group_courses
 
   accepts_nested_attributes_for :questions, allow_destroy: true
 

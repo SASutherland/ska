@@ -1,10 +1,11 @@
 class DashboardsController < ApplicationController
   def index
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
+    @groups = current_user.owned_groups
 
     # For each course, find the most recent attempt or registration date
     @registered_courses_with_attempts = @registered_courses.map do |course|
-      last_attempt = current_user.attempts.joins(:question).where(questions: { course_id: course.id }).order(updated_at: :desc).first
+      last_attempt = current_user.attempts.joins(:question).where(questions: {course_id: course.id}).order(updated_at: :desc).first
       last_registration = current_user.registrations.find_by(course_id: course.id)
 
       {
@@ -31,5 +32,9 @@ class DashboardsController < ApplicationController
       current_user.registrations.create(course: course)
       redirect_to dashboard_path, notice: "You have successfully registered for #{course.title}."
     end
+  end
+
+  def my_groups
+    @groups = current_user.owned_groups
   end
 end
