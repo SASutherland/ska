@@ -15,8 +15,16 @@ class CoursesController < ApplicationController
       flash[:notice] = "Course created and you have been automatically enrolled!"
       redirect_to dashboard_path
     else
-      flash[:alert] = "There was an issue creating the course."
-      render :new
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:alert] = "Make sure to add a course title and fill in all question fields."
+          render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flashes")
+        end
+        format.html do
+          flash.now[:alert] = "There was an issue creating the course."
+          render :new, status: :unprocessable_entity
+        end
+      end
     end
   end
 
