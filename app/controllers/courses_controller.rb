@@ -108,10 +108,26 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:title, :description, group_ids: [], questions_attributes: [
-      :id, :content, :question_type, :_destroy, answers_attributes: [:id, :content, :correct, :_destroy]
-    ])
+    params.require(:course).permit(
+      :title,
+      :description,
+      group_ids: [],
+      questions_attributes: [
+        :id,
+        :content,
+        :question_type,
+        :image,
+        :_destroy,
+        answers_attributes: [
+          :id,
+          :content,
+          :correct,
+          :_destroy
+        ]
+      ]
+    )
   end
+
 
   def handle_multiple_answer_questions(course)
     course.questions.each do |question|

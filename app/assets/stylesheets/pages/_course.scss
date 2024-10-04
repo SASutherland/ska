@@ -20,3 +20,18 @@
 .fa-trash-can:hover {
   color: #C30938;
 }
+
+#course_questions_attributes_1_image {
+  max-width: 600px;
+}
+
+.custom-file-input::file-selector-button {
+  cursor: pointer;
+  font-family: "Lato", sans-serif;
+  transition: ease 0.3s;
+}
+
+.custom-file-input::file-selector-button:hover {
+  // This isn't working for some reason!
+  background-color: #4580C4;
+}

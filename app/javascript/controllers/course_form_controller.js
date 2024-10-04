@@ -28,6 +28,13 @@ export default class extends Controller {
           <input type="text" name="course[questions_attributes][${questionNumber}][content]" id="course_questions_attributes_${questionNumber}_content" class="form-control" style="max-width: 600px;">
         </div>
         <input type="hidden" name="course[questions_attributes][${questionNumber}][question_type]" value="${selectedQuestionType}">
+
+        <!-- Add image upload field -->
+        <div class="form-group">
+          <label for="course_questions_attributes_${questionNumber}_image">Upload Image</label>
+          <input type="file" name="course[questions_attributes][${questionNumber}][image]" id="course_questions_attributes_${questionNumber}_image" class="form-control custom-file-input">
+        </div>
+
         <div class="answers mt-2">`;
 
     // Generate the input fields based on the selected question type

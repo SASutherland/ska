@@ -16,7 +16,13 @@
     </div>
 
     <div class="question-box">
+
       <h2><%= @question.content %></h2>
+
+      <!-- Display the question image (if attached) -->
+      <% if @question.image.attached? %>
+        <%= image_tag @question.image, alt: "Question image", class: "question-image img-fluid my-4" %>
+      <% end %>
 
       <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true, data: { answer_target: "form" } do |f| %>
 
