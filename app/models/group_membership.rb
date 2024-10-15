@@ -3,6 +3,7 @@ class GroupMembership < ApplicationRecord
   belongs_to :group
 
   validate :user_must_be_a_student
+  validates :user_id, uniqueness: { scope: :group_id, message: "has already been added to this group" }
 
   private
 

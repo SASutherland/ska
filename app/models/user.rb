@@ -16,6 +16,13 @@ class User < ApplicationRecord
   has_many :group_memberships
   has_many :groups, through: :group_memberships
 
+  # Scopes
+  scope :students, -> { where(role: :student) }
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   def set_default_role
     self.role ||= :student
   end

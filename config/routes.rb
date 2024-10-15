@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get 'groups/new'
+  get 'groups/create'
+  get 'groups/show'
+  get 'groups/edit'
+  get 'groups/update'
   devise_for :users
 
   get "dashboard", to: "dashboards#index", as: "dashboard"
@@ -17,6 +22,13 @@ Rails.application.routes.draw do
 
     resources :questions, only: [:show] do
       post "submit_answer", on: :member
+    end
+  end
+
+  resources :groups, only: [:new, :create, :show, :edit, :update] do
+    member do
+      get :add_members
+      post :assign_members
     end
   end
 

@@ -11,7 +11,7 @@ Group.delete_all
 User.delete_all
 puts "Existing data removed."
 
-# Create a teacher
+# Create teachers
 teacher = User.create(
   first_name: "John",
   last_name: "Doe",
@@ -20,7 +20,6 @@ teacher = User.create(
   role: :teacher
 )
 
-# Create a student
 shawn = User.create(
   first_name: "Shawn",
   last_name: "Sutherland",
@@ -34,7 +33,7 @@ roel = User.create(
   last_name: "de Jong",
   email: "roel4811@gmail.com",
   password: "111111",
-  role: :student
+  role: :teacher
 )
 
 nour = User.create(
@@ -42,8 +41,32 @@ nour = User.create(
   last_name: "El Ghezaoui",
   email: "roel4811@hotmail.com",
   password: "111111",
-  role: :student
+  role: :teacher
 )
+
+# Create students
+students = [
+  { first_name: "Alice", last_name: "Johnson", email: "alice.johnson@ska.com" },
+  { first_name: "Bob", last_name: "Smith", email: "bob.smith@ska.com" },
+  { first_name: "Charlie", last_name: "Davis", email: "charlie.davis@ska.com" },
+  { first_name: "Diana", last_name: "Evans", email: "diana.evans@ska.com" },
+  { first_name: "Ethan", last_name: "Brown", email: "ethan.brown@ska.com" },
+  { first_name: "Fiona", last_name: "Wilson", email: "fiona.wilson@ska.com" },
+  { first_name: "George", last_name: "Miller", email: "george.miller@ska.com" },
+  { first_name: "Hannah", last_name: "Garcia", email: "hannah.garcia@ska.com" },
+  { first_name: "Isaac", last_name: "Martinez", email: "isaac.martinez@ska.com" },
+  { first_name: "Julia", last_name: "Lee", email: "julia.lee@ska.com" }
+]
+
+students.each do |student|
+  User.create!(
+    first_name: student[:first_name],
+    last_name: student[:last_name],
+    email: student[:email],
+    password: "111111",
+    role: :student
+  )
+end
 
 groupA = Group.create(
   name: "Group A",
