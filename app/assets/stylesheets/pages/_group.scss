@@ -1,0 +1,25 @@
+.group-form-control {
+  max-width: 600px;
+}
+
+.group-select {
+  border-radius: 8px;
+  margin-left: 6px;
+  padding: 8px 4px;
+}
+
+#selected-members {
+  display: none;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  max-width: 300px !important;
+}
+
+.student-name {
+  flex-grow: 1; 
+  margin-right: 10px; 
+}
