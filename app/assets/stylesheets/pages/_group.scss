@@ -8,6 +8,24 @@
   padding: 8px 4px;
 }
 
+.form-group .form-control {
+  max-width: 600px;
+  padding: 0;
+}
+
+.ts-control {
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  line-height: 1.5;
+}
+
+.ts-wrapper.multi .ts-control [data-value] {
+  background-color: #5A8FCB;
+  background-image: none;
+  border-radius: 6px;
+}
+
 .student-list {
   max-width: 400px;
 }

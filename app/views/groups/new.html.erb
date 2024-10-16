@@ -8,19 +8,28 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content flex-grow-1" data-controller="add-members"> <!-- Attach the controller here -->
+  <div class="main-content flex-grow-1" data-controller="add-members">
     <h1>Create a New Group</h1>
 
     <%= simple_form_for @group, data: { turbo: true } do |f| %>
+
+      <!-- Group Name Input -->
       <div class="field group-form-control">
         <%= f.input :name, label: "Group name", required: true %>
       </div>
 
+      <!-- Select Groups for pre-selecting students -->
+      <div class="form-group">
+        <label for="groupSelect">Select all students from an existing group (optional)</label>
+        <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control mt-2 mb-3", id: "groupSelect", data: { controller: "tom-select" } %>
+      </div>
+
+      <!-- Student Checkboxes -->
       <div class="field">
-        <%= f.label "Select students to add to the Group:" %>
+        <%= f.label "Select students to add to the group" %>
 
         <!-- List all students with checkboxes -->
-        <div class="student-list mt-3">
+        <div class="student-list mt-2">
           <ul class="list-group">
             <!-- "Select all" checkbox -->
             <li class="list-group-item" style="background-color: white;">
