@@ -5,14 +5,27 @@ class CoursesController < ApplicationController
 
   def create
     @course = current_user.courses.build(course_params)
+    
     if @course.save
+      # Handle true/false and open-answer questions
       handle_true_false_questions(@course)
       handle_open_answer_questions(@course)
-
-      # Automatically register the current user for the course
+  
+      # Automatically register the current user (teacher) for the course
       current_user.registrations.create(course: @course)
-
-      flash[:notice] = "Course created and you have been automatically enrolled!"
+  
+      # Register all students from selected groups for the new course
+      if params[:group_ids].present?
+        selected_groups = Group.where(id: params[:group_ids])
+        selected_students = selected_groups.flat_map(&:students).uniq # Get all unique students from the selected groups
+  
+        selected_students.each do |student|
+          # Register the student for the course
+          Registration.find_or_create_by(user: student, course: @course)
+        end
+      end
+  
+      flash[:notice] = "Course created and students have been enrolled!"
       redirect_to dashboard_path
     else
       respond_to do |format|
@@ -26,7 +39,7 @@ class CoursesController < ApplicationController
         end
       end
     end
-  end
+  end  
 
   def destroy
     @course.questions.each do |question|
@@ -135,7 +148,6 @@ class CoursesController < ApplicationController
       ]
     )
   end
-
 
   def handle_multiple_answer_questions(course)
     course.questions.each do |question|
