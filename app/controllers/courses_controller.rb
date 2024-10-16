@@ -71,8 +71,9 @@ class CoursesController < ApplicationController
 
   def my_courses
     @created_courses = current_user.courses.order(:title)
+    @attempts = current_user.attempts.includes(:question) # Add this line to fetch attempts
   end
-
+  
   def new
     @course = Course.new
     @groups = current_user.owned_groups
