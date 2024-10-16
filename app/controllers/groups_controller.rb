@@ -5,27 +5,18 @@ class GroupsController < ApplicationController
 
   def create
     @group = Group.new(group_params)
-    @group.teacher = current_user 
-  
+    @group.teacher = current_user
+
     if @group.save
-      # Assign students to the group, ensuring no duplicates
-      student_ids = params[:group][:student_ids]
-      if student_ids.present?
-        students_to_add = User.where(id: student_ids) - @group.students
-        @group.students << students_to_add unless students_to_add.empty?
-      end
-  
-      # Use respond_to to handle both HTML and Turbo requests
-      respond_to do |format|
-        format.html { redirect_to dashboard_my_groups_path, notice: 'Group was successfully created.' }
-        format.turbo_stream { redirect_to dashboard_my_groups_path, notice: 'Group was successfully created.' }
-      end
+      redirect_to dashboard_my_groups_path, notice: "Group created successfully!"
     else
-      flash[:alert] = 'Error creating group.'
-      render :new, status: :unprocessable_entity
+      flash.now[:alert] = @group.errors.full_messages.join(", ")
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flashes") }
+        format.html { render :new }
+      end
     end
   end
-  
 
   private
 
