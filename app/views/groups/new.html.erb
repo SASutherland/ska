@@ -8,7 +8,7 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content flex-grow-1">
+  <div class="main-content flex-grow-1" data-controller="add-members"> <!-- Attach the controller here -->
     <h1>Create a New Group</h1>
 
     <%= simple_form_for @group, data: { turbo: true } do |f| %>
@@ -22,10 +22,16 @@
         <!-- List all students with checkboxes -->
         <div class="student-list mt-3">
           <ul class="list-group">
+            <!-- "Select all" checkbox -->
+            <li class="list-group-item" style="background-color: white;">
+              <span>Select all</span>
+              <%= check_box_tag "select_all", "all", false, id: "select-all", class: "select-all-checkbox", data: { action: "change->add-members#toggleSelectAll" } %>
+            </li>
+
             <% User.students.each do |student| %>
               <li class="list-group-item">
                 <span><%= student.full_name %></span>
-                <%= check_box_tag "group[student_ids][]", student.id, false, class: "student-checkbox" %>
+                <%= check_box_tag "group[student_ids][]", student.id, false, class: "student-checkbox", data: { add_members_target: "studentCheckbox" } %>
               </li>
             <% end %>
           </ul>
