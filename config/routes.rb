@@ -27,5 +27,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :students, only: [:show] # This will create a route for students#show
+  
   root to: "pages#home"
 end

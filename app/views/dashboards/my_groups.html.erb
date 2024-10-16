@@ -13,8 +13,11 @@
 
           <h4>Studenten:</h4>
           <ul>
-            <% group.students.each do |user| %>
-              <li><%= user.first_name %> <%= user.last_name %></li>
+            <% group.students.each do |student| %>
+              <li>
+                <!-- Link to student's profile -->
+                <%= link_to "#{student.first_name} #{student.last_name}", student_path(student) %>
+              </li>
             <% end %>
           </ul>
 
@@ -23,7 +26,7 @@
             <%= link_to 'Edit', edit_group_path(group), class: 'btn btn-primary me-2' %>
             <%= button_to 'Delete', group_path(group), method: :delete, data: { confirm: "Are you sure you want to delete this group? This action cannot be undone.", turbo: false }, class: 'btn btn-danger' %>
           </div>
- 
+
         </div>
         <hr>
       <% end %>
