@@ -11,7 +11,12 @@ class GroupsController < ApplicationController
     if params[:group_ids].present?
       selected_groups = Group.where(id: params[:group_ids])
       selected_students = selected_groups.flat_map(&:students).uniq # Get all students from the selected groups
-      @group.students += selected_students # Add them to the new group
+
+      # Filter out students who are already manually selected in the checkboxes
+      manually_selected_students = User.where(id: params[:group][:student_ids])
+      remaining_students = selected_students - manually_selected_students
+
+      @group.students += remaining_students # Add only non-duplicated students to the new group
     end
 
     if @group.save
