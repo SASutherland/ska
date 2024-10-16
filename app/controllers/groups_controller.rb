@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  before_action :set_group, only: [:edit, :update, :destroy]
+
   def new
     @group = Group.new
     @groups = Group.all
@@ -30,7 +32,49 @@ class GroupsController < ApplicationController
     end
   end
 
+  def edit
+    @group = Group.find(params[:id])
+    @groups = Group.all # This will allow pre-selecting students from other groups (optional)
+  end
+
+  def update
+    @group = Group.find(params[:id])
+
+    # Clear existing students if the teacher deselects them all
+    @group.students.clear
+
+    # If groups were selected in the "Select all students from an existing group" dropdown
+    if params[:group_ids].present?
+      selected_groups = Group.where(id: params[:group_ids])
+      selected_students = selected_groups.flat_map(&:students).uniq # Get all students from the selected groups
+      manually_selected_students = User.where(id: params[:group][:student_ids])
+      remaining_students = selected_students - manually_selected_students
+
+      @group.students += remaining_students # Add only non-duplicated students to the group
+    end
+
+    # Update the group name and manually selected students
+    if @group.update(group_params)
+      redirect_to dashboard_my_groups_path, notice: "Group updated successfully!"
+    else
+      flash.now[:alert] = @group.errors.full_messages.join(", ")
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flashes") }
+        format.html { render :edit }
+      end
+    end
+  end
+
+  def destroy
+    @group.destroy
+    redirect_to dashboard_my_groups_path, notice: "Group deleted."
+  end
+
   private
+
+  def set_group
+    @group = Group.find(params[:id])
+  end
 
   def group_params
     params.require(:group).permit(:name, student_ids: [])

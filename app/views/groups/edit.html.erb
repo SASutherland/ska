@@ -1,2 +1,54 @@
-<h1>Groups#edit</h1>
-<p>Find me in app/views/groups/edit.html.erb</p>
+<div class="dashboard-container d-flex">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <!-- Flash messages for validation errors -->
+  <div id="flash-messages">
+    <%= render 'shared/flashes' %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1" data-controller="add-members">
+    <h1>Edit Group</h1>
+
+    <%= simple_form_for @group, url: group_path(@group), method: :patch, data: { turbo: true } do |f| %>
+
+      <!-- Group Name Input -->
+      <div class="field group-form-control">
+        <%= f.input :name, label: "Group name", required: true %> <!-- Pre-fill group name -->
+      </div>
+
+      <!-- Select Groups for pre-selecting students -->
+      <div class="form-group">
+        <label for="groupSelect">Select all students from an existing group (optional)</label>
+        <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control mt-2 mb-3", id: "groupSelect", data: { controller: "tom-select" } %>
+      </div>
+
+      <!-- Student Checkboxes -->
+      <div class="field">
+        <%= f.label "Select students to add to the group" %>
+
+        <!-- List all students with checkboxes -->
+        <div class="student-list mt-2">
+          <ul class="list-group">
+            <!-- "Select all" checkbox -->
+            <li class="list-group-item" style="background-color: white;">
+              <span>Select all</span>
+              <%= check_box_tag "select_all", "all", false, id: "select-all", class: "select-all-checkbox", data: { action: "change->add-members#toggleSelectAll" } %>
+            </li>
+
+            <% User.students.each do |student| %>
+              <li class="list-group-item">
+                <span><%= student.full_name %></span>
+                <!-- Pre-check the checkbox if the student is already in the group -->
+                <%= check_box_tag "group[student_ids][]", student.id, @group.students.include?(student), class: "student-checkbox", data: { add_members_target: "studentCheckbox" } %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <%= f.submit "Update Group", class: "btn btn-primary mt-4 mb-5", id: "submit-group" %>
+    <% end %>
+  </div>
+</div>

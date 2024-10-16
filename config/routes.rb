@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-  get 'groups/new'
-  get 'groups/create'
-  get 'groups/show'
-  get 'groups/edit'
-  get 'groups/update'
   devise_for :users
 
   get "dashboard", to: "dashboards#index", as: "dashboard"
@@ -25,7 +20,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :groups, only: [:new, :create, :show, :edit, :update] do
+  resources :groups, only: [:new, :create, :show, :edit, :update, :destroy] do
     member do
       get :add_members
       post :assign_members
