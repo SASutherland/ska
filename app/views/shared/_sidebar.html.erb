@@ -28,5 +28,10 @@
         <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'new' %>" href="<%= new_course_path %>">Create Course</a>
       </li>
     <% end %>
+    <% if current_user.teacher? %>
+      <li class="nav-item">
+        <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Students List</a>
+      </li>
+    <% end %>
   </ul>
 </div>
