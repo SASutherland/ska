@@ -4,31 +4,41 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1>Mijn groepen</h1>
+    <h1 class="mb-4">Mijn groepen</h1>
 
     <% if @groups.any? %>
       <% @groups.each do |group| %>
-        <div class="group-item mb-4">
-          <h2><%= group.name %></h2>
+        <div class="card-white">
+          <!-- Flex container for Group Name and Action Buttons -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- Group Name -->
+            <h2 class="mb-0"><%= group.name %></h2>
 
+            <!-- Action Buttons (Edit/Delete) -->
+            <div class="d-flex">
+              <!-- Edit Button -->
+              <%= link_to edit_group_path(group), class: 'me-4', title: 'Edit this group' do %>
+                <i class="fa-solid fa-pen-to-square icon-aligned"></i>
+              <% end %>
+
+              <!-- Delete Button -->
+              <%= link_to group_path(group), method: :delete, data: { confirm: "Are you sure you want to delete this group? This action cannot be undone.", turbo: false }, class: 'me-2', title: 'Delete this group' do %>
+                <i class="fa-solid fa-xmark icon-aligned"></i>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Students Section -->
           <h4>Studenten:</h4>
           <ul>
             <% group.students.each do |student| %>
               <li>
                 <!-- Link to student's profile -->
-                <%= link_to "#{student.first_name} #{student.last_name}", student_path(student) %>
+                <%= link_to "#{student.first_name} #{student.last_name}", student_path(student), class: 'student-link' %>
               </li>
             <% end %>
           </ul>
-
-          <!-- Delete button for created groups -->
-          <div class="action-buttons d-flex">
-            <%= link_to 'Edit', edit_group_path(group), class: 'btn btn-primary me-2' %>
-            <%= button_to 'Delete', group_path(group), method: :delete, data: { confirm: "Are you sure you want to delete this group? This action cannot be undone.", turbo: false }, class: 'btn btn-danger' %>
-          </div>
-
         </div>
-        <hr>
       <% end %>
     <% else %>
       <p>You have not created any groups yet.</p>

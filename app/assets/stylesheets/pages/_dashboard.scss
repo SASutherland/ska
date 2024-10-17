@@ -21,6 +21,56 @@
   overflow-y: auto;
 }
 
+.card-white {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-white ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.student-link {
+  color: #5A8FCB;
+  font-size: 18px;
+  font-weight: bolder;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.student-link:hover {
+  color: #4580C4;
+}
+
+.icon-aligned {
+  vertical-align: middle;
+  padding-top: 5px;
+}
+
+.fa-solid.fa-pen-to-square {
+  color: #5A8FCB;
+  font-size: 28px;
+  transition: ease 0.3s;
+}
+
+.fa-solid.fa-pen-to-square:hover {
+  color: #4580C4;
+}
+
+.fa-solid.fa-xmark {
+  color: #EC0B43;
+  font-size: 34px;
+  transition: ease 0.3s;
+}
+
+.fa-solid.fa-xmark:hover {
+  color: #C30938;
+}
+
 .course-progress {
   margin-bottom: 20px;
 }
