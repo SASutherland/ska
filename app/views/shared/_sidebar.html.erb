@@ -3,9 +3,11 @@
     <li class="nav-item">
       <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'index' %>" href="<%= dashboard_path %>">Dashboard</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Enrolled Courses</a>
-    </li>
+    <% if current_user.student? %>
+      <li class="nav-item">
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Enrolled Courses</a>
+      </li>
+    <% end %>
     <% if current_user.teacher? %>
       <li class="nav-item">
         <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Mijn Groepen</a>
@@ -18,7 +20,7 @@
     <% end %>
     <% if current_user.teacher? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Created Courses</a>
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">My Courses</a>
       </li>
     <% end %>
     <% if current_user.teacher? %>
