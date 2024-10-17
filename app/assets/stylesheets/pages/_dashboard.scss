@@ -111,15 +111,26 @@
   border-color: #4FBA66;
 }
 
-.incorrect-answer {
+.question-answered {
   background-color: #FED766;
   border-color: #FED766;
   color: white;
 }
 
-.incorrect-answer:hover {
+.question-answered:hover {
   background-color: #FECB34;
   border-color: #FECB34;
+}
+
+.incorrect-answer {
+  background-color: #EC0B43;
+  border-color: #EC0B43;
+  color: white;
+}
+
+.incorrect-answer:hover {
+  background-color: #C30938;
+  border-color: #C30938;
 }
 
 #dropdownCourseButton {

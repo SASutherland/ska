@@ -5,6 +5,7 @@ Attempt.delete_all
 Answer.delete_all
 Question.delete_all
 Registration.delete_all
+ActiveRecord::Base.connection.execute("DELETE FROM group_courses")
 Course.delete_all
 GroupMembership.delete_all
 Group.delete_all
@@ -13,14 +14,6 @@ puts "Existing data removed."
 
 # Create teachers
 teacher = User.create(
-  first_name: "John",
-  last_name: "Doe",
-  email: "teacher@ska.com",
-  password: "111111",
-  role: :teacher
-)
-
-shawn = User.create(
   first_name: "Shawn",
   last_name: "Sutherland",
   email: "shawnsutherland@hotmail.com",
@@ -45,6 +38,14 @@ nour = User.create(
 )
 
 # Create students
+student = User.create(
+  first_name: "John",
+  last_name: "Doe",
+  email: "student@ska.com",
+  password: "111111",
+  role: :student
+)
+
 students = [
   { first_name: "Alice", last_name: "Johnson", email: "alice.johnson@ska.com" },
   { first_name: "Bob", last_name: "Smith", email: "bob.smith@ska.com" },
@@ -694,37 +695,18 @@ trivia_data.each_with_index do |course_data, course_index|
   )
 end
 
-# Create courses, questions, and answers based on the trivia data
-# trivia_data.each_with_index do |course_data, course_index|
-#   course = Course.create(
-#     title: course_data[:title],
-#     description: course_data[:description],
-#     teacher_id: teacher.id
-#   )
+# Register all students for all courses
+puts "Registering students for courses..."
 
-#   course_data[:questions].each_with_index do |question_data, question_index|
-#     question = Question.create(
-#       content: question_data[:content],
-#       question_type: question_data[:question_type] || "multiple_choice",
-#       course_id: course.id
-#     )
+students = User.where(role: :student)
+courses = Course.all
 
-#     if question_data[:question_type] == "open_answer"
-#       Answer.create(
-#         content: question_data[:correct_answer],
-#         correct: true,
-#         question_id: question.id
-#       )
-#     else
-#       question_data[:answers]&.each do |answer_data|
-#         Answer.create(
-#           content: answer_data[:content],
-#           correct: answer_data[:correct],
-#           question_id: question.id
-#         )
-#       end
-#     end
-#   end
-# end
+courses.each do |course|
+  students.each do |student|
+    Registration.create(user: student, course: course)
+  end
+end
+
+puts "All students have been registered for all courses."
 
 puts "Seed data with demo questions created successfully!"

@@ -7,16 +7,25 @@
     <h1><%= @course.title %></h1>
     <h1 class="question-title">QUESTION #<%= @question_number %></h1>
 
-    <%= link_to dashboard_path, class: "back-btn" do %>
-      <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to Dashboard</span></p>
+    <!-- Back button -->
+    <% if current_user.teacher? %>
+      <%= link_to my_courses_courses_path, class: "back-btn" do %>
+        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to My Courses</span></p>
+      <% end %>
+    <% else %>
+      <%= link_to dashboard_path, class: "back-btn" do %>
+        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to Dashboard</span></p>
+      <% end %>
     <% end %>
 
-    <div class="time-spent">
-      <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
-    </div>
+    <!-- Timer only for students -->
+    <% unless current_user.teacher? %>
+      <div class="time-spent">
+        <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
+      </div>
+    <% end %>
 
     <div class="question-box">
-
       <h2><%= @question.content %></h2>
 
       <!-- Display the question image (if attached) -->
@@ -25,18 +34,24 @@
       <% end %>
 
       <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true, data: { answer_target: "form" } do |f| %>
-
         <div class="answers">
           <% if @question.question_type == 'open_answer' %>
-            <!-- Input field for open_answer type questions -->
             <div class="form-group">
               <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
             </div>
 
-            <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+            <% if current_user.teacher? %>
+              <div class="mt-3">
+                <strong>Answer:</strong> <%= @question.answers.first.content %>
+              </div>
+              <%= link_to course_question_path(@course, @next_question || @course.questions.first), class: "btn btn-primary mt-3" do %>
+                Next
+              <% end %>
+            <% else %>
+              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+            <% end %>
 
           <% elsif @question.question_type == 'multiple_answer' %>
-            <!-- Checkboxes for multiple_answer type questions -->
             <% @answers.each_with_index do |answer, index| %>
               <div class="answer-button-container">
                 <label class="answer-button">
@@ -46,10 +61,18 @@
               </div>
             <% end %>
 
-            <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+            <% if current_user.teacher? %>
+              <div class="mt-3">
+                <strong>Answer:</strong> <%= @question.answers.where(correct: true).map(&:content).join(", ") %>
+              </div>
+              <%= link_to course_question_path(@course, @next_question || @course.questions.first), class: "btn btn-primary mt-3" do %>
+                Next
+              <% end %>
+            <% else %>
+              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+            <% end %>
 
           <% else %>
-            <!-- Answer buttons for multiple_choice and true_false questions -->
             <% @answers.each_with_index do |answer, index| %>
               <div class="answer-button-container" data-answer-target="answerButton">
                 <button type="button" class="answer-button" data-answer-id="<%= answer.id %>">
@@ -58,15 +81,34 @@
               </div>
             <% end %>
 
-            <!-- Hidden field to store the selected answer -->
             <%= f.hidden_field :answer, id: "selected_answer", data: { answer_target: "hiddenAnswerField" } %>
+
+            <% if current_user.teacher? %>
+              <div class="mt-4">
+                <strong>Answer:</strong> <%= @question.answers.find_by(correct: true)&.content %>
+              </div>
+              
+              <!-- If this is the last question, show 'Back' button, otherwise 'Next' -->
+              <% if @next_question.present? %>
+                <%= link_to course_question_path(@course, @next_question), class: "btn btn-primary mt-3" do %>
+                  Next
+                <% end %>
+              <% else %>
+                <%= link_to my_courses_courses_path, class: "btn btn-primary mt-3" do %>
+                  Finish
+                <% end %>
+              <% end %>
+
+            <% else %>
+              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+            <% end %>
           <% end %>
         </div>
       <% end %>
     </div>
 
+    <!-- Progress Box -->
     <div class="progress-box">
-      <!-- Navigation buttons with the progress bar in the middle -->
       <div class="navigation-wrapper">
         <div class="previous-button">
           <% if @previous_question %>
@@ -86,49 +128,17 @@
               <% attempt = @attempts.find { |a| a.question_id == question.id } %>
 
               <% if attempt %>
-                <!-- For open_answer type -->
-                <% if question.question_type == 'open_answer' %>
-                  <% if attempt.correct? %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% else %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% end %>
-
-                <!-- For multiple_answer type -->
-                <% elsif question.question_type == 'multiple_answer' %>
-                  <% if attempt.chosen_answers.map(&:id).sort == question.answers.where(correct: true).pluck(:id).sort %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% else %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% end %>
-
-                <!-- For multiple_choice and true_false types -->
+                <!-- Teachers' answered questions will show as default -->
+                <% if current_user.teacher? %>
+                  <a href="<%= course_question_path(@course, question) %>" class="question-number">
+                    <%= index + 1 %>
+                  </a>
                 <% else %>
-                  <% if attempt.chosen_answers.present? && attempt.chosen_answers.first&.correct? %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% elsif attempt.chosen_answer_id.present? && Answer.find(attempt.chosen_answer_id).correct? %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number correct-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% else %>
-                    <a href="<%= course_question_path(@course, question) %>" class="question-number incorrect-answer">
-                      <%= index + 1 %>
-                    </a>
-                  <% end %>
+                  <a href="<%= course_question_path(@course, question) %>" class="question-number question-answered">
+                    <%= index + 1 %>
+                  </a>
                 <% end %>
-
               <% else %>
-                <!-- No attempt made yet -->
                 <a href="<%= course_question_path(@course, question) %>" class="question-number">
                   <%= index + 1 %>
                 </a>
