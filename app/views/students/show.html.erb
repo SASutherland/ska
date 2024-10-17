@@ -52,12 +52,17 @@
           <div class="questions-progress">
             <% course.questions.each_with_index do |question, index| %>
               <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+
               <% if attempt %>
-                <span class="question-number <%= attempt.correct? ? 'correct-answer' : 'incorrect-answer' %>">
+                <!-- Link to the question review page where the teacher can see the student's attempt -->
+                <%= link_to course_question_path(course, question, student_id: @student.id), class: "question-number #{attempt.correct? ? 'correct-answer' : 'incorrect-answer'}" do %>
                   <%= index + 1 %>
-                </span>
+                <% end %>
               <% else %>
-                <span class="question-number"> <%= index + 1 %> </span>
+                <!-- Link to the question review page -->
+                <%= link_to course_question_path(course, question, student_id: @student.id), class: "question-number" do %>
+                  <%= index + 1 %>
+                <% end %>
               <% end %>
             <% end %>
           </div>
