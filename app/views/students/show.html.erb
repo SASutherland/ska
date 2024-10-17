@@ -1,17 +1,52 @@
 <div class="dashboard-container d-flex">
+
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1><%= @student.first_name %> <%= @student.last_name %> - Progress</h1>
 
-    <h3>Enrolled Courses</h3>
+    <!-- Flexbox for avatar and profile information -->
+    <div class="d-flex align-items-center mb-4">
+      
+      <!-- Avatar image -->
+      <div class="me-4">
+        <%= image_tag 'avatar-blue.png', alt: 'Avatar', class: 'avatar-large' %>
+      </div>
+
+      <!-- Profile information -->
+      <div>
+        <h1><%= @student.first_name %> <%= @student.last_name %></h1>
+        <h4><%= @student.email %></h4>
+        <h4><strong><%= @student.role.capitalize %></strong></h4>
+      </div>
+    </div>
+
+    <!-- Courses section -->
     <% if @courses.any? %>
       <% @courses.each do |course| %>
-        <div class="course-item mb-4">
-          <h4><%= course.title %></h4>
+        <div class="card-white p-4 mb-4">
+          <!-- Flexbox for course title and completion status -->
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-1"><%= course.title %></h2>
+
+            <!-- Completion Status -->
+            <% total_questions = course.questions.count %>
+            <% total_attempts = course.questions.map { |q| @attempts.find { |a| a.question_id == q.id } }.compact.count %>
+
+            <% if total_attempts == total_questions %>
+              <strong style="color: #6CC680;">Complete</strong>
+            <% else %>
+              Incomplete
+            <% end %>
+          </div>
+
           <p><%= course.description %></p>
+
+          <!-- Percentage Score -->
+          <% correct_answers = @attempts.select { |a| a.correct? && course.questions.include?(a.question) }.count %>
+          <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
+          <p><strong>Score:</strong> <%= percentage %>%</p>
 
           <!-- Progress for each course -->
           <div class="questions-progress">
@@ -27,10 +62,10 @@
             <% end %>
           </div>
         </div>
-        <hr>
       <% end %>
     <% else %>
       <p>This student is not enrolled in any courses.</p>
     <% end %>
+
   </div>
 </div>

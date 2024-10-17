@@ -9,37 +9,48 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1>Create a New Course</h1>
+    <h1 class="mb-4">Create a New Course</h1>
 
-    <%= simple_form_for @course, html: { multipart: true, data: { turbo: true } } do |f| %>
-      <%= f.input :title, label: "Course Title", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
-      <%= f.input :description,
-            label: "Course Description",
-            as: :text,
-            input_html: { maxlength: 250, rows: 2, class: 'form-control', style: 'max-width: 600px;' } %>
+    <div class="card-white p-4">
+      <%= simple_form_for @course, html: { multipart: true, data: { turbo: true } } do |f| %>
 
-      <div class="form-group">
-        <label for="groupSelect" class="mb-2">Assign course to these groups</label>
-        <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
-      </div>
+        <!-- Course Title -->
+        <%= f.input :title, label: "Course Title", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
 
-      <div id="questions-container" data-course-form-target="questionsContainer">
-        <!-- This container will hold the dynamically added questions -->
-      </div>
+        <!-- Course Description -->
+        <%= f.input :description,
+              label: "Course Description",
+              as: :text,
+              input_html: { maxlength: 250, rows: 2, class: 'form-control', style: 'max-width: 600px;' } %>
 
-      <!-- Question Type Dropdown and Add Question Button -->
-      <div class="d-flex align-items-center my-4">
-        <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
-          <option value="multiple_choice">Multiple Choice</option>
-          <option value="open_answer">Open Answer</option>
-          <option value="true_false">True/False</option>
-          <option value="multiple_answer">Multiple Answer</option>
-        </select>
+        <!-- Group Selection -->
+        <div class="form-group">
+          <label for="groupSelect" class="mb-2">Assign course to these groups</label>
+          <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
+        </div>
 
-        <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion"><i class="fa-solid fa-plus"></i> Add Question</button>
-      </div>
+        <!-- Questions Container -->
+        <div id="questions-container" data-course-form-target="questionsContainer">
+          <!-- This container will hold the dynamically added questions -->
+        </div>
 
-      <%= f.submit "Create Course", class: "btn btn-primary mb-5" %>
-    <% end %>
+        <!-- Question Type Dropdown and Add Question Button -->
+        <div class="d-flex align-items-center my-4">
+          <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
+            <option value="multiple_choice">Multiple Choice</option>
+            <option value="open_answer">Open Answer</option>
+            <option value="true_false">True/False</option>
+            <option value="multiple_answer">Multiple Answer</option>
+          </select>
+
+          <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion">
+            <i class="fa-solid fa-plus"></i> Add Question
+          </button>
+        </div>
+
+        <!-- Submit Button -->
+        <%= f.submit "Create Course", class: "btn btn-primary mb-2" %>
+      <% end %>
+    </div>
   </div>
 </div>
