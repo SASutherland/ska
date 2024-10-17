@@ -32,7 +32,7 @@
           <h4>Studenten</h4>
           <% if course.registrations.any? %>
             <ul>
-              <% course.registrations.each do |registration| %>
+              <% course.registrations.sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
                 <li>
                   <!-- Link to student's profile page -->
                   <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>

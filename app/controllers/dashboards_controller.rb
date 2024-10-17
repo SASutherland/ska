@@ -14,7 +14,18 @@ class DashboardsController < ApplicationController
       }
     end
 
-    # Sort courses by the last activity (attempt or registration) in descending order
+    # Include created courses for teachers
+    if current_user.teacher?
+      @created_courses = current_user.courses.map do |course|
+        {
+          course: course,
+          last_activity: course.created_at
+        }
+      end
+      @registered_courses_with_attempts.concat(@created_courses)
+    end
+
+    # Sort courses by the last activity (attempt, registration, or creation) in descending order
     @registered_courses_with_attempts.sort_by! { |course_with_attempt| course_with_attempt[:last_activity] }.reverse!
 
     # Limit the display to the top 4 most recent courses

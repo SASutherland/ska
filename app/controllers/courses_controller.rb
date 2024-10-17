@@ -11,9 +11,6 @@ class CoursesController < ApplicationController
       handle_true_false_questions(@course)
       handle_open_answer_questions(@course)
   
-      # Automatically register the current user (teacher) for the course
-      current_user.registrations.create(course: @course)
-  
       # Register all students from selected groups for the new course
       if params[:group_ids].present?
         selected_groups = Group.where(id: params[:group_ids])
@@ -70,8 +67,8 @@ class CoursesController < ApplicationController
   end
 
   def my_courses
-    @created_courses = current_user.courses.order(:title)
-    @attempts = current_user.attempts.includes(:question) # Add this line to fetch attempts
+    @created_courses = current_user.courses.order(created_at: :desc)
+    @attempts = current_user.attempts.includes(:question)
   end
   
   def new
@@ -94,14 +91,18 @@ class CoursesController < ApplicationController
   end
 
   def update
+    # Update the course with the form parameters
     if @course.update(course_params)
-      #   If a course is edited, it is done so through the new course form, and
-      #   the new course is saved as a new, distinct course.
-      #
-      handle_multiple_answer_questions(@course)
-      handle_open_answer_questions(@course)
-      handle_true_false_questions(@course)
-      flash[:notice] = "Course updated successfully!"
+      # After updating the course, now handle registering students for the selected groups
+      new_group_ids = params[:course][:group_ids].reject(&:blank?).map(&:to_i)
+      
+      # Update the course's groups association first
+      @course.group_ids = new_group_ids
+  
+      # Register each student from each group to the course
+      register_students_from_groups(new_group_ids)
+  
+      flash[:notice] = "Course updated successfully, and students have been registered!"
       redirect_to my_courses_courses_path
     else
       flash[:alert] = "There was an issue updating the course."
@@ -219,6 +220,16 @@ class CoursesController < ApplicationController
           question.answers.create!(content: "True", correct: true) unless question.answers.exists?(content: "True")
           question.answers.create!(content: "False", correct: false) unless question.answers.exists?(content: "False")
         end
+      end
+    end
+  end
+
+  def register_students_from_groups(group_ids)
+    groups = Group.where(id: group_ids)
+  
+    groups.each do |group|
+      group.students.each do |student|
+        Registration.find_or_create_by(user_id: student.id, course_id: @course.id)
       end
     end
   end

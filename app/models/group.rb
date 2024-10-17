@@ -4,7 +4,7 @@ class Group < ApplicationRecord
   has_many :group_memberships, dependent: :destroy
   has_many :students, through: :group_memberships, source: :user
 
-  has_many :group_courses
+  has_many :group_courses, dependent: :destroy
   has_many :courses, through: :group_courses
 
   validates :name, presence: true
