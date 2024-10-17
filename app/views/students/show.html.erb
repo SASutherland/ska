@@ -43,10 +43,19 @@
 
           <p><%= course.description %></p>
 
-          <!-- Percentage Score -->
+          <!-- Percentage Score and Time Spent -->
           <% correct_answers = @attempts.select { |a| a.correct? && course.questions.include?(a.question) }.count %>
           <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
-          <p><strong>Score:</strong> <%= percentage %>%</p>
+
+          <% registration = @registrations.find { |r| r.course_id == course.id } %>
+          <% time_spent_formatted = registration&.time_spent && registration.time_spent > 0 ? Time.at(registration.time_spent).utc.strftime("%H:%M:%S") : nil %>
+
+          <p>
+            <strong>Score:</strong> <%= percentage %>%
+            <% if time_spent_formatted %>
+              | <strong>Time Spent:</strong> <%= time_spent_formatted %>
+            <% end %>
+          </p>
 
           <!-- Progress for each course -->
           <div class="questions-progress">

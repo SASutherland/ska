@@ -27,6 +27,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :registrations, only: [] do
+    patch :update_time_spent, on: :collection
+  end
+  
   resources :students, only: [:index, :show]
 
   root to: "pages#home"
