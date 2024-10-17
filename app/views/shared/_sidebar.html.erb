@@ -5,7 +5,7 @@
     </li>
     <% if current_user.student? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Enrolled Courses</a>
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">My Courses</a>
       </li>
     <% end %>
     <% if current_user.teacher? %>
