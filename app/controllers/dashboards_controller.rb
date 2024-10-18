@@ -50,8 +50,24 @@ class DashboardsController < ApplicationController
   end
 
   def manage_users
-    # Fetch all users for the admin to view and manage
-    @users = User.all.order("LOWER(last_name) ASC")
+    # Always initialize @users as an empty array if User.all is nil
+    @users = User.all || []
+
+    # Handle sorting logic
+    case params[:sort]
+    when 'role'
+      direction = params[:direction] == 'desc' ? :desc : :asc
+      @users = @users.order(role: direction)
+    when 'first_name'
+      direction = params[:direction] == 'desc' ? :desc : :asc
+      @users = @users.order("LOWER(first_name) #{direction}")
+    when 'last_name'
+      direction = params[:direction] == 'desc' ? :desc : :asc
+      @users = @users.order("LOWER(last_name) #{direction}")
+    else
+      # Default sorting, e.g., by last name and first name (case-insensitive)
+      @users = @users.sort_by { |user| [user.last_name.downcase, user.first_name.downcase] }
+    end
   end
 
   def my_groups

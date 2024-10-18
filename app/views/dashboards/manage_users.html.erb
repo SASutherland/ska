@@ -11,10 +11,55 @@
         <table class="table table-striped users-table">
           <thead>
             <tr>
-              <th style="width: 20%; padding-left: 20px;">First Name</th>
-              <th style="width: 20%;">Last Name</th>
+              <th style="width: 20%; padding-left: 20px;">
+                <div class="d-flex align-items-center">
+                  <span>First Name</span>
+                  <%= link_to dashboard_manage_users_path(sort: 'first_name', direction: params[:direction] == 'asc' ? 'desc' : 'asc'), class: 'ms-2' do %>
+                    <% if params[:sort] == 'first_name' %>
+                      <% if params[:direction] == 'asc' %>
+                        <i class="fa-solid fa-arrow-up-a-z"></i>
+                      <% else %>
+                        <i class="fa-solid fa-arrow-down-z-a"></i>
+                      <% end %>
+                    <% else %>
+                      <i class="fa-solid fa-sort"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </th>
+              <th style="width: 20%;">
+                <div class="d-flex align-items-center">
+                  <span>Last Name</span>
+                  <%= link_to dashboard_manage_users_path(sort: 'last_name', direction: params[:direction] == 'asc' ? 'desc' : 'asc'), class: 'ms-2' do %>
+                    <% if params[:sort] == 'last_name' %>
+                      <% if params[:direction] == 'asc' %>
+                        <i class="fa-solid fa-arrow-up-a-z"></i>
+                      <% else %>
+                        <i class="fa-solid fa-arrow-down-z-a"></i>
+                      <% end %>
+                    <% else %>
+                      <i class="fa-solid fa-sort"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </th>
               <th style="width: 25%;">Email</th>
-              <th style="width: 15%;">Role</th>
+              <th style="width: 15%;">
+                <div class="d-flex align-items-center">
+                  <span>Role</span>
+                  <%= link_to dashboard_manage_users_path(sort: 'role', direction: params[:direction] == 'asc' ? 'desc' : 'asc'), class: 'ms-2' do %>
+                    <% if params[:sort] == 'role' %>
+                      <% if params[:direction] == 'asc' %>
+                        <i class="fa-solid fa-arrow-up-a-z"></i>
+                      <% else %>
+                        <i class="fa-solid fa-arrow-down-z-a"></i>
+                      <% end %>
+                    <% else %>
+                      <i class="fa-solid fa-sort"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </th>
               <th style="width: 20%;">Actions</th>
             </tr>
           </thead>
