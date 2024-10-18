@@ -10,7 +10,7 @@ class Group < ApplicationRecord
   validates :name, presence: true
 
   validate :must_have_students 
-  validate :owner_must_be_a_teacher
+  validate :owner_must_be_authorized
 
   private
 
@@ -18,7 +18,9 @@ class Group < ApplicationRecord
     errors.add(:base, "Groups must include at least one student") if student_ids.empty?
   end
 
-  def owner_must_be_a_teacher
-    errors.add(:base, "Only teachers can create a group") unless teacher&.teacher?
+  def owner_must_be_authorized
+    unless teacher&.teacher? || teacher&.admin?
+      errors.add(:base, "Only teachers or admin can create or edit a group")
+    end
   end
 end

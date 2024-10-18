@@ -67,7 +67,13 @@ class CoursesController < ApplicationController
   end
 
   def my_courses
-    @created_courses = current_user.courses.order(created_at: :desc)
+    if current_user.admin?
+      # Admins can see all courses, ordered by updated_at
+      @created_courses = Course.order(updated_at: :desc)
+    else
+      # Teachers can only see the courses they have created
+      @created_courses = current_user.courses.order(updated_at: :desc)
+    end
     @attempts = current_user.attempts.includes(:question)
   end
   
@@ -102,6 +108,9 @@ class CoursesController < ApplicationController
       # Register each student from each group to the course
       register_students_from_groups(new_group_ids)
   
+      # Explicitly touch the course to update the `updated_at` timestamp
+      @course.touch
+  
       flash[:notice] = "Course updated successfully, and students have been registered!"
       redirect_to my_courses_courses_path
     else
@@ -127,7 +136,10 @@ class CoursesController < ApplicationController
   private
 
   def authorize_teacher
-    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.teacher?
+    # Allow access if the user is either a teacher or an admin
+    unless current_user.teacher? || current_user.admin?
+      redirect_to root_path, alert: "You are not authorized to perform this action."
+    end
   end
 
   def course_params
@@ -235,6 +247,10 @@ class CoursesController < ApplicationController
   end
 
   def set_course
-    @course = Course.find(params[:id])
-  end
+    if current_user.admin?
+      @course = Course.find(params[:id])
+    else
+      @course = current_user.courses.find(params[:id])
+    end
+  end  
 end
