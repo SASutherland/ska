@@ -13,7 +13,7 @@
       <%= link_to student_path(student), class: "back-btn" do %>
         <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to <%= student.first_name %>'s profile</span></p>
       <% end %>
-    <% elsif current_user.teacher? %>
+    <% elsif current_user.teacher? || current_user.admin? %>
       <%= link_to my_courses_courses_path, class: "back-btn" do %>
         <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to My Courses</span></p>
       <% end %>
@@ -22,14 +22,6 @@
         <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to Dashboard</span></p>
       <% end %>
     <% end %>
-
-    <!-- Timer for students
-    <% unless current_user.teacher? %>
-      <div class="time-spent">
-        <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
-      </div>
-    <% end %>
-    -->
 
     <div class="question-box">
       <h2><%= @question.content %></h2>
@@ -52,8 +44,8 @@
               <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
             </div>
 
-            <% if current_user.teacher? %>
-              <!-- No submit for teachers -->
+            <% if current_user.teacher? || current_user.admin? %>
+              <!-- No submit for teachers or admins -->
             <% else %>
               <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
             <% end %>
@@ -68,8 +60,8 @@
               </div>
             <% end %>
 
-            <% if current_user.teacher? %>
-              <!-- No submit for teachers -->
+            <% if current_user.teacher? || current_user.admin? %>
+              <!-- No submit for teachers or admins -->
             <% else %>
               <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
             <% end %>
@@ -85,8 +77,8 @@
 
             <%= f.hidden_field :answer, id: "selected_answer", data: { answer_target: "hiddenAnswerField" } %>
 
-            <% if current_user.teacher? %>
-              <!-- No submit for teachers -->
+            <% if current_user.teacher? || current_user.admin? %>
+              <!-- No submit for teachers or admins -->
             <% else %>
               <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
             <% end %>
@@ -94,8 +86,8 @@
         </div>
       <% end %>
 
-      <!-- Correct Answer and Student's Answer for teachers -->
-      <% if current_user.teacher? %>
+      <!-- Correct Answer and Student's Answer for Teachers and Admins -->
+      <% if current_user.teacher? || current_user.admin? %>
         <div class="mt-4">
           <strong>Correct Answer:</strong> <%= @question.answers.where(correct: true).map(&:content).join(", ") %>
         </div>
@@ -114,7 +106,7 @@
           </div>
         <% end %>
 
-        <!-- Next Button for Teachers -->
+        <!-- Next Button for Teachers and Admins -->
         <div class="mt-2">
           <% if @next_question.present? %>
             <%= link_to course_question_path(@course, @next_question, student_id: params[:student_id]), class: "btn btn-primary mt-3" do %>
@@ -135,58 +127,58 @@
           <% end %>
         </div>
       <% end %>
-    </div>
 
-    <!-- Progress Box -->
-    <div class="progress-box">
-      <div class="navigation-wrapper">
-        <div class="previous-button">
-          <% if @previous_question %>
-            <%= link_to course_question_path(@course, @previous_question, student_id: params[:student_id]), class: "chevron-btn" do %>
-              <i class="fa fa-chevron-left"></i>
+      <!-- Progress Box -->
+      <div class="progress-box">
+        <div class="navigation-wrapper">
+          <div class="previous-button">
+            <% if @previous_question %>
+              <%= link_to course_question_path(@course, @previous_question, student_id: params[:student_id]), class: "chevron-btn" do %>
+                <i class="fa fa-chevron-left"></i>
+              <% end %>
+            <% else %>
+              <a class="chevron-btn" style="visibility: hidden;">
+                <i class="fa fa-chevron-left"></i>
+              </a>
             <% end %>
-          <% else %>
-            <a class="chevron-btn" style="visibility: hidden;">
-              <i class="fa fa-chevron-left"></i>
-            </a>
-          <% end %>
-        </div>
+          </div>
 
-        <div class="questions-progress-wrapper">
-          <div class="questions-progress">
-            <% @course.questions.each_with_index do |question, index| %>
-              <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+          <div class="questions-progress-wrapper">
+            <div class="questions-progress">
+              <% @course.questions.each_with_index do |question, index| %>
+                <% attempt = @attempts.find { |a| a.question_id == question.id } %>
 
-              <% if attempt %>
-                <!-- Teachers' answered questions will show as default -->
-                <% if current_user.teacher? %>
+                <% if attempt %>
+                  <!-- Teachers' and Admins' answered questions will show as default -->
+                  <% if current_user.teacher? || current_user.admin? %>
+                    <a href="<%= course_question_path(@course, question, student_id: params[:student_id]) %>" class="question-number">
+                      <%= index + 1 %>
+                    </a>
+                  <% else %>
+                    <a href="<%= course_question_path(@course, question) %>" class="question-number question-answered">
+                      <%= index + 1 %>
+                    </a>
+                  <% end %>
+                <% else %>
                   <a href="<%= course_question_path(@course, question, student_id: params[:student_id]) %>" class="question-number">
                     <%= index + 1 %>
                   </a>
-                <% else %>
-                  <a href="<%= course_question_path(@course, question) %>" class="question-number question-answered">
-                    <%= index + 1 %>
-                  </a>
                 <% end %>
-              <% else %>
-                <a href="<%= course_question_path(@course, question, student_id: params[:student_id]) %>" class="question-number">
-                  <%= index + 1 %>
-                </a>
               <% end %>
+            </div>
+          </div>
+
+          <div class="next-button">
+            <% if @next_question %>
+              <%= link_to course_question_path(@course, @next_question, student_id: params[:student_id]), class: "chevron-btn" do %>
+                <i class="fa fa-chevron-right"></i>
+              <% end %>
+            <% else %>
+              <a class="chevron-btn" style="visibility: hidden;">
+                <i class="fa fa-chevron-right"></i>
+              </a>
             <% end %>
           </div>
-        </div>
-
-        <div class="next-button">
-          <% if @next_question %>
-            <%= link_to course_question_path(@course, @next_question, student_id: params[:student_id]), class: "chevron-btn" do %>
-              <i class="fa fa-chevron-right"></i>
-            <% end %>
-          <% else %>
-            <a class="chevron-btn" style="visibility: hidden;">
-              <i class="fa fa-chevron-right"></i>
-            </a>
-          <% end %>
         </div>
       </div>
     </div>
