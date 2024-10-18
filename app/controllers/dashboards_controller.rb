@@ -1,4 +1,21 @@
 class DashboardsController < ApplicationController
+  before_action :find_user, only: [:edit_user_profile, :update_user_profile]
+
+  def destroy_user
+    @user = User.find(params[:id])
+    
+    if @user.destroy
+      redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol verwijderd."
+    else
+      redirect_to dashboard_manage_users_path, alert: "Er was een probleem bij het verwijderen van de gebruiker."
+    end
+  end
+
+  def edit_user_profile
+    # Load user via the :id param
+    # @user is already loaded by before_action :find_user
+  end
+
   def index
     if current_user.admin?
       # Admin: show the most recent courses in the system
@@ -90,9 +107,27 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def update_user_profile
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+      redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol bijgewerkt."
+    else
+      flash.now[:alert] = "Er was een probleem bij het bijwerken van de gebruiker."
+      render :edit_user_profile
+    end
+  end
+
   private
 
   def authorize_admin
     redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.admin?
+  end
+
+  def find_user
+    @user = User.find(params[:id])
+  end
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :role)
   end
 end

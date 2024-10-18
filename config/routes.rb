@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboards#index", as: "dashboard"
   get "dashboard/groepen", to: "dashboards#my_groups", as: "dashboard_my_groups"
   get "dashboard/manage_users", to: "dashboards#manage_users", as: "dashboard_manage_users"
+  get "dashboard/manage_users/:id/edit", to: "dashboards#edit_user_profile", as: "dashboard_edit_user_profile"
+  patch "dashboard/manage_users/:id", to: "dashboards#update_user_profile", as: "dashboard_update_user_profile"
+  delete "dashboard/manage_users/:id", to: "dashboards#destroy_user", as: "dashboard_delete_user"
   post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
 
   resources :courses, only: [:new, :create, :index, :edit, :update, :destroy] do

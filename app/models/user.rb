@@ -13,7 +13,7 @@ class User < ApplicationRecord
   has_many :attempts, dependent: :destroy
   has_many :registrations, dependent: :destroy
   has_many :owned_groups, class_name: "Group", foreign_key: :teacher_id
-  has_many :group_memberships
+  has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
 
   scope :students, -> { where(role: :student) }

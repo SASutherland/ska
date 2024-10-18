@@ -1,0 +1,50 @@
+<div class="form-container">
+
+  <%= simple_form_for(@user, url: dashboard_update_user_profile_path(@user), html: { method: :patch }) do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-header">
+      <h1>PROFIEL BIJWERKEN</h1>
+    </div>
+
+    <div class="form-inputs">
+      <!-- Voornaam -->
+      <%= f.input :first_name,
+                  label: "Voornaam",
+                  required: true,
+                  input_html: { autocomplete: "given-name" } %>
+
+      <!-- Achternaam -->
+      <%= f.input :last_name,
+                  label: "Achternaam",
+                  required: true,
+                  input_html: { autocomplete: "family-name" } %>
+
+      <!-- E-mail -->
+      <%= f.input :email,
+                  label: "E-mail",
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "email" } %>
+
+      <!-- Role (Student or Teacher) -->
+      <%= f.input :role, 
+                  as: :select, 
+                  label: "Ik ben een", 
+                  collection: [['Student', 'student'], ['Leraar', 'teacher']], 
+                  selected: @user.role %>
+
+      <div class="form-actions">
+        <%= f.button :submit, "BIJWERKEN", class: "btn btn-azure btn-form" %>
+      </div>
+
+      <!-- Account annuleren section -->
+      <h3 class="mt-5 text-center">Account annuleren</h3>
+
+      <div class="text-center mt-3">
+        Ontevreden? <%= link_to "Delete User", dashboard_delete_user_path(@user), method: :delete, data: { confirm: "Weet je het zeker dat je deze gebruiker wilt verwijderen?" }, class: "btn btn-danger ms-2" %>
+      </div>
+
+  <% end %>
+
+</div>
