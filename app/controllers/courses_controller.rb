@@ -39,6 +39,10 @@ class CoursesController < ApplicationController
   end  
 
   def destroy
+    # First, remove any associations in the group_courses join table to avoid foreign key violations
+    @course.groups.clear
+
+    # Destroy attempts associated with the questions and answers within the course
     @course.questions.each do |question|
       # Destroy attempts associated with the question's answers first
       question.answers.each do |answer|
@@ -47,6 +51,7 @@ class CoursesController < ApplicationController
       question.attempts.destroy_all
     end
 
+    # Finally, destroy the course
     if @course.destroy
       flash[:notice] = "Course deleted successfully."
       redirect_to request.referer || my_courses_courses_path

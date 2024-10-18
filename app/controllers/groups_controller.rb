@@ -1,29 +1,24 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:edit, :update, :destroy]
 
-  def new
-    @group = Group.new
-    @groups = Group.all
-  end
-
   def create
     @group = current_user.owned_groups.new(group_params)
-  
+    
     # Check if the current user is admin; set teacher explicitly for consistency
     @group.teacher = current_user if current_user.admin?
-  
+    
     # If groups were selected in the "Select all students from an existing group" dropdown
     if params[:group_ids].present?
       selected_groups = Group.where(id: params[:group_ids])
       selected_students = selected_groups.flat_map(&:students).uniq # Get all students from the selected groups
-  
+      
       # Filter out students who are already manually selected in the checkboxes
       manually_selected_students = User.where(id: params[:group][:student_ids])
       remaining_students = selected_students - manually_selected_students
-  
+      
       @group.students += remaining_students # Add only non-duplicated students to the new group
     end
-  
+    
     if @group.save
       redirect_to dashboard_my_groups_path, notice: "Group created successfully!"
     else
@@ -34,7 +29,21 @@ class GroupsController < ApplicationController
       end
     end
   end  
-
+  
+  def destroy
+    # Clear associations with students and courses before deleting the group
+    @group.students.clear
+    @group.courses.clear
+    
+    if @group.destroy
+      flash[:notice] = "Group deleted successfully."
+      redirect_to request.referer || dashboard_my_groups_path
+    else
+      flash[:alert] = "There was an issue deleting the group."
+      redirect_to request.referer || dashboard_my_groups_path
+    end
+  end
+  
   def edit
     @group = Group.find(params[:id])
     @groups = Group.all
@@ -45,9 +54,14 @@ class GroupsController < ApplicationController
     end
   end
   
+  def new
+    @group = Group.new
+    @groups = Group.all
+  end
+
   def update
     @group = Group.find(params[:id])
-  
+    
     # Clear existing students if the teacher deselects them all
     @group.students.clear
   
@@ -73,11 +87,6 @@ class GroupsController < ApplicationController
       end
     end
   end  
-
-  def destroy
-    @group.destroy
-    redirect_to dashboard_my_groups_path, notice: "Group deleted."
-  end
 
   private
 
