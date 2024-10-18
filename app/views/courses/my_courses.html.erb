@@ -29,48 +29,57 @@
           </div>
 
           <!-- List of Students Registered for the Course -->
-          <h4 class="mb-2">Studenten</h4>
           <% if course.registrations.any? %>
-            <div class="students-list" style="font-family: 'Lato', sans-serif;">
-              <% course.registrations.sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
-                <div class="d-flex justify-content-between align-items-center">
-                  
-                  <!-- Student Name -->
-                  <div class="col">
-                    <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
-                  </div>
+            <!-- Headers Row -->
+            <div class="students-list-wrapper">
+              <div class="d-flex justify-content-between align-items-center mb-2" style="font-weight: bold;">
+                <div class="col-3">Studenten</div>
+                <div class="col-2 text-center">Status</div>
+                <div class="col-2 text-center">Score</div>
+                <div class="col-3 text-center">Time Spent</div>
+              </div>
 
-                  <!-- Completion Status -->
-                  <div class="col text-center">
-                    <% total_questions = course.questions.count %>
-                    <% total_attempts = course.questions.map { |q| registration.user.attempts.find_by(question: q) }.compact.count %>
-                    <% if total_attempts == total_questions && total_questions > 0 %>
-                      <span style="color: #6CC680;">Complete</span>
-                    <% else %>
-                      Incomplete
-                    <% end %>
-                  </div>
+              <div class="students-list">
+                <% course.registrations.sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
+                  <div class="d-flex justify-content-between align-items-center">
+                    
+                    <!-- Student Name -->
+                    <div class="col-3">
+                      <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
+                    </div>
 
-                  <!-- Score -->
-                  <div class="col text-center">
-                    <% correct_answers = registration.user.attempts.select { |a| a.correct? && course.questions.include?(a.question) }.count %>
-                    <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
-                    <%= percentage %>%
-                  </div>
+                    <!-- Completion Status -->
+                    <div class="col-2 text-center">
+                      <% total_questions = course.questions.count %>
+                      <% total_attempts = course.questions.map { |q| registration.user.attempts.find_by(question: q) }.compact.count %>
+                      <% if total_attempts == total_questions && total_questions > 0 %>
+                        <span style="color: #6CC680;">Complete</span>
+                      <% else %>
+                        Incomplete
+                      <% end %>
+                    </div>
 
-                  <!-- Time Spent -->
-                  <div class="col text-start">
-                    <% time_spent = registration.time_spent %>
-                    <% if time_spent && time_spent > 0 %>
-                      <% hours = (time_spent / 3600).to_i %>
-                      <% minutes = (time_spent % 3600 / 60).to_i %>
-                      <% seconds = (time_spent % 60).to_i %>
-                      <%= "Time spent: #{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
-                    <% end %>
-                  </div>
+                    <!-- Score -->
+                    <div class="col-2 text-center">
+                      <% correct_answers = registration.user.attempts.select { |a| a.correct? && course.questions.include?(a.question) }.count %>
+                      <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
+                      <%= percentage %>%
+                    </div>
 
-                </div>
-              <% end %>
+                    <!-- Time Spent -->
+                    <div class="col-3 text-center">
+                      <% time_spent = registration.time_spent %>
+                      <% if time_spent && time_spent > 0 %>
+                        <% hours = (time_spent / 3600).to_i %>
+                        <% minutes = (time_spent % 3600 / 60).to_i %>
+                        <% seconds = (time_spent % 60).to_i %>
+                        <%= "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
+                      <% end %>
+                    </div>
+
+                  </div>
+                <% end %>
+              </div>
             </div>
           <% else %>
             <p>No students are currently registered for this course.</p>

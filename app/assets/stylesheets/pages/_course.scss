@@ -36,7 +36,12 @@
   background-color: #4580C4;
 }
 
-.students-list {
+.students-list-wrapper {
   font-family: 'Lato', sans-serif;
-  padding-left: 20px;
+  width: 90%; 
+}
+
+.students-list {
+  // font-family: 'Lato', sans-serif;
+  // padding-left: 20px;
 }

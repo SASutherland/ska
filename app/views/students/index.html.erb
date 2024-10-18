@@ -9,7 +9,7 @@
 
     <% if @students.any? %>
       <div class="card-white p-4 mb-4">
-        <h4>Studenten</h4>
+        <h4><strong>Studenten</strong></h4>
         <ul>
           <% @students.sort_by { |student| [student.first_name, student.last_name] }.each do |student| %>
             <li>
