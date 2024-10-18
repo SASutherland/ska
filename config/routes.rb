@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "dashboards#index", as: "dashboard"
   get "dashboard/groepen", to: "dashboards#my_groups", as: "dashboard_my_groups"
-
+  get "dashboard/manage_users", to: "dashboards#manage_users", as: "dashboard_manage_users"
   post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
 
   resources :courses, only: [:new, :create, :index, :edit, :update, :destroy] do

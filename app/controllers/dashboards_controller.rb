@@ -49,14 +49,9 @@ class DashboardsController < ApplicationController
     @attempts = current_user.attempts.includes(:question)
   end
 
-  def register_for_course
-    course = Course.find(params[:selected_course_id])
-    if current_user.registrations.exists?(course: course)
-      redirect_to dashboard_path, alert: "You are already registered for #{course.title}."
-    else
-      current_user.registrations.create(course: course)
-      redirect_to dashboard_path, notice: "You have successfully registered for #{course.title}."
-    end
+  def manage_users
+    # Fetch all users for the admin to view and manage
+    @users = User.all.order("LOWER(last_name) ASC")
   end
 
   def my_groups
@@ -67,5 +62,21 @@ class DashboardsController < ApplicationController
       # Teachers can only see the groups they created, ordered by the most recently updated
       @groups = current_user.owned_groups.order(updated_at: :desc)
     end
+  end
+
+  def register_for_course
+    course = Course.find(params[:selected_course_id])
+    if current_user.registrations.exists?(course: course)
+      redirect_to dashboard_path, alert: "You are already registered for #{course.title}."
+    else
+      current_user.registrations.create(course: course)
+      redirect_to dashboard_path, notice: "You have successfully registered for #{course.title}."
+    end
+  end
+
+  private
+
+  def authorize_admin
+    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.admin?
   end
 end
