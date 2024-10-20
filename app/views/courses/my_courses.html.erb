@@ -40,7 +40,7 @@
               </div>
 
               <div class="students-list">
-                <% course.registrations.sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
+                <% course.registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
                   <div class="d-flex justify-content-between align-items-center">
                     
                     <!-- Student Name -->
@@ -50,8 +50,8 @@
 
                     <!-- Completion Status -->
                     <div class="col-2 text-center">
-                      <% total_questions = course.questions.count %>
-                      <% total_attempts = course.questions.map { |q| registration.user.attempts.find_by(question: q) }.compact.count %>
+                      <% total_questions = course.questions.size %>
+                      <% total_attempts = registration.user.attempts.where(question_id: course.questions.pluck(:id)).size %>
                       <% if total_attempts == total_questions && total_questions > 0 %>
                         <span style="color: #6CC680;">Complete</span>
                       <% else %>
@@ -61,7 +61,7 @@
 
                     <!-- Score -->
                     <div class="col-2 text-center">
-                      <% correct_answers = registration.user.attempts.select { |a| a.correct? && course.questions.include?(a.question) }.count %>
+                      <% correct_answers = registration.user.attempts.where(question_id: course.questions.pluck(:id), correct: true).size %>
                       <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
                       <%= percentage %>%
                     </div>

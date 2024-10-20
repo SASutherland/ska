@@ -67,19 +67,27 @@ class CoursesController < ApplicationController
   end
 
   def index
-    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).sort_by(&:title)
+    @registered_courses = current_user.registrations.includes(course: { questions: :attempts }).map(&:course).sort_by(&:title)
     @attempts = current_user.attempts.includes(:question)
   end
 
   def my_courses
     if current_user.admin?
       # Admins can see all courses, ordered by updated_at
-      @created_courses = Course.order(updated_at: :desc)
+      @created_courses = Course.includes(
+        questions: :attempts,
+        registrations: :user
+      ).order(updated_at: :desc)
     else
       # Teachers can only see the courses they have created
-      @created_courses = current_user.courses.order(updated_at: :desc)
+      @created_courses = current_user.courses.includes(
+        questions: :attempts,
+        registrations: :user
+      ).order(updated_at: :desc)
     end
-    @attempts = current_user.attempts.includes(:question)
+  
+    # Only load @attempts if the user is not an admin (likely a teacher)
+    @attempts = current_user.attempts.includes(:question) unless current_user.admin?
   end
   
   def new
@@ -102,21 +110,29 @@ class CoursesController < ApplicationController
   end
 
   def update
+    # Store current group ids before updating the course
+    previous_group_ids = @course.group_ids
+  
     # Update the course with the form parameters
     if @course.update(course_params)
-      # After updating the course, now handle registering students for the selected groups
+      # After updating the course, now handle registering/unregistering students for the selected groups
       new_group_ids = params[:course][:group_ids].reject(&:blank?).map(&:to_i)
-      
+  
       # Update the course's groups association first
       @course.group_ids = new_group_ids
   
-      # Register each student from each group to the course
-      register_students_from_groups(new_group_ids)
+      # Register students from newly added groups
+      new_groups = new_group_ids - previous_group_ids
+      register_students_from_groups(new_groups)
+  
+      # Unregister students from groups that were removed
+      removed_groups = previous_group_ids - new_group_ids
+      unregister_students_from_groups(removed_groups)
   
       # Explicitly touch the course to update the `updated_at` timestamp
       @course.touch
   
-      flash[:notice] = "Course updated successfully, and students have been registered!"
+      flash[:notice] = "Course updated successfully, and student enrollments have been updated!"
       redirect_to my_courses_courses_path
     else
       flash[:alert] = "There was an issue updating the course."
@@ -257,5 +273,16 @@ class CoursesController < ApplicationController
     else
       @course = current_user.courses.find(params[:id])
     end
-  end  
+  end
+
+  def unregister_students_from_groups(group_ids)
+    # Get all the students belonging to the groups that were removed
+    groups = Group.where(id: group_ids)
+    students_to_unregister = groups.flat_map(&:students).uniq
+  
+    students_to_unregister.each do |student|
+      registration = Registration.find_by(user_id: student.id, course_id: @course.id)
+      registration.destroy if registration
+    end
+  end
 end

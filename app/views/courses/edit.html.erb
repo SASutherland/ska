@@ -19,9 +19,8 @@
 
       <div class="form-group">
         <label for="groupSelect" class="mt-3">Assign course to these groups</label>
-        <%= f.select(:group_ids, options_from_collection_for_select(@groups, "id", "name", @course.group_ids), { prompt: "Please select" }, 
-                                    { multiple: true, class: "form-control mt-2", data: { controller: "tom-select" } }, 
-                                     ) %>
+        <%= f.select(:group_ids, options_from_collection_for_select(@groups, "id", "name", @course.group_ids), {}, 
+                                    { multiple: true, class: "form-control mt-2", data: { controller: "tom-select" } }) %>
       </div>
 
       <div id="questions-container" data-course-form-target="questionsContainer">
