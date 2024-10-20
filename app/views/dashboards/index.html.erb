@@ -22,33 +22,127 @@
       </div>
     </div>
 
-    <!-- Weekly Task wrapped in card-white -->
+    <!-- Weekly Task -->
     <div class="card-white p-4 my-4">
-      <h1>Weekly Task</h1>
-      <div class="d-flex align-items-center mb-4">
-        <div class="dropdown me-2">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCourseButton" data-bs-toggle="dropdown" aria-expanded="false" data-add-course-target="dropdownButton">
-            Select Course
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownCourseButton">
-            <% @courses.each do |course| %>
-              <li>
-                <a class="dropdown-item" href="#" data-course-id="<%= course.id %>" data-course-title="<%= course.title %>" data-action="click->add-course#selectCourse" data-add-course-target="dropdownItem">
-                  <%= course.title %>
+      <% if @weekly_task %>
+        <h1>Weekly Task - <%= @weekly_task.created_at.strftime("%-d %B %Y") %></h1>
+
+        <!-- Calculate and display the Due Date countdown -->
+        <% due_date = @weekly_task.created_at + 7.days %>
+        <% remaining_time = due_date - Time.current %>
+
+        <% if remaining_time > 0 %>
+          <% days = (remaining_time / 1.day).to_i %>
+          <% hours = ((remaining_time % 1.day) / 1.hour).to_i %>
+          <p class="text-muted"><strong>Due</strong>: <%= "#{days} day#{'s' if days != 1} #{hours} hour#{'s' if hours != 1}" %></p>
+        <% else %>
+          <p class="text-danger"><strong>Due</strong>: Task is overdue</p>
+        <% end %>
+
+        <% if current_user.teacher? || current_user.admin? %>
+          <!-- List of Students Registered for the Weekly Task -->
+          <% if @weekly_task.registrations.any? %>
+            <!-- Headers Row -->
+            <div class="students-list-wrapper mt-4">
+              <div class="d-flex justify-content-between align-items-center mb-2" style="font-weight: bold;">
+                <div class="col-3">Student</div>
+                <div class="col-2 text-center">Status</div>
+                <div class="col-2 text-center">Score</div>
+                <div class="col-3 text-center">Time Spent</div>
+              </div>
+
+              <div class="students-list">
+                <% @weekly_task.registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
+                  <div class="d-flex justify-content-between align-items-center">
+                    
+                    <!-- Student Name -->
+                    <div class="col-3">
+                      <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
+                    </div>
+
+                    <!-- Completion Status -->
+                    <div class="col-2 text-center">
+                      <% total_questions = @weekly_task.questions.size %>
+                      <% total_attempts = registration.user.attempts.where(question_id: @weekly_task.questions.pluck(:id)).size %>
+                      <% if total_attempts == total_questions && total_questions > 0 %>
+                        <span style="color: #6CC680;">Complete</span>
+                      <% else %>
+                        Incomplete
+                      <% end %>
+                    </div>
+
+                    <!-- Score -->
+                    <div class="col-2 text-center">
+                      <% correct_answers = registration.user.attempts.where(question_id: @weekly_task.questions.pluck(:id), correct: true).size %>
+                      <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
+                      <%= percentage %>%
+                    </div>
+
+                    <!-- Time Spent -->
+                    <div class="col-3 text-center">
+                      <% time_spent = registration.time_spent %>
+                      <% if time_spent && time_spent > 0 %>
+                        <% hours = (time_spent / 3600).to_i %>
+                        <% minutes = (time_spent % 3600 / 60).to_i %>
+                        <% seconds = (time_spent % 60).to_i %>
+                        <%= "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
+                      <% end %>
+                    </div>
+
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <p>No students are currently registered for this weekly task.</p>
+          <% end %>
+        <% end %>
+
+        <!-- Questions Section -->
+        <h4 class="mt-4 mb-3">Questions</h4>
+        <div class="course-content d-flex align-items-start justify-content-between">
+          <!-- Questions Display -->
+          <div class="questions-list">
+            <% @weekly_task.questions.each_with_index do |question, index| %>
+              <% if current_user.teacher? || current_user.admin? %>
+                <!-- Teachers and Admin -->
+                <a href="<%= course_question_path(@weekly_task, question) %>" class="question-number">
+                  <%= index + 1 %>
                 </a>
-              </li>
+              <% else %>
+                <!-- Students -->
+                <% attempt = @attempts.find { |a| a.question_id == question.id } %>
+                <% if attempt %>
+                  <a href="<%= course_question_path(@weekly_task, question) %>" class="question-number question-answered">
+                    <%= index + 1 %>
+                  </a>
+                <% else %>
+                  <a href="<%= course_question_path(@weekly_task, question) %>" class="question-number">
+                    <%= index + 1 %>
+                  </a>
+                <% end %>
+              <% end %>
             <% end %>
-          </ul>
+          </div>
         </div>
 
-        <%= form_with url: register_for_course_path, method: :post, data: { turbo: false }, id: 'registerForm', class: 'd-flex align-items-center' do |f| %>
-          <%= hidden_field_tag :selected_course_id, '', id: 'selected_course_id', data: { add_course_target: 'selectedCourseInput' } %>
-          <%= f.submit 'Add', id: 'registerButton', disabled: true, data: { add_course_target: 'registerButton' } %>
-        <% end %>
-      </div>
+      <% else %>
+        <h1>Weekly Task</h1>
+        <p>No Weekly Task has been assigned yet.</p>
+      <% end %>
+
+      <% if current_user.teacher? || current_user.admin? %>
+        <div class="d-flex align-items-center mt-4">
+          <% if @weekly_task %>
+            <%= link_to "Edit Task", edit_weekly_task_course_path(@weekly_task), class: "btn btn-primary" %>
+          <% else %>
+            <%= link_to "Create Task", weekly_task_courses_path, class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
 
-    <!-- Recent Courses wrapped in card-white -->
+    <!-- Recent Courses -->
     <div class="card-white p-4">
       <h1>Recent Courses</h1>
 

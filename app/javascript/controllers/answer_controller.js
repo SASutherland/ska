@@ -8,14 +8,29 @@ export default class extends Controller {
     this.updateTimerDisplay();
     this.startTimer();
 
-    this.answerButtonTargets.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        this.handleAnswerClick(event);
-      });
-    });
-
     // Save time spent when user navigates away from the page
     window.addEventListener("beforeunload", this.saveTimeSpent.bind(this));
+  }
+
+  handleAnswerClick(event) {
+    // Debugging Log
+    console.log("Answer button clicked");
+
+    const selectedAnswerId = event.target.getAttribute("data-answer-id");
+
+    if (selectedAnswerId) {
+      console.log(`Selected answer ID: ${selectedAnswerId}`);
+      // Set the selected answer in the hidden field
+      this.hiddenAnswerFieldTarget.value = selectedAnswerId;
+
+      // Automatically submit the form for students
+      if (!this.isTeacherOrAdmin()) {
+        console.log("Submitting the form for the student...");
+        this.formTarget.submit();
+      }
+    } else {
+      console.error("Could not find the answer ID.");
+    }
   }
 
   checkAndResetTimerForNewCourse() {
@@ -54,12 +69,6 @@ export default class extends Controller {
     }
   }
 
-  handleAnswerClick(event) {
-    const selectedAnswerId = event.target.getAttribute("data-answer-id");
-    this.hiddenAnswerFieldTarget.value = selectedAnswerId;
-    this.formTarget.submit();
-  }
-
   disconnect() {
     clearInterval(this.timerInterval);
     this.saveTimeSpent(); // Save when leaving the page
@@ -88,25 +97,8 @@ export default class extends Controller {
         console.error("Error saving time spent:", error);
       });
   }
+
+  isTeacherOrAdmin() {
+    return document.body.classList.contains("teacher-role") || document.body.classList.contains("admin-role");
+  }
 }
-
-
-// import { Controller } from "@hotwired/stimulus";
-
-// export default class extends Controller {
-//   static targets = ["answerButton", "hiddenAnswerField", "form"];
-
-//   connect() {
-//     this.answerButtonTargets.forEach(button => {
-//       button.addEventListener("click", (event) => {
-//         this.handleAnswerClick(event);
-//       });
-//     });
-//   }
-
-//   handleAnswerClick(event) {
-//     const selectedAnswerId = event.target.getAttribute("data-answer-id");
-//     this.hiddenAnswerFieldTarget.value = selectedAnswerId;
-//     this.formTarget.submit();  // Submit the form automatically
-//   }
-// }

@@ -23,6 +23,14 @@
       <% end %>
     <% end %>
 
+    <!-- Do not remove
+    <% unless current_user.teacher? %>
+      <div class="time-spent">
+        <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
+      </div>
+    <% end %>
+    -->
+
     <div class="question-box">
       <h2><%= @question.content %></h2>
 
@@ -38,53 +46,42 @@
       <% end %>
 
       <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true, data: { answer_target: "form" } do |f| %>
-        <div class="answers">
-          <% if @question.question_type == 'open_answer' %>
-            <div class="form-group">
-              <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
+            <div class="answers">
+              <% if @question.question_type == 'open_answer' %>
+                <div class="form-group">
+                  <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
+                </div>
+                <!-- Answer Button for Students -->
+                <% if current_user.student? %>
+                  <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+                <% end %>
+
+              <% elsif @question.question_type == 'multiple_answer' %>
+                <% @answers.each do |answer| %>
+                  <div class="answer-button-container">
+                    <label class="answer-button">
+                      <%= f.check_box :answer_ids, { multiple: true }, answer.id, id: "answer_#{answer.id}", class: "d-none" %>
+                      <span class="answer-button-label"><%= answer.content %></span>
+                    </label>
+                  </div>
+                <% end %>
+                <!-- Answer Button for Students -->
+                <% if current_user.student? %>
+                  <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+                <% end %>
+
+              <% else %> <!-- Multiple Choice or True/False -->
+                <% @answers.each do |answer| %>
+                  <div class="answer-button-container" data-answer-target="answerButton">
+                    <button type="button" class="answer-button" data-answer-id="<%= answer.id %>" data-action="click->answer#handleAnswerClick">
+                      <%= answer.content %>
+                    </button>
+                  </div>
+                <% end %>
+                <%= f.hidden_field :answer, id: "selected_answer", data: { answer_target: "hiddenAnswerField" } %>
+              <% end %>
             </div>
-
-            <% if current_user.teacher? || current_user.admin? %>
-              <!-- No submit for teachers or admins -->
-            <% else %>
-              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
-            <% end %>
-
-          <% elsif @question.question_type == 'multiple_answer' %>
-            <% @answers.each_with_index do |answer, index| %>
-              <div class="answer-button-container">
-                <label class="answer-button">
-                  <%= f.check_box :answer_ids, { multiple: true }, answer.id, id: "answer_#{answer.id}", class: "d-none" %>
-                  <span class="answer-button-label"><%= answer.content %></span>
-                </label>
-              </div>
-            <% end %>
-
-            <% if current_user.teacher? || current_user.admin? %>
-              <!-- No submit for teachers or admins -->
-            <% else %>
-              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
-            <% end %>
-
-          <% else %>
-            <% @answers.each_with_index do |answer, index| %>
-              <div class="answer-button-container" data-answer-target="answerButton">
-                <button type="button" class="answer-button" data-answer-id="<%= answer.id %>">
-                  <%= answer.content %>
-                </button>
-              </div>
-            <% end %>
-
-            <%= f.hidden_field :answer, id: "selected_answer", data: { answer_target: "hiddenAnswerField" } %>
-
-            <% if current_user.teacher? || current_user.admin? %>
-              <!-- No submit for teachers or admins -->
-            <% else %>
-              <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
-            <% end %>
           <% end %>
-        </div>
-      <% end %>
 
       <!-- Correct Answer and Student's Answer for Teachers and Admins -->
       <% if current_user.teacher? || current_user.admin? %>

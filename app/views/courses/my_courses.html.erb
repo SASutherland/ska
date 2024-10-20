@@ -4,11 +4,19 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1 class="mb-4">My Created Courses</h1>
+
+    <!-- Teachers and Admins - My Created Courses -->
+    <h1 class="mb-4">
+      <% if current_user.admin? %>
+        All Courses
+      <% else %>
+        My Created Courses
+      <% end %>
+    </h1>
 
     <% if @created_courses.any? %>
       <% @created_courses.each do |course| %>
-        <div class="card-white">
+        <div class="card-white mb-4">
           <!-- Flex container for Course Name and Action Buttons -->
           <div class="d-flex justify-content-between align-items-center mb-3">
             <!-- Course Title -->
@@ -33,7 +41,7 @@
             <!-- Headers Row -->
             <div class="students-list-wrapper">
               <div class="d-flex justify-content-between align-items-center mb-2" style="font-weight: bold;">
-                <div class="col-3">Studenten</div>
+                <div class="col-3">Student</div>
                 <div class="col-2 text-center">Status</div>
                 <div class="col-2 text-center">Score</div>
                 <div class="col-3 text-center">Time Spent</div>
@@ -42,7 +50,6 @@
               <div class="students-list">
                 <% course.registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
                   <div class="d-flex justify-content-between align-items-center">
-                    
                     <!-- Student Name -->
                     <div class="col-3">
                       <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
@@ -76,7 +83,6 @@
                         <%= "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
                       <% end %>
                     </div>
-
                   </div>
                 <% end %>
               </div>
@@ -100,7 +106,13 @@
         </div>
       <% end %>
     <% else %>
-      <p>You have not created any courses yet.</p>
+      <p>
+        <% if current_user.admin? %>
+          No courses have been created yet.
+        <% else %>
+          You have not created any courses yet.
+        <% end %>
+      </p>
     <% end %>
   </div>
 </div>

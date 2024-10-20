@@ -1,0 +1,74 @@
+<div class="dashboard-container d-flex" data-controller="course-form">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <!-- Flash messages for validation errors -->
+  <div id="flash-messages">
+    <%= render 'shared/flashes' %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1">
+    <h1 class="mb-4">Edit Weekly Task</h1>
+
+    <div class="card-white p-4">
+      <%= simple_form_for @course, url: update_weekly_task_course_path(@course), method: :patch, html: { multipart: true, data: { turbo: true } } do |f| %>
+        
+        <!-- Group Selection -->
+        <div class="form-group mb-4">
+          <label for="groupSelect" class="mb-2">Assign task to these groups</label>
+          <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name", @course.group_ids), 
+            multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questions-container" data-course-form-target="questionsContainer">
+          <!-- This container will hold the dynamically added questions -->
+          <%= f.fields_for :questions do |question_form| %>
+            <!-- Existing questions with pre-filled data for editing -->
+            <div class="question-fields mb-4" data-question-id="<%= question_form.object.id %>">
+              <h4>Question <%= question_form.index + 1 %></h4>
+
+              <!-- Question content -->
+              <div class="form-group">
+                <%= question_form.text_field :content, class: 'form-control', style: 'max-width: 600px;' %>
+              </div>
+
+              <!-- Answers (for applicable types) -->
+              <div class="answers mt-2">
+                <%= question_form.fields_for :answers do |answer_form| %>
+                  <div class="answer-fields d-flex align-items-center mb-2">
+                    <div class="form-group d-flex align-items-center" style="width: 100%;">
+                      <%= answer_form.text_field :content, class: 'form-control', style: 'max-width: 495px; margin-right: 10px;' %>
+                      <div class="form-check">
+                        <%= answer_form.check_box :correct, class: 'form-check-input' %>
+                        <%= answer_form.label :correct, "Correct", class: 'form-check-label' %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Question Type Dropdown and Add Question Button -->
+        <div class="d-flex align-items-center my-4">
+          <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
+            <option value="multiple_choice">Multiple Choice</option>
+            <option value="open_answer">Open Answer</option>
+            <option value="true_false">True/False</option>
+            <option value="multiple_answer">Multiple Answer</option>
+          </select>
+
+          <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion">
+            <i class="fa-solid fa-plus"></i> Add Question
+          </button>
+        </div>
+
+        <!-- Submit Button -->
+        <%= f.submit "Update Weekly Task", class: "btn btn-primary mb-2" %>
+      <% end %>
+    </div>
+  </div>
+</div>

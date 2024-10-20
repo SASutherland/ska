@@ -9,23 +9,14 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1 class="mb-4">Create a New Course</h1>
+    <h1 class="mb-4">Create a Weekly Task</h1>
 
     <div class="card-white p-4">
-      <%= simple_form_for @course, html: { multipart: true, data: { turbo: true } } do |f| %>
-
-        <!-- Course Title -->
-        <%= f.input :title, label: "Course Title", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
-
-        <!-- Course Description -->
-        <%= f.input :description,
-              label: "Course Description",
-              as: :text,
-              input_html: { maxlength: 250, rows: 2, class: 'form-control', style: 'max-width: 600px;' } %> 
-
+      <%= simple_form_for @course, url: create_weekly_task_courses_path, method: :post, html: { multipart: true, data: { turbo: true } } do |f| %>
+        
         <!-- Group Selection -->
         <div class="form-group">
-          <label for="groupSelect" class="mb-2">Assign course to these groups</label>
+          <label for="groupSelect" class="mb-2">Assign task to these groups</label>
           <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
         </div>
 
@@ -49,7 +40,7 @@
         </div>
 
         <!-- Submit Button -->
-        <%= f.submit "Create Course", class: "btn btn-primary mb-2" %>
+        <%= f.submit "Create Weekly Task", class: "btn btn-primary mb-2" %>
       <% end %>
     </div>
   </div>

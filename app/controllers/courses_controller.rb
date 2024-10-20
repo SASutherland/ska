@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_teacher, only: [:new, :create, :edit, :update, :destroy, :my_courses]
-  before_action :set_course, only: [:edit, :update, :destroy]
+  before_action :authorize_teacher, only: [:new, :create, :edit, :update, :destroy, :my_courses, :weekly_task, :edit_weekly_task, :update_weekly_task]
+  before_action :set_course, only: [:edit, :update, :destroy, :edit_weekly_task, :update_weekly_task]
 
   def create
     @course = current_user.courses.build(course_params)
@@ -36,6 +36,24 @@ class CoursesController < ApplicationController
         end
       end
     end
+  end
+
+  def create_weekly_task
+    # Set title to current date for Weekly Task if title is missing
+    title = "Weekly Task - #{Date.today.strftime("%d %B %Y")}"
+    @course = current_user.courses.build(course_params.merge(weekly_task: true, title: title))
+  
+    if @course.save
+      # Register students from selected groups if groups are present
+      register_students_from_groups(params[:group_ids]) if params[:group_ids].present?
+      flash[:notice] = "Weekly Task has been created!"
+      redirect_to dashboard_path # Redirect to dashboard after successful creation
+    else
+      # Ensure groups are loaded again before re-rendering the form
+      @groups = current_user.owned_groups
+      flash.now[:alert] = "There was an issue creating the Weekly Task."
+      render :weekly_task, status: :unprocessable_entity
+    end
   end  
 
   def destroy
@@ -66,29 +84,43 @@ class CoursesController < ApplicationController
     @groups = current_user.owned_groups
   end
 
+  def edit_weekly_task
+    @course = Course.find(params[:id])
+    @groups = current_user.owned_groups
+  end
+
   def index
-    @registered_courses = current_user.registrations.includes(course: { questions: :attempts }).map(&:course).sort_by(&:title)
+    # Only for students to see their registered courses
+    @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
+  
+    # Sort registered courses by the most recent activity (attempt or registration date)
+    @registered_courses_with_attempts = @registered_courses.map do |course|
+      last_attempt = current_user.attempts.joins(:question).where(questions: { course_id: course.id }).order(updated_at: :desc).first
+      last_registration = current_user.registrations.find_by(course_id: course.id)
+
+      {
+        course: course,
+        last_activity: last_attempt ? last_attempt.updated_at : last_registration.created_at
+      }
+    end
+
+    # Sort courses by last_activity date in descending order to show the most recent ones first
+    @registered_courses_with_attempts.sort_by! { |course_with_attempt| -course_with_attempt[:last_activity].to_i }
+
     @attempts = current_user.attempts.includes(:question)
   end
 
   def my_courses
     if current_user.admin?
-      # Admins can see all courses, ordered by updated_at
-      @created_courses = Course.includes(
-        questions: :attempts,
-        registrations: :user
-      ).order(updated_at: :desc)
-    else
+      # Admins can see all courses, ordered by the most recent update
+      @created_courses = Course.includes(:questions, registrations: :user).order(updated_at: :desc)
+    elsif current_user.teacher?
       # Teachers can only see the courses they have created
-      @created_courses = current_user.courses.includes(
-        questions: :attempts,
-        registrations: :user
-      ).order(updated_at: :desc)
+      @created_courses = current_user.courses.includes(:questions, registrations: :user).order(updated_at: :desc)
+    else
+      redirect_to root_path, alert: "You are not authorized to access this page."
     end
-  
-    # Only load @attempts if the user is not an admin (likely a teacher)
-    @attempts = current_user.attempts.includes(:question) unless current_user.admin?
-  end
+  end 
   
   def new
     @course = Course.new
@@ -140,6 +172,35 @@ class CoursesController < ApplicationController
     end
   end
 
+  def update_weekly_task
+    # Ensure @course is set properly
+    previous_group_ids = @course.group_ids
+    
+    # Update the course with form parameters, excluding groups for now
+    if @course.update(course_params.except(:group_ids))
+      # Handle group associations
+      new_group_ids = (params[:group_ids] || []).reject(&:blank?).map(&:to_i)
+  
+      # Update the course's groups association
+      @course.group_ids = new_group_ids
+  
+      # Register students from newly added groups
+      new_groups = new_group_ids - previous_group_ids
+      register_students_from_groups(new_groups)
+  
+      # Unregister students from groups that were removed
+      removed_groups = previous_group_ids - new_group_ids
+      unregister_students_from_groups(removed_groups)
+  
+      flash[:notice] = "Weekly Task updated successfully!"
+      redirect_to dashboard_path
+    else
+      flash.now[:alert] = "There was an issue updating the Weekly Task."
+      @groups = current_user.owned_groups
+      render :edit_weekly_task, status: :unprocessable_entity
+    end
+  end  
+
   def unenroll
     course = Course.find(params[:id])
     registration = current_user.registrations.find_by(course: course)
@@ -152,6 +213,11 @@ class CoursesController < ApplicationController
     end
 
     redirect_to courses_path
+  end
+
+  def weekly_task
+    @course = Course.new(weekly_task: true)
+    @groups = current_user.owned_groups
   end
 
   private
@@ -167,6 +233,7 @@ class CoursesController < ApplicationController
     params.require(:course).permit(
       :title,
       :description,
+      :weekly_task,
       group_ids: [],
       questions_attributes: [
         :id,
