@@ -15,62 +15,79 @@ class DashboardsController < ApplicationController
     # Load user via the :id param
     # @user is already loaded by before_action :find_user
   end
-
+  
   def index
+    # Handle logic differently for Admins, Teachers, and Students
     if current_user.admin?
-      # Admin: show the most recent courses and weekly tasks in the system
-      @registered_courses_with_attempts = Course.where(weekly_task: false).order(updated_at: :desc).limit(4).map do |course|
+      # Admin Logic: Show recent courses and weekly tasks across the entire system
+      @registered_courses_with_attempts = Course.where(weekly_task: false)
+                                                .order(updated_at: :desc)
+                                                .limit(4)
+                                                .map do |course|
         {
           course: course,
           last_activity: course.updated_at
         }
       end
-  
-      # Admin: Get the most recent weekly task
-      @weekly_task = Course.where(weekly_task: true).order(created_at: :desc).first
-  
+
+      # Get the most recent weekly tasks for Admin
+      @weekly_tasks = Course.where(weekly_task: true)
+                            .where("created_at >= ?", 7.days.ago)
+                            .order(created_at: :desc)
+
     else
-      # Non-admin: Collect registered courses (students) and created courses (for teachers)
-      @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
+      # Common logic for Teachers and Students
+      @registered_courses = current_user.registrations.includes(course: :questions)
+                                                .map(&:course)
+                                                .uniq
       @groups = current_user.owned_groups
-  
-      # For each registered course, find the most recent attempt or registration date
-      @registered_courses_with_attempts = @registered_courses.select { |course| !course.weekly_task }.map do |course|
-        last_attempt = current_user.attempts.joins(:question).where(questions: { course_id: course.id }).order(updated_at: :desc).first
+
+      # Collect registered courses (excluding weekly tasks)
+      @registered_courses_with_attempts = @registered_courses
+                                          .select { |course| !course.weekly_task }
+                                          .map do |course|
+        last_attempt = current_user.attempts.joins(:question)
+                                              .where(questions: { course_id: course.id })
+                                              .order(updated_at: :desc).first
         last_registration = current_user.registrations.find_by(course_id: course.id)
-  
+
         {
           course: course,
           last_activity: last_attempt ? last_attempt.updated_at : last_registration.created_at
         }
       end
-  
-      # Include created courses for teachers
+
+      # If Teacher, include courses they've created
       if current_user.teacher?
-        @created_courses = current_user.courses.where(weekly_task: false).map do |course|
+        @created_courses = current_user.courses.where(weekly_task: false)
+                                                .map do |course|
           {
             course: course,
-            last_activity: course.updated_at # Use updated_at instead of created_at to capture recent modifications
+            last_activity: course.updated_at # Use updated_at for recent modifications
           }
         end
         @registered_courses_with_attempts.concat(@created_courses)
-  
-        # Load the most recent weekly task created by the teacher
-        @weekly_task = current_user.courses.where(weekly_task: true).order(created_at: :desc).first
+
+        # Get all weekly tasks created by the teacher that are still active
+        @weekly_tasks = current_user.courses.where(weekly_task: true)
+                                            .where("created_at >= ?", 7.days.ago)
+                                            .order(created_at: :desc)
+
       else
-        # Students: Load the most recent weekly task assigned to the student
-        @weekly_task = @registered_courses.select { |course| course.weekly_task }.first
+        # For Students: Load weekly tasks assigned to them
+        @weekly_tasks = @registered_courses.select { |course| course.weekly_task && course.created_at >= 7.days.ago }
       end
-  
-      # Sort courses by the last activity in descending order
+
+      # Sort by last activity (descending order)
       @registered_courses_with_attempts.sort_by! { |course_with_attempt| course_with_attempt[:last_activity] }.reverse!
-  
-      # Limit the display to the top 4 most recent courses
+
+      # Limit the list to the top 4 most recent courses
       @registered_courses_with_attempts = @registered_courses_with_attempts.first(4)
     end
-  
+
+    # Load attempts data for students
     @attempts = current_user.attempts.includes(:question)
-  end   
+  end
 
   def manage_users
     # Always initialize @users as an empty array if User.all is nil

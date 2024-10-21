@@ -95,21 +95,26 @@ class CoursesController < ApplicationController
   
     # Sort registered courses by the most recent activity (attempt or registration date)
     @registered_courses_with_attempts = @registered_courses.map do |course|
+      # Fetch the most recent attempt for the course
       last_attempt = current_user.attempts.joins(:question).where(questions: { course_id: course.id }).order(updated_at: :desc).first
+      # Fetch the registration record for the course
       last_registration = current_user.registrations.find_by(course_id: course.id)
-
+  
+      # Determine the most recent activity date
+      last_activity = [last_attempt&.updated_at, last_registration&.created_at].compact.max
+  
       {
         course: course,
-        last_activity: last_attempt ? last_attempt.updated_at : last_registration.created_at
+        last_activity: last_activity
       }
     end
-
+  
     # Sort courses by last_activity date in descending order to show the most recent ones first
-    @registered_courses_with_attempts.sort_by! { |course_with_attempt| -course_with_attempt[:last_activity].to_i }
-
+    @registered_courses_with_attempts.sort_by! { |course_with_attempt| course_with_attempt[:last_activity] }.reverse!
+  
     @attempts = current_user.attempts.includes(:question)
   end
-
+  
   def my_courses
     if current_user.admin?
       # Admins can see all courses, ordered by the most recent update

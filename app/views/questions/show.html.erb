@@ -23,13 +23,11 @@
       <% end %>
     <% end %>
 
-    <!-- Do not remove
     <% unless current_user.teacher? %>
-      <div class="time-spent">
+      <div class="time-spent student-hidden">
         <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
       </div>
     <% end %>
-    -->
 
     <div class="question-box">
       <h2><%= @question.content %></h2>
