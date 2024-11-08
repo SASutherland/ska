@@ -5,27 +5,27 @@
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
     <h1><%= @course.title %></h1>
-    <h1 class="question-title">QUESTION #<%= @question_number %></h1>
+    <h1 class="question-title">Vraag #<%= @question_number %></h1>
 
     <!-- Back button -->
     <% if params[:student_id] %>
       <% student = User.find(params[:student_id]) %>
       <%= link_to student_path(student), class: "back-btn" do %>
-        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to <%= student.first_name %>'s profile</span></p>
+        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Terug naar <%= student.first_name %>'s profiiel</span></p>
       <% end %>
     <% elsif current_user.teacher? || current_user.admin? %>
       <%= link_to my_courses_courses_path, class: "back-btn" do %>
-        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to My Courses</span></p>
+        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Terug naar cursussen</span></p>
       <% end %>
     <% else %>
       <%= link_to dashboard_path, class: "back-btn" do %>
-        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Back to Dashboard</span></p>
+        <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Terug naar Dashboard</span></p>
       <% end %>
     <% end %>
 
     <% unless current_user.teacher? %>
       <div class="time-spent student-hidden">
-        <p>🕐<strong class="ms-2">Time practiced:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
+        <p>🕐<strong class="ms-2">Tijd besteed:</strong> <span id="timer" data-answer-target="timer">00:00:00</span></p>
       </div>
     <% end %>
 
@@ -47,11 +47,11 @@
             <div class="answers">
               <% if @question.question_type == 'open_answer' %>
                 <div class="form-group">
-                  <%= f.text_field :answer_content, placeholder: "Type your answer here", class: "form-control", style: "max-width: 50%;" %>
+                  <%= f.text_field :answer_content, placeholder: "Jouw antwoord hier", class: "form-control", style: "max-width: 50%;" %>
                 </div>
                 <!-- Answer Button for Students -->
                 <% if current_user.student? %>
-                  <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+                  <%= f.submit "Antwoord", class: "btn btn-primary mt-3" %>
                 <% end %>
 
               <% elsif @question.question_type == 'multiple_answer' %>
@@ -65,7 +65,7 @@
                 <% end %>
                 <!-- Answer Button for Students -->
                 <% if current_user.student? %>
-                  <%= f.submit "Answer", class: "btn btn-primary mt-3" %>
+                  <%= f.submit "Bevestig", class: "btn btn-primary mt-3" %>
                 <% end %>
 
               <% else %> <!-- Multiple Choice or True/False -->
@@ -84,19 +84,19 @@
       <!-- Correct Answer and Student's Answer for Teachers and Admins -->
       <% if current_user.teacher? || current_user.admin? %>
         <div class="mt-4">
-          <strong>Correct Answer:</strong> <%= @question.answers.where(correct: true).map(&:content).join(", ") %>
+          <strong>Juiste antwoord:</strong> <%= @question.answers.where(correct: true).map(&:content).join(", ") %>
         </div>
 
         <!-- Only show the student's answer if student_id is present -->
         <% if params[:student_id] %>
           <div class="mt-2">
-            <strong><%= student&.first_name %>'s Answer:</strong>
+            <strong><%= student&.first_name %>'s antwoord:</strong>
             <% if @question.question_type == 'open_answer' %>
-              <%= student_attempt&.written_answer.presence || "No answer given" %>
+              <%= student_attempt&.written_answer.presence || "Geen antwoord gegeven" %>
             <% elsif @question.question_type == 'multiple_answer' %>
-              <%= student_attempt&.chosen_answers&.map(&:content).join(", ") || "No answer given" %>
+              <%= student_attempt&.chosen_answers&.map(&:content).join(", ") || "Geen antwoord gegeven" %>
             <% else %>
-              <%= Answer.find_by(id: student_attempt&.chosen_answer_id)&.content || "No answer given" %>
+              <%= Answer.find_by(id: student_attempt&.chosen_answer_id)&.content || "Geen antwoord gegeven" %>
             <% end %>
           </div>
         <% end %>
@@ -105,18 +105,18 @@
         <div class="mt-2">
           <% if @next_question.present? %>
             <%= link_to course_question_path(@course, @next_question, student_id: params[:student_id]), class: "btn btn-primary mt-3" do %>
-              Next
+              Volgende
             <% end %>
           <% else %>
             <% if params[:student_id] %>
               <!-- Redirect to student's profile if student_id exists -->
               <%= link_to student_path(student), class: "btn btn-primary mt-3" do %>
-                Finish
+                Afronden
               <% end %>
             <% else %>
               <!-- Redirect to My Courses if no student_id -->
               <%= link_to my_courses_courses_path, class: "btn btn-primary mt-3" do %>
-                Finish
+                Afronden
               <% end %>
             <% end %>
           <% end %>

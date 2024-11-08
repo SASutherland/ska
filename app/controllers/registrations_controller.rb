@@ -6,12 +6,12 @@ class RegistrationsController < ApplicationController
     if registration
       registration.time_spent = params[:time_spent]
       if registration.save
-        render json: { success: true }, status: :ok
+        render json: {success: true}, status: :ok
       else
-        render json: { success: false, errors: registration.errors.full_messages }, status: :unprocessable_entity
+        render json: {success: false, errors: registration.errors.full_messages}, status: :unprocessable_entity
       end
     else
-      render json: { success: false, error: 'Registration not found' }, status: :not_found
+      render json: {success: false, error: "Registratie niet gevonden"}, status: :not_found
     end
   end
 end

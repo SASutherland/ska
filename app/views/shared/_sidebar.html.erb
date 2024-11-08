@@ -8,33 +8,27 @@
     <!-- Manage Users (Admin only) -->
     <% if current_user.admin? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'manage_users' %>" href="<%= dashboard_manage_users_path %>">Manage Users</a>
+        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'manage_users' %>" href="<%= dashboard_manage_users_path %>">Gebruikers</a>
       </li>
     <% end %>
 
     <!-- My Courses (Student) -->
     <% if current_user.student? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">My Courses</a>
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Mijn cursusses</a>
       </li>
     <% end %>
 
     <!-- Teachers and Admin Section -->
     <% if current_user.teacher? || current_user.admin? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Mijn Groepen</a>
+        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Groepen</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'groups' && action_name == 'new' %>" href="<%= new_group_path %>">Create Group</a>
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Cursusses</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">My Courses</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'new' %>" href="<%= new_course_path %>">Create Course</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Students List</a>
+        <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Studenten lijst</a>
       </li>
     <% end %>
   </ul>

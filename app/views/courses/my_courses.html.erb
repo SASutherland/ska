@@ -8,11 +8,13 @@
     <!-- Teachers and Admins - My Created Courses -->
     <h1 class="mb-4">
       <% if current_user.admin? %>
-        All Courses
+        Alle cursusses
       <% else %>
-        My Created Courses
+        Aangemaakte cursussen
       <% end %>
     </h1>
+
+    <%= link_to "Cursus aanmaken", new_course_path, class: "btn btn-primary mb-4" %>
 
     <% if @created_courses.any? %>
       <% @created_courses.each do |course| %>
@@ -25,12 +27,12 @@
             <!-- Action Buttons (Edit/Delete) -->
             <div class="d-flex">
               <!-- Edit Button -->
-              <%= link_to edit_course_path(course), class: 'me-4', title: 'Edit this course' do %>
+              <%= link_to edit_course_path(course), class: 'me-4', title: 'Wijzig cursus' do %>
                 <i class="fa-solid fa-pen-to-square icon-aligned"></i>
               <% end %>
 
               <!-- Delete Button -->
-              <%= link_to course_path(course), method: :delete, data: { confirm: "Are you sure you want to delete this course? This action cannot be undone.", turbo: false }, class: 'me-2', title: 'Delete this course' do %>
+              <%= link_to course_path(course), method: :delete, data: { confirm: "Weet je zeker dat je deze cursus wilt verwijderen? Dit kan niet ongedaan gemaakt worden.", turbo: false }, class: 'me-2', title: 'Cursus verwijderen' do %>
                 <i class="fa-solid fa-xmark icon-aligned"></i>
               <% end %>
             </div>
@@ -44,55 +46,19 @@
                 <div class="col-3">Student</div>
                 <div class="col-2 text-center">Status</div>
                 <div class="col-2 text-center">Score</div>
-                <div class="col-3 text-center">Time Spent</div>
+                <div class="col-3 text-center">Bestede tijd</div>
               </div>
 
               <div class="students-list">
-                <% course.registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <!-- Student Name -->
-                    <div class="col-3">
-                      <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
-                    </div>
-
-                    <!-- Completion Status -->
-                    <div class="col-2 text-center">
-                      <% total_questions = course.questions.size %>
-                      <% total_attempts = registration.user.attempts.where(question_id: course.questions.pluck(:id)).size %>
-                      <% if total_attempts == total_questions && total_questions > 0 %>
-                        <span style="color: #6CC680;">Complete</span>
-                      <% else %>
-                        Incomplete
-                      <% end %>
-                    </div>
-
-                    <!-- Score -->
-                    <div class="col-2 text-center">
-                      <% correct_answers = registration.user.attempts.where(question_id: course.questions.pluck(:id), correct: true).size %>
-                      <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
-                      <%= percentage %>%
-                    </div>
-
-                    <!-- Time Spent -->
-                    <div class="col-3 text-center">
-                      <% time_spent = registration.time_spent %>
-                      <% if time_spent && time_spent > 0 %>
-                        <% hours = (time_spent / 3600).to_i %>
-                        <% minutes = (time_spent % 3600 / 60).to_i %>
-                        <% seconds = (time_spent % 60).to_i %>
-                        <%= "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
+                <%= render partial: 'shared/registration_list', locals: { registrations: course.registrations, questions: course.questions } %>
               </div>
             </div>
           <% else %>
-            <p>No students are currently registered for this course.</p>
+            <p>Er zijn geen studenten geregistreerd voor deze cursus.</p>
           <% end %>
 
           <!-- Questions Section -->
-          <h4 class="mt-4 mb-3">Questions</h4>
+          <h4 class="mt-4 mb-3">Vragen</h4>
           <div class="course-content d-flex align-items-start justify-content-between">
             <!-- Questions Display -->
             <div class="questions-list">
@@ -108,9 +74,9 @@
     <% else %>
       <p>
         <% if current_user.admin? %>
-          No courses have been created yet.
+          Er is nog geen cursus.
         <% else %>
-          You have not created any courses yet.
+          Je hebt nog geen cursus aangemaakt.
         <% end %>
       </p>
     <% end %>

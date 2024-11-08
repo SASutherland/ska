@@ -41,11 +41,6 @@
 
     <%= f.input :role, as: :select, label: "Ik ben een", collection: [['Student', 'student'], ['Leraar', 'teacher']], selected: resource.role %>
 
-    <%= f.input :current_password,
-                label: "Huidig wachtwoord",
-                hint: "Huidig wachtwoord nodig om wijzigingen te bevestigen",
-                required: true,
-                input_html: { autocomplete: "current-password" } %>
 
     <div class="form-actions">
       <%= f.button :submit, "BIJWERKEN", class: "btn btn-azure btn-form" %>

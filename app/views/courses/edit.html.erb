@@ -4,7 +4,7 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1>Edit Course</h1>
+    <h1>Cursus aanpassen</h1>
 
     <%= form_for @course, method: :patch, data: { turbo: "false" } do |f| %>
       <div class="form-group">
@@ -28,7 +28,7 @@
         <%= f.fields_for :questions do |question_form| %>
           <div class="question-fields mb-4" data-question-id="<%= question_form.object.id %>">
             <h4 class="new-question">
-              Question <%= question_form.index + 1 %>
+              Vraag <%= question_form.index + 1 %>
               <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
                 <i class="fa-solid fa-trash-can"></i>
               </button>

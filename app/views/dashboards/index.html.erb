@@ -44,7 +44,7 @@
                 <% end %>
 
                 <!-- Delete Button -->
-                <%= link_to course_path(weekly_task), method: :delete, data: { confirm: "Are you sure you want to delete this Weekly Task? This action cannot be undone.", turbo: false }, class: 'me-2', title: 'Delete this task' do %>
+                <%= link_to course_path(weekly_task), method: :delete, data: { confirm: "Weet je zeker dat je deze weektaak wilt verwijderen? Dit kan niet ongedaan gemaakt worden.", turbo: false }, class: 'me-2', title: 'Weektaak verwijderen' do %>
                   <i class="fa-solid fa-xmark icon-aligned"></i>
                 <% end %>
               </div>
@@ -73,47 +73,11 @@
                   <div class="col-3">Student</div>
                   <div class="col-2 text-center">Status</div>
                   <div class="col-2 text-center">Score</div>
-                  <div class="col-3 text-center">Time Spent</div>
+                  <div class="col-3 text-center">Bstede tijd</div>
                 </div>
 
                 <div class="students-list">
-                  <% weekly_task.registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <!-- Student Name -->
-                      <div class="col-3">
-                        <%= link_to "#{registration.user.first_name} #{registration.user.last_name}", student_path(registration.user), class: 'student-link' %>
-                      </div>
-
-                      <!-- Completion Status -->
-                      <div class="col-2 text-center">
-                        <% total_questions = weekly_task.questions.size %>
-                        <% total_attempts = registration.user.attempts.where(question_id: weekly_task.questions.pluck(:id)).size %>
-                        <% if total_attempts == total_questions && total_questions > 0 %>
-                          <span style="color: #6CC680;">Complete</span>
-                        <% else %>
-                          Incomplete
-                        <% end %>
-                      </div>
-
-                      <!-- Score -->
-                      <div class="col-2 text-center">
-                        <% correct_answers = registration.user.attempts.where(question_id: weekly_task.questions.pluck(:id), correct: true).size %>
-                        <% percentage = total_questions > 0 ? (correct_answers.to_f / total_questions * 100).round : 0 %>
-                        <%= percentage %>%
-                      </div>
-
-                      <!-- Time Spent -->
-                      <div class="col-3 text-center">
-                        <% time_spent = registration.time_spent %>
-                        <% if time_spent && time_spent > 0 %>
-                          <% hours = (time_spent / 3600).to_i %>
-                          <% minutes = (time_spent % 3600 / 60).to_i %>
-                          <% seconds = (time_spent % 60).to_i %>
-                          <%= "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}" %>
-                        <% end %>
-                      </div>
-                    </div>
-                  <% end %>
+                  <%= render partial: 'shared/registration_list', locals: { registrations: weekly_task.registrations, questions: weekly_task.questions } %>
                 </div>
               </div>
             <% else %>
@@ -151,20 +115,20 @@
         </div>
       <% end %>
     <% else %>
-      <h1>Weekly Task</h1>
-      <p>No Weekly Task has been assigned yet.</p>
+      <h1>Weektaak</h1>
+      <p>Er is nog geen weektaak.</p>
 
       <!-- Button to Create New Weekly Task (Only If No Task Exists) -->
       <% if current_user.teacher? || current_user.admin? %>
-        <div class="d-flex align-items-center mt-4">
-          <%= link_to "Create Task", weekly_task_courses_path, class: "btn btn-primary" %>
+        <div class="d-flex align-items-center my-4">
+          <%= link_to "Maak taak aan", weekly_task_courses_path, class: "btn btn-primary" %>
         </div>
       <% end %>
     <% end %>
 
     <!-- Recent Courses -->
     <div class="card-white p-4">
-      <h1>Recent Courses</h1>
+      <h1>Recente Cursussen</h1>
 
       <% @registered_courses_with_attempts.each do |course_with_attempt| %>
         <% course = course_with_attempt[:course] %>

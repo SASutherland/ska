@@ -19,6 +19,14 @@ module Ska
     config.load_defaults 7.0
 
     # Configuration for the application, engines, and railties goes here.
+
+    # Set default locale to Dutch
+    config.i18n.default_locale = :nl
+    config.i18n.available_locales = [:nl, :en]
+
+    # Fallback to English for missing translations in Dutch
+    config.i18n.fallbacks = [:en]
+
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.

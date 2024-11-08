@@ -18,7 +18,7 @@ export default class extends Controller {
     let questionHTML = `
       <div class="question-fields mb-4" data-question-number="${questionNumber}">
         <h4 class="new-question">
-          Question ${questionNumber}
+          Vraag ${questionNumber}
           <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
             <i class="fa-solid fa-trash-can"></i>
           </button>
@@ -83,7 +83,7 @@ export default class extends Controller {
     const questionFields = this.questionsContainerTarget.querySelectorAll(".question-fields");
     questionFields.forEach((field, index) => {
       const questionNumberSpan = field.querySelector(".new-question");
-      questionNumberSpan.innerHTML = `Question ${index + 1}
+      questionNumberSpan.innerHTML = `Vraag ${index + 1}
         <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
           <i class="fa-solid fa-trash-can"></i>
         </button>`;

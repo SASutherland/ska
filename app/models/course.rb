@@ -15,17 +15,17 @@ class Course < ApplicationRecord
 
   def validate_questions
     if questions.empty?
-      errors.add(:base, "The course must have at least one question.")
+      errors.add(:base, "De cursus moet ten minste één vraag bevatten.")
     end
 
     questions.each do |question|
       if question.content.blank?
-        errors.add(:base, "All question fields must be filled in.")
+        errors.add(:base, "Alle vragen moeten ingevuld zijn")
       end
 
       question.answers.each do |answer|
         if answer.content.blank?
-          errors.add(:base, "All answer fields must be filled in for each question.")
+          errors.add(:base, "Alle antwoorden moeten ingevuld zijn")
         end
       end
     end

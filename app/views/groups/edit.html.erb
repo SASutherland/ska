@@ -9,31 +9,31 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1" data-controller="add-members">
-    <h1>Edit Group</h1>
+    <h1>Groep wijzigen</h1>
 
     <%= simple_form_for @group, url: group_path(@group), method: :patch, data: { turbo: true } do |f| %>
 
       <!-- Group Name Input -->
       <div class="field group-form-control">
-        <%= f.input :name, label: "Group name", required: true %> <!-- Pre-fill group name -->
+        <%= f.input :name, label: "Naam van de groep", required: true %> <!-- Pre-fill group name -->
       </div>
 
       <!-- Select Groups for pre-selecting students -->
       <div class="form-group">
-        <label for="groupSelect">Select all students from an existing group (optional)</label>
+        <label for="groupSelect">Select studenten van een bestaande groep (optioneel).</label>
         <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control mt-2 mb-3", id: "groupSelect", data: { controller: "tom-select" } %>
       </div>
 
       <!-- Student Checkboxes -->
       <div class="field">
-        <%= f.label "Select students to add to the group" %>
+        <%= f.label "Selecteer studenten om te toevoegen aan deze groep" %>
 
         <!-- List all students with checkboxes -->
         <div class="student-list mt-2">
           <ul class="list-group">
             <!-- "Select all" checkbox -->
             <li class="list-group-item" style="background-color: white;">
-              <span>Select all</span>
+              <span>Selecteer alles</span>
               <%= check_box_tag "select_all", "all", false, id: "select-all", class: "select-all-checkbox", data: { action: "change->add-members#toggleSelectAll" } %>
             </li>
 
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <%= f.submit "Update Group", class: "btn btn-primary mt-4 mb-5", id: "submit-group" %>
+      <%= f.submit "Groep wijzigen", class: "btn btn-primary mt-4 mb-5", id: "submit-group" %>
     <% end %>
   </div>
 </div>
