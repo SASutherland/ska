@@ -3,7 +3,7 @@ class DashboardsController < ApplicationController
 
   def destroy_user
     @user = User.find(params[:id])
-    
+
     if @user.destroy
       redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol verwijderd."
     else
@@ -15,15 +15,15 @@ class DashboardsController < ApplicationController
     # Load user via the :id param
     # @user is already loaded by before_action :find_user
   end
-  
+
   def index
     # Handle logic differently for Admins, Teachers, and Students
     if current_user.admin?
       # Admin Logic: Show recent courses and weekly tasks across the entire system
       @registered_courses_with_attempts = Course.where(weekly_task: false)
-                                                .order(updated_at: :desc)
-                                                .limit(4)
-                                                .map do |course|
+        .order(updated_at: :desc)
+        .limit(4)
+        .map do |course|
         {
           course: course,
           last_activity: course.updated_at
@@ -32,23 +32,23 @@ class DashboardsController < ApplicationController
 
       # Get the most recent weekly tasks for Admin
       @weekly_tasks = Course.where(weekly_task: true)
-                            .where("created_at >= ?", 7.days.ago)
-                            .order(created_at: :desc)
+        .where("created_at >= ?", 7.days.ago)
+        .order(created_at: :desc)
 
     else
       # Common logic for Teachers and Students
       @registered_courses = current_user.registrations.includes(course: :questions)
-                                                .map(&:course)
-                                                .uniq
+        .map(&:course)
+        .uniq
       @groups = current_user.owned_groups
 
       # Collect registered courses (excluding weekly tasks)
       @registered_courses_with_attempts = @registered_courses
-                                          .select { |course| !course.weekly_task }
-                                          .map do |course|
+        .select { |course| !course.weekly_task }
+        .map do |course|
         last_attempt = current_user.attempts.joins(:question)
-                                              .where(questions: { course_id: course.id })
-                                              .order(updated_at: :desc).first
+          .where(questions: {course_id: course.id})
+          .order(updated_at: :desc).first
         last_registration = current_user.registrations.find_by(course_id: course.id)
 
         {
@@ -60,7 +60,7 @@ class DashboardsController < ApplicationController
       # If Teacher, include courses they've created
       if current_user.teacher?
         @created_courses = current_user.courses.where(weekly_task: false)
-                                                .map do |course|
+          .map do |course|
           {
             course: course,
             last_activity: course.updated_at # Use updated_at for recent modifications
@@ -70,8 +70,8 @@ class DashboardsController < ApplicationController
 
         # Get all weekly tasks created by the teacher that are still active
         @weekly_tasks = current_user.courses.where(weekly_task: true)
-                                            .where("created_at >= ?", 7.days.ago)
-                                            .order(created_at: :desc)
+          .where("created_at >= ?", 7.days.ago)
+          .order(created_at: :desc)
 
       else
         # For Students: Load weekly tasks assigned to them
@@ -95,14 +95,14 @@ class DashboardsController < ApplicationController
 
     # Handle sorting logic
     case params[:sort]
-    when 'role'
-      direction = params[:direction] == 'desc' ? :desc : :asc
+    when "role"
+      direction = (params[:direction] == "desc") ? :desc : :asc
       @users = @users.order(role: direction)
-    when 'first_name'
-      direction = params[:direction] == 'desc' ? :desc : :asc
+    when "first_name"
+      direction = (params[:direction] == "desc") ? :desc : :asc
       @users = @users.order("LOWER(first_name) #{direction}")
-    when 'last_name'
-      direction = params[:direction] == 'desc' ? :desc : :asc
+    when "last_name"
+      direction = (params[:direction] == "desc") ? :desc : :asc
       @users = @users.order("LOWER(last_name) #{direction}")
     else
       # Default sorting, e.g., by last name and first name (case-insensitive)
@@ -111,12 +111,12 @@ class DashboardsController < ApplicationController
   end
 
   def my_groups
-    if current_user.admin?
+    @groups = if current_user.admin?
       # Admin can see all groups, ordered by the most recently updated
-      @groups = Group.order(updated_at: :desc) 
+      Group.order(updated_at: :desc)
     else
       # Teachers can only see the groups they created, ordered by the most recently updated
-      @groups = current_user.owned_groups.order(updated_at: :desc)
+      current_user.owned_groups.order(updated_at: :desc)
     end
   end
 
