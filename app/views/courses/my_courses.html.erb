@@ -14,6 +14,8 @@
       <% end %>
     </h1>
 
+    <%= link_to "Cursus aanmaken", new_course_path, class: "btn btn-primary mb-4" %>
+
     <% if @created_courses.any? %>
       <% @created_courses.each do |course| %>
         <div class="card-white mb-4">

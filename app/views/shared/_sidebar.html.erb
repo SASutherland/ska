@@ -22,13 +22,10 @@
     <!-- Teachers and Admin Section -->
     <% if current_user.teacher? || current_user.admin? %>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Mijn Groepen</a>
+        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Groepen</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Mijn cursusses</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'new' %>" href="<%= new_course_path %>">Cursus aanmaken</a>
+        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Cursusses</a>
       </li>
       <li class="nav-item">
         <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Studenten lijst</a>
