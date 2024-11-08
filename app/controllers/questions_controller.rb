@@ -2,28 +2,28 @@ class QuestionsController < ApplicationController
   def show
     @course = Course.includes(questions: [:attempts]).find(params[:course_id])
     @question = @course.questions.find(params[:id])
-  
+
     # Only shuffle answers for multiple_choice questions
-    if @question.question_type == 'multiple_choice'
-      @answers = @question.answers.shuffle
+    @answers = if @question.question_type == "multiple_choice"
+      @question.answers.shuffle
     else
       # For true_false and multiple_answer questions, don't shuffle answers
-      @answers = @question.answers.order(:id)
+      @question.answers.order(:id)
     end
-  
+
     @attempts = current_user.attempts.where(question_id: @course.questions.pluck(:id))
     @question_number = @course.questions.order(:id).pluck(:id).index(@question.id) + 1
     @previous_question = @course.questions.where("id < ?", @question.id).order(id: :desc).first
     @next_question = @course.questions.where("id > ?", @question.id).order(id: :asc).first
-  end  
+  end
 
   def submit_answer
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
 
-    if @question.question_type == 'open_answer'
+    if @question.question_type == "open_answer"
       handle_open_answer_submission(@question)
-    elsif @question.question_type == 'multiple_answer'
+    elsif @question.question_type == "multiple_answer"
       handle_multiple_answer_submission(@question)
     else
       chosen_answer_id = params[:answer]
@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
       if chosen_answer_id.present?
         handle_multiple_choice_or_true_false_submission(chosen_answer_id)
       else
-        flash[:alert] = "Please select an answer before submitting."
+        flash[:alert] = "Kies eerst een antwoord."
         redirect_to course_question_path(@course, @question)
         return
       end
@@ -45,7 +45,7 @@ class QuestionsController < ApplicationController
       redirect_to course_question_path(@course, next_question)
     else
       # If no more questions, redirect to the dashboard
-      redirect_to dashboard_path, notice: "You have completed the course!"
+      redirect_to dashboard_path, notice: "Je heeft alle vragen beantwoord."
     end
   end
 
@@ -87,7 +87,6 @@ class QuestionsController < ApplicationController
     attempt.update(written_answer: user_answer_content, correct: is_correct)
   end
 
-
   # Handle submission for multiple_answer questions
   def handle_multiple_answer_submission(question)
     chosen_answer_ids = params[:answer_ids] || []
@@ -105,5 +104,4 @@ class QuestionsController < ApplicationController
     attempt.chosen_answers = Answer.where(id: chosen_answer_ids)
     attempt.update(correct: is_correct)
   end
-
 end

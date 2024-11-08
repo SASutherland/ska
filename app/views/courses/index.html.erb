@@ -5,7 +5,7 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1 class="mb-4">My Courses</h1>
+    <h1 class="mb-4">Mijn cursussen</h1>
 
     <% if @registered_courses_with_attempts.any? %>
       <% @registered_courses_with_attempts.each do |course_with_attempt| %>
@@ -37,7 +37,7 @@
 
             <!--
             <div class="action-buttons">
-              <%= button_to 'Unenroll', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+              <%= button_to 'Uitschrijven', unenroll_course_path(course), method: :delete, data: { turbo_confirm: 'Weet je het zeker?' }, class: 'btn btn-danger' %>
             </div>
             -->
 
@@ -45,7 +45,7 @@
         </div>
       <% end %>
     <% else %>
-      <p>You are not enrolled in any courses.</p>
+      <p>Je bent nog niet lid van een cursus.</p>
     <% end %>
   </div>
 </div>

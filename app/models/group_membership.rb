@@ -3,11 +3,11 @@ class GroupMembership < ApplicationRecord
   belongs_to :group
 
   validate :user_must_be_a_student
-  validates :user_id, uniqueness: { scope: :group_id, message: "has already been added to this group" }
+  validates :user_id, uniqueness: {scope: :group_id, message: "Deze gebruiker is al lid van deze groep"}
 
   private
 
   def user_must_be_a_student
-    errors.add(:user, "must be a student") unless user&.student?
+    errors.add(:user, "moet een student zijn") unless user&.student?
   end
 end

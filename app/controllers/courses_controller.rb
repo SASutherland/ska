@@ -5,33 +5,33 @@ class CoursesController < ApplicationController
 
   def create
     @course = current_user.courses.build(course_params)
-    
+
     if @course.save
       # Handle true/false and open-answer questions
       handle_true_false_questions(@course)
       handle_open_answer_questions(@course)
-  
+
       # Register all students from selected groups for the new course
       if params[:group_ids].present?
         selected_groups = Group.where(id: params[:group_ids])
         selected_students = selected_groups.flat_map(&:students).uniq # Get all unique students from the selected groups
-  
+
         selected_students.each do |student|
           # Register the student for the course
           Registration.find_or_create_by(user: student, course: @course)
         end
       end
-  
-      flash[:notice] = "Course created and students have been enrolled!"
+
+      flash[:notice] = "Cursus is aangemaakt!"
       redirect_to dashboard_path
     else
       respond_to do |format|
         format.turbo_stream do
-          flash.now[:alert] = "Make sure to add a course title and fill in all question fields."
+          flash.now[:alert] = "Zorg er voor dat alle velden zijn ingevuld."
           render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flashes")
         end
         format.html do
-          flash.now[:alert] = "There was an issue creating the course."
+          flash.now[:alert] = "Is was een probleem met het aanmaken van de cursus."
           render :new, status: :unprocessable_entity
         end
       end
@@ -40,21 +40,21 @@ class CoursesController < ApplicationController
 
   def create_weekly_task
     # Set title to current date for Weekly Task if title is missing
-    title = "Weekly Task - #{Date.today.strftime("%d %B %Y")}"
+    title = "Weektaak - #{Date.today.strftime("%d %B %Y")}"
     @course = current_user.courses.build(course_params.merge(weekly_task: true, title: title))
-  
+
     if @course.save
       # Register students from selected groups if groups are present
       register_students_from_groups(params[:group_ids]) if params[:group_ids].present?
-      flash[:notice] = "Weekly Task has been created!"
+      flash[:notice] = "Weektaak is aangemaakt!"
       redirect_to dashboard_path # Redirect to dashboard after successful creation
     else
       # Ensure groups are loaded again before re-rendering the form
       @groups = current_user.owned_groups
-      flash.now[:alert] = "There was an issue creating the Weekly Task."
+      flash.now[:alert] = "Is was een probleem met het aanmaken van de weektaak."
       render :weekly_task, status: :unprocessable_entity
     end
-  end  
+  end
 
   def destroy
     # First, remove any associations in the group_courses join table to avoid foreign key violations
@@ -71,10 +71,10 @@ class CoursesController < ApplicationController
 
     # Finally, destroy the course
     if @course.destroy
-      flash[:notice] = "Course deleted successfully."
+      flash[:notice] = "Cursus is verwijderd."
       redirect_to request.referer || my_courses_courses_path
     else
-      flash[:alert] = "There was an issue deleting the course."
+      flash[:alert] = "Cursus kon niet worden verwijderd."
       redirect_to request.referer || my_courses_courses_path
     end
   end
@@ -92,29 +92,29 @@ class CoursesController < ApplicationController
   def index
     # Only for students to see their registered courses
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
-  
+
     # Sort registered courses by the most recent activity (attempt or registration date)
     @registered_courses_with_attempts = @registered_courses.map do |course|
       # Fetch the most recent attempt for the course
-      last_attempt = current_user.attempts.joins(:question).where(questions: { course_id: course.id }).order(updated_at: :desc).first
+      last_attempt = current_user.attempts.joins(:question).where(questions: {course_id: course.id}).order(updated_at: :desc).first
       # Fetch the registration record for the course
       last_registration = current_user.registrations.find_by(course_id: course.id)
-  
+
       # Determine the most recent activity date
       last_activity = [last_attempt&.updated_at, last_registration&.created_at].compact.max
-  
+
       {
         course: course,
         last_activity: last_activity
       }
     end
-  
+
     # Sort courses by last_activity date in descending order to show the most recent ones first
     @registered_courses_with_attempts.sort_by! { |course_with_attempt| course_with_attempt[:last_activity] }.reverse!
-  
+
     @attempts = current_user.attempts.includes(:question)
   end
-  
+
   def my_courses
     if current_user.admin?
       # Admins can see all courses, ordered by the most recent update
@@ -123,10 +123,10 @@ class CoursesController < ApplicationController
       # Teachers can only see the courses they have created
       @created_courses = current_user.courses.includes(:questions, registrations: :user).order(updated_at: :desc)
     else
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
     end
-  end 
-  
+  end
+
   def new
     @course = Course.new
     @groups = current_user.owned_groups
@@ -149,30 +149,30 @@ class CoursesController < ApplicationController
   def update
     # Store current group ids before updating the course
     previous_group_ids = @course.group_ids
-  
+
     # Update the course with the form parameters
     if @course.update(course_params)
       # After updating the course, now handle registering/unregistering students for the selected groups
       new_group_ids = params[:course][:group_ids].reject(&:blank?).map(&:to_i)
-  
+
       # Update the course's groups association first
       @course.group_ids = new_group_ids
-  
+
       # Register students from newly added groups
       new_groups = new_group_ids - previous_group_ids
       register_students_from_groups(new_groups)
-  
+
       # Unregister students from groups that were removed
       removed_groups = previous_group_ids - new_group_ids
       unregister_students_from_groups(removed_groups)
-  
+
       # Explicitly touch the course to update the `updated_at` timestamp
       @course.touch
-  
-      flash[:notice] = "Course updated successfully, and student enrollments have been updated!"
+
+      flash[:notice] = "Cursus is bijgewerkt."
       redirect_to my_courses_courses_path
     else
-      flash[:alert] = "There was an issue updating the course."
+      flash[:alert] = "Er was een probleem bij het bijwerken van de cursus."
       render :edit
     end
   end
@@ -180,31 +180,31 @@ class CoursesController < ApplicationController
   def update_weekly_task
     # Ensure @course is set properly
     previous_group_ids = @course.group_ids
-    
+
     # Update the course with form parameters, excluding groups for now
     if @course.update(course_params.except(:group_ids))
       # Handle group associations
       new_group_ids = (params[:group_ids] || []).reject(&:blank?).map(&:to_i)
-  
+
       # Update the course's groups association
       @course.group_ids = new_group_ids
-  
+
       # Register students from newly added groups
       new_groups = new_group_ids - previous_group_ids
       register_students_from_groups(new_groups)
-  
+
       # Unregister students from groups that were removed
       removed_groups = previous_group_ids - new_group_ids
       unregister_students_from_groups(removed_groups)
-  
-      flash[:notice] = "Weekly Task updated successfully!"
+
+      flash[:notice] = "Weektaak is bijgewerkt."
       redirect_to dashboard_path
     else
-      flash.now[:alert] = "There was an issue updating the Weekly Task."
+      flash.now[:alert] = "Er was een probleem bij het bijwerken van de weektaak."
       @groups = current_user.owned_groups
       render :edit_weekly_task, status: :unprocessable_entity
     end
-  end  
+  end
 
   def unenroll
     course = Course.find(params[:id])
@@ -212,9 +212,9 @@ class CoursesController < ApplicationController
 
     if registration
       registration.destroy
-      flash[:notice] = "You have successfully unenrolled from #{course.title}."
+      flash[:notice] = "Je bent uitgeschreven van #{course.title}."
     else
-      flash[:alert] = "You are not enrolled in this course."
+      flash[:alert] = "Je bent al uitgeschreven van deze cursus."
     end
 
     redirect_to courses_path
@@ -230,7 +230,7 @@ class CoursesController < ApplicationController
   def authorize_teacher
     # Allow access if the user is either a teacher or an admin
     unless current_user.teacher? || current_user.admin?
-      redirect_to root_path, alert: "You are not authorized to perform this action."
+      redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
     end
   end
 
@@ -283,10 +283,10 @@ class CoursesController < ApplicationController
             # Create or update the answer if necessary
             question.answers.create!(content: correct_answer_content, correct: true) if question.answers.empty?
           else
-            flash[:alert] = "No correct answer provided for the open-answer question '#{question.content}'."
+            flash[:alert] = "Geen correcte antwoord gevonden voor de vraag '#{question.content}'."
           end
         else
-          flash[:alert] = "No answer parameters provided for the question '#{question.content}'."
+          flash[:alert] = "Geen antwoorden gevonden voor de vraag '#{question.content}'."
         end
       end
     end
@@ -313,7 +313,7 @@ class CoursesController < ApplicationController
       # Update the attempt with the user's written answer and correctness
       attempt.update(written_answer: user_answer_content, correct: is_correct)
     else
-      flash[:alert] = "Correct answer not found for this question."
+      flash[:alert] = "Er is geen correct antwoord gevonden voor deze vraag."
       redirect_to course_question_path(question.course, question)
     end
   end
@@ -331,7 +331,7 @@ class CoursesController < ApplicationController
 
   def register_students_from_groups(group_ids)
     groups = Group.where(id: group_ids)
-  
+
     groups.each do |group|
       group.students.each do |student|
         Registration.find_or_create_by(user_id: student.id, course_id: @course.id)
@@ -340,10 +340,10 @@ class CoursesController < ApplicationController
   end
 
   def set_course
-    if current_user.admin?
-      @course = Course.find(params[:id])
+    @course = if current_user.admin?
+      Course.find(params[:id])
     else
-      @course = current_user.courses.find(params[:id])
+      current_user.courses.find(params[:id])
     end
   end
 
@@ -351,7 +351,7 @@ class CoursesController < ApplicationController
     # Get all the students belonging to the groups that were removed
     groups = Group.where(id: group_ids)
     students_to_unregister = groups.flat_map(&:students).uniq
-  
+
     students_to_unregister.each do |student|
       registration = Registration.find_by(user_id: student.id, course_id: @course.id)
       registration.destroy if registration

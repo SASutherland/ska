@@ -6,6 +6,8 @@
   <div class="main-content flex-grow-1">
     <h1 class="mb-4">Mijn groepen</h1>
 
+    <%= link_to "Groep aanmaken", new_group_path, class: "btn btn-primary mb-4" %>
+
     <% if @groups.any? %>
       <% @groups.each do |group| %>
         <div class="card-white">

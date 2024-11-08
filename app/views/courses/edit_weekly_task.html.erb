@@ -9,7 +9,7 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1 class="mb-4">Edit Weekly Task</h1>
+    <h1 class="mb-4">Weektaak aanpassen</h1>
 
     <div class="card-white p-4">
       <%= simple_form_for @course, url: update_weekly_task_course_path(@course), method: :patch, html: { multipart: true, data: { turbo: true } } do |f| %>
@@ -27,7 +27,7 @@
           <%= f.fields_for :questions do |question_form| %>
             <!-- Existing questions with pre-filled data for editing -->
             <div class="question-fields mb-4" data-question-id="<%= question_form.object.id %>">
-              <h4>Question <%= question_form.index + 1 %></h4>
+              <h4>Vraag <%= question_form.index + 1 %></h4>
 
               <!-- Question content -->
               <div class="form-group">
@@ -55,14 +55,14 @@
         <!-- Question Type Dropdown and Add Question Button -->
         <div class="d-flex align-items-center my-4">
           <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
-            <option value="multiple_choice">Multiple Choice</option>
-            <option value="open_answer">Open Answer</option>
-            <option value="true_false">True/False</option>
-            <option value="multiple_answer">Multiple Answer</option>
+            <option value="multiple_choice">Meerdere opties</option>
+            <option value="open_answer">Open Antwoord</option>
+            <option value="true_false">Goed/Fout</option>
+            <option value="multiple_answer">Meerdere antwoorden</option>
           </select>
 
           <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion">
-            Add Question
+            Vraag toevoegen
           </button>
         </div>
 
