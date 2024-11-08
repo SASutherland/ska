@@ -1,0 +1,100 @@
+nl:
+  activerecord:
+    attributes:
+      user:
+        email: "E-mailadres"
+        encrypted_password: "Versleuteld wachtwoord"
+        reset_password_token: "Wachtwoord herstel token"
+        reset_password_sent_at: "Wachtwoord herstel verzonden op"
+        remember_created_at: "Onthoud aangemaakt op"
+        role: "Rol"
+        first_name: "Voornaam"
+        last_name: "Achternaam"
+        current_password: "Huidig wachtwoord"
+        password: "Wachtwoord"
+        password_confirmation: "Bevestiging wachtwoord"
+
+      course:
+        title: "Titel"
+        description: "Beschrijving"
+        teacher_id: "Docent ID"
+        weekly_task: "Wekelijkse taak"
+
+      group:
+        name: "Naam"
+        teacher_id: "Docent ID"
+
+      question:
+        course_id: "Cursus ID"
+        question_type: "Vraagtype"
+        content: "Inhoud"
+
+      answer:
+        question_id: "Vraag ID"
+        correct: "Correct"
+        content: "Inhoud"
+        match: "Match"
+
+      attempt:
+        user_id: "Gebruiker ID"
+        question_id: "Vraag ID"
+        chosen_answer_id: "Gekozen antwoord ID"
+        correct: "Correct"
+        written_answer: "Geschreven antwoord"
+
+      registration:
+        user_id: "Gebruiker ID"
+        course_id: "Cursus ID"
+        time_spent: "Tijd besteed"
+
+      active_storage_attachment:
+        name: "Naam"
+        record_type: "Recordtype"
+        record_id: "Record ID"
+        blob_id: "Blob ID"
+
+      active_storage_blob:
+        key: "Sleutel"
+        filename: "Bestandsnaam"
+        content_type: "Inhoudstype"
+        metadata: "Metadata"
+        byte_size: "Bestandsgrootte"
+        checksum: "Checksum"
+        created_at: "Aangemaakt op"
+
+      active_storage_variant_record:
+        blob_id: "Blob ID"
+        variation_digest: "Variatiedigest"
+
+  errors:
+    messages:
+      blank: "mag niet leeg zijn"
+      invalid: "is ongeldig"
+      too_short: "is te kort (minimum is %{count} tekens)"
+      too_long: "is te lang (maximum is %{count} tekens)"
+      taken: "is al in gebruik"
+      confirmation: "komt niet overeen met bevestiging"
+      required: "is vereist"
+      already_confirmed: "is al bevestigd, probeer in te loggen"
+      confirmation_period_expired: "moet binnen %{period} worden bevestigd, vraag een nieuwe aan"
+      expired: "is verlopen, vraag een nieuwe aan"
+      not_found: "niet gevonden"
+      not_locked: "was niet vergrendeld"
+      not_saved:
+        one: "1 fout verhinderde dat deze %{resource} werd opgeslagen:"
+        other: "%{count} fouten verhinderden dat deze %{resource} werd opgeslagen:"
+
+  helpers:
+    submit:
+      create: "Aanmaken %{model}"
+      update: "Bijwerken %{model}"
+      submit: "Verzenden %{model}"
+
+  flash:
+    actions:
+      create:
+        notice: "%{resource} is succesvol aangemaakt."
+      update:
+        notice: "%{resource} is succesvol bijgewerkt."
+      destroy:
+        notice: "%{resource} is succesvol verwijderd."

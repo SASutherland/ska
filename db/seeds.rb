@@ -32,9 +32,9 @@ roel = User.create(
 nour = User.create(
   first_name: "Nour",
   last_name: "El Ghezaoui",
-  email: "roel4811@hotmail.com",
+  email: "nourelghezaoui@nghulp.nl",
   password: "111111",
-  role: :teacher
+  role: :admin
 )
 
 # Create students
@@ -47,16 +47,16 @@ student = User.create(
 )
 
 students = [
-  { first_name: "Alice", last_name: "Johnson", email: "alice.johnson@ska.com" },
-  { first_name: "Bob", last_name: "Smith", email: "bob.smith@ska.com" },
-  { first_name: "Charlie", last_name: "Davis", email: "charlie.davis@ska.com" },
-  { first_name: "Diana", last_name: "Evans", email: "diana.evans@ska.com" },
-  { first_name: "Ethan", last_name: "Brown", email: "ethan.brown@ska.com" },
-  { first_name: "Fiona", last_name: "Wilson", email: "fiona.wilson@ska.com" },
-  { first_name: "George", last_name: "Miller", email: "george.miller@ska.com" },
-  { first_name: "Hannah", last_name: "Garcia", email: "hannah.garcia@ska.com" },
-  { first_name: "Isaac", last_name: "Martinez", email: "isaac.martinez@ska.com" },
-  { first_name: "Julia", last_name: "Lee", email: "julia.lee@ska.com" }
+  {first_name: "Alice", last_name: "Johnson", email: "alice.johnson@ska.com"},
+  {first_name: "Bob", last_name: "Smith", email: "bob.smith@ska.com"},
+  {first_name: "Charlie", last_name: "Davis", email: "charlie.davis@ska.com"},
+  {first_name: "Diana", last_name: "Evans", email: "diana.evans@ska.com"},
+  {first_name: "Ethan", last_name: "Brown", email: "ethan.brown@ska.com"},
+  {first_name: "Fiona", last_name: "Wilson", email: "fiona.wilson@ska.com"},
+  {first_name: "George", last_name: "Miller", email: "george.miller@ska.com"},
+  {first_name: "Hannah", last_name: "Garcia", email: "hannah.garcia@ska.com"},
+  {first_name: "Isaac", last_name: "Martinez", email: "isaac.martinez@ska.com"},
+  {first_name: "Julia", last_name: "Lee", email: "julia.lee@ska.com"}
 ]
 
 students.each do |student|

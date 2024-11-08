@@ -1,0 +1,105 @@
+nl:
+  simple_form:
+    "yes": "Ja"
+    "no": "Nee"
+    required:
+      text: "verplicht"
+      mark: "*"
+      # Uncomment de regel hieronder indien je de hele vereiste html wilt overschrijven.
+      # Bij gebruik van html, worden text en mark niet gebruikt.
+      # html: '<abbr title="verplicht">*</abbr>'
+    error_notification:
+      default_message: "Controleer de onderstaande problemen:"
+    labels:
+      active_storage_attachment:
+        name: "Naam"
+        record_type: "Record Type"
+        record_id: "Record ID"
+        blob_id: "Blob ID"
+        created_at: "Aangemaakt op"
+      active_storage_blob:
+        key: "Sleutel"
+        filename: "Bestandsnaam"
+        content_type: "Inhoudstype"
+        metadata: "Metadata"
+        service_name: "Servicenaam"
+        byte_size: "Bestandsgrootte"
+        checksum: "Controlegetal"
+        created_at: "Aangemaakt op"
+      answer:
+        question_id: "Vraag ID"
+        correct: "Correct"
+        content: "Inhoud"
+        match: "Match"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      attempt:
+        user_id: "Gebruiker ID"
+        question_id: "Vraag ID"
+        chosen_answer_id: "Gekozen Antwoord ID"
+        correct: "Correct"
+        written_answer: "Geschreven Antwoord"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      course:
+        title: "Titel"
+        description: "Beschrijving"
+        teacher_id: "Leraar ID"
+        weekly_task: "Wekelijkse Taak"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      group:
+        teacher_id: "Leraar ID"
+        name: "Naam"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      group_membership:
+        user_id: "Gebruiker ID"
+        group_id: "Groep ID"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      question:
+        course_id: "Cursus ID"
+        question_type: "Vraagtype"
+        content: "Inhoud"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      registration:
+        user_id: "Gebruiker ID"
+        course_id: "Cursus ID"
+        time_spent: "Tijd Besteed"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+      user:
+        email: "E-mailadres"
+        encrypted_password: "Versleuteld Wachtwoord"
+        reset_password_token: "Wachtwoord Reset Token"
+        reset_password_sent_at: "Wachtwoord Reset Verzonden op"
+        remember_created_at: "Herinnering Aangemaakt op"
+        current_password: "Huidig wachtwoord"
+        role: "Rol"
+        first_name: "Voornaam"
+        last_name: "Achternaam"
+        created_at: "Aangemaakt op"
+        updated_at: "Bijgewerkt op"
+    hints:
+      active_storage_attachment:
+        name: "De naam van de bijlage."
+      active_storage_blob:
+        key: "Unieke sleutel voor de blob."
+        filename: "Naam van het bestand."
+      answer:
+        correct: "Geeft aan of het antwoord correct is."
+      attempt:
+        correct: "Geeft aan of het antwoord correct is."
+      course:
+        weekly_task: "Geeft aan of de cursus een wekelijkse taak bevat."
+      question:
+        question_type: "Het type vraag, bijvoorbeeld meerkeuze of open vraag."
+      registration:
+        time_spent: "De totale tijd die aan de cursus is besteed."
+      user:
+        role: "De rol van de gebruiker, bijvoorbeeld student of leraar."
+    prompts:
+      defaults:
+        age: "Selecteer je leeftijd"
