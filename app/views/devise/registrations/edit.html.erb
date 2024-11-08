@@ -39,8 +39,9 @@
                 required: false,
                 input_html: { autocomplete: "new-password" } %>
 
-    <%= f.input :role, as: :select, label: "Ik ben een", collection: [['Student', 'student'], ['Leraar', 'teacher']], selected: resource.role %>
-
+    <% if current_user.admin? %>
+      <%= f.input :role, as: :select, label: "Ik ben een", collection: [['Student', 'student'], ['Leraar', 'teacher']], selected: resource.role %>
+    <% end %>
 
     <div class="form-actions">
       <%= f.button :submit, "BIJWERKEN", class: "btn btn-azure btn-form" %>
