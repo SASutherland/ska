@@ -47,14 +47,21 @@
   color: #4580C4;
 }
 
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+}
+
 .icon-aligned {
-  vertical-align: middle;
-  padding-top: 5px;
+  font-size: 28px;
+  line-height: 1;
 }
 
 .fa-solid.fa-plus {
   color: #6CC680;
-  font-size: 31px;
+  font-size: 25px;
   transition: ease 0.3s;
 }
 
@@ -64,7 +71,7 @@
 
 .fa-solid.fa-pen-to-square {
   color: #5A8FCB;
-  font-size: 28px;
+  font-size: 21px;
   transition: ease 0.3s;
 }
 
@@ -74,7 +81,7 @@
 
 .fa-solid.fa-xmark {
   color: #EC0B43;
-  font-size: 34px;
+  font-size: 28px;
   transition: ease 0.3s;
 }
 

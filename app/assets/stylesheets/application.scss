@@ -27,9 +27,8 @@ body {
   overflow: hidden;
 }
 
-.content-scroll-container {
-  height: calc(100vh - 66px);
-  overflow-y: auto;
+a {
+  text-decoration: none;
 }
 
 h1 {
@@ -41,11 +40,17 @@ h2, h3, h4, p, li, label, .form-label {
   font-family: "Lato", sans-serif;
 }
 
-.main-content h2 {
-  font-size: 22px;
+.content-scroll-container {
+  height: calc(100vh - 66px);
+  overflow-y: auto;
 }
 
 .form-control {
   background-color: white;
   border-radius: 8px;
 }
+
+.main-content h2 {
+  font-size: 22px;
+}
+
