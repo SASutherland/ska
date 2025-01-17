@@ -1,5 +1,6 @@
 class DashboardsController < ApplicationController
   before_action :find_user, only: [:edit_user_profile, :update_user_profile]
+  before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile]
 
   def destroy_user
     @user = User.find(params[:id])
@@ -111,6 +112,11 @@ class DashboardsController < ApplicationController
   end
 
   def my_groups
+    unless current_user.admin? || current_user.teacher?
+      redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
+      return
+    end
+
     @groups = if current_user.admin?
       # Admin can see all groups, ordered by the most recently updated
       Group.order(updated_at: :desc)

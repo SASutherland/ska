@@ -28,7 +28,7 @@
                   input_html: { autocomplete: "email" } %>
 
       <% if current_user.admin? %>
-        <%= f.input :role, as: :select, label: "Ik ben een", collection: [['Student', 'student'], ['Leraar', 'teacher']], selected: resource.role %>
+        <%= f.input :role, as: :select, label: "#{@user.first_name} is een", collection: [['Student', 'student'], ['Docent', 'teacher']], selected: @user.role %>
       <% end %>
 
 

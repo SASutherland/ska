@@ -98,3 +98,8 @@ nl:
         notice: "%{resource} is succesvol bijgewerkt."
       destroy:
         notice: "%{resource} is succesvol verwijderd."
+
+  roles:
+    teacher: "docent"
+    student: "student"
+    admin: "admin"

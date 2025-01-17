@@ -44,12 +44,12 @@ nl:
       course:
         title: "Titel"
         description: "Beschrijving"
-        teacher_id: "Leraar ID"
+        teacher_id: "Docent ID"
         weekly_task: "Wekelijkse Taak"
         created_at: "Aangemaakt op"
         updated_at: "Bijgewerkt op"
       group:
-        teacher_id: "Leraar ID"
+        teacher_id: "Docent ID"
         name: "Naam"
         created_at: "Aangemaakt op"
         updated_at: "Bijgewerkt op"
@@ -99,7 +99,7 @@ nl:
       registration:
         time_spent: "De totale tijd die aan de cursus is besteed."
       user:
-        role: "De rol van de gebruiker, bijvoorbeeld student of leraar."
+        role: "De rol van de gebruiker, bijvoorbeeld student of docent."
     prompts:
       defaults:
         age: "Selecteer je leeftijd"

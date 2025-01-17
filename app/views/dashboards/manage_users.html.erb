@@ -69,9 +69,11 @@
                 <td style="padding-left: 20px;"><%= user.first_name %></td>
                 <td><%= user.last_name %></td>
                 <td><%= user.email %></td>
-                <td><%= user.role.capitalize %></td>
+                <td><%= t("roles.#{user.role}").capitalize %></td>
                 <td>
-                  <%= link_to "Aanpassen", dashboard_edit_user_profile_path(user), class: "btn btn-primary", style: "font-family: 'Work Sans', sans-serif;" %>
+                  <% if current_user != user %>
+                    <%= link_to "Aanpassen", dashboard_edit_user_profile_path(user), class: "btn btn-primary", style: "font-family: 'Work Sans', sans-serif;" %>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
