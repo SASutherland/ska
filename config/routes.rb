@@ -45,6 +45,11 @@ Rails.application.routes.draw do
   # Students routes
   resources :students, only: [:index, :show]
 
+  # Subscriptions routes
+  resources :subscriptions, only: [:new, :create]
+  get "/subscription-success", to: "subscriptions#success"
+  post "/subscriptions/webhook", to: "subscriptions#webhook"
+
   # Root route
   root to: "pages#home"
 end
