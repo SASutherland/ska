@@ -146,6 +146,12 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def subscriptions
+    @current_subscription = current_user.active_subscription
+    @memberships = Membership.all
+    # @past_subscriptions = current_user.subscriptions.where.not(status: "active")
+  end
+
   private
 
   def authorize_admin

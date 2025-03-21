@@ -7,7 +7,7 @@ class User < ApplicationRecord
   after_commit :send_welcome_email, on: :create
   after_initialize :set_default_role, if: :new_record?
 
-  enum role: { student: 0, teacher: 1, admin: 2 }
+  enum role: {student: 0, teacher: 1, admin: 2}
 
   has_many :courses, foreign_key: :teacher_id, dependent: :destroy
   has_many :attempts, dependent: :destroy
@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :owned_groups, class_name: "Group", foreign_key: :teacher_id
   has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
+  has_many :subscriptions
+  has_many :memberships, through: :subscriptions
 
   scope :students, -> { where(role: :student) }
   scope :teachers, -> { where(role: :teacher) }
@@ -26,6 +28,10 @@ class User < ApplicationRecord
 
   def set_default_role
     self.role ||= :student
+  end
+
+  def active_subscription
+    subscriptions.find_by(status: "active")
   end
 
   def teacher?

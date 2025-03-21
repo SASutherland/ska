@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_20_204413) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_20_131054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -110,6 +110,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_20_204413) do
     t.index ["teacher_id"], name: "index_groups_on_teacher_id"
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.string "interval"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "course_id", null: false
     t.string "question_type"
@@ -127,6 +135,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_20_204413) do
     t.integer "time_spent"
     t.index ["course_id"], name: "index_registrations_on_course_id"
     t.index ["user_id"], name: "index_registrations_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "membership_id", null: false
+    t.string "mollie_customer_id"
+    t.string "mollie_mandate_id"
+    t.string "mollie_subscription_id"
+    t.string "status"
+    t.date "start_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_id"], name: "index_subscriptions_on_membership_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -161,4 +183,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_20_204413) do
   add_foreign_key "questions", "courses"
   add_foreign_key "registrations", "courses"
   add_foreign_key "registrations", "users"
+  add_foreign_key "subscriptions", "memberships"
+  add_foreign_key "subscriptions", "users"
 end

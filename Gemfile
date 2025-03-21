@@ -82,3 +82,5 @@ group :test do
 end
 
 gem "mollie-api-ruby"
+
+gem "sidekiq"
