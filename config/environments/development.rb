@@ -17,6 +17,9 @@ Rails.application.configure do
   # Enable server timing
   config.server_timing = true
 
+  # Allow ngrok to bypass Rails Host Authorization
+  config.hosts << /[a-z0-9\-]+\.ngrok-free\.app/
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?
@@ -72,7 +75,6 @@ Rails.application.configure do
   # For Postmark emails. Add API token to .env file and change host site below.
   # Also remember to change @url in `app/mailers/user_mailer.rb`
   config.action_mailer.delivery_method = :postmark
-  config.action_mailer.postmark_settings = { api_token: ENV['POSTMARK_API_TOKEN'] }
-  config.action_mailer.default_url_options = { host: 'yourdomain.com' }
-
+  config.action_mailer.postmark_settings = {api_token: ENV["POSTMARK_API_TOKEN"]}
+  config.action_mailer.default_url_options = {host: "yourdomain.com"}
 end

@@ -16,16 +16,13 @@ class ApplicationController < ActionController::Base
       :role,
       :first_name,
       :last_name
-      ]
-    )
+    ])
 
     # For additional in app/views/devise/registrations/edit.html.erb
     devise_parameter_sanitizer.permit(:account_update, keys: [
       :role,
       :first_name,
       :last_name
-      ]
-    )
+    ])
   end
-
 end

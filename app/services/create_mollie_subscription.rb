@@ -9,17 +9,18 @@ class CreateMollieSubscription
   def call
     log("Creating subscription for user ##{@user.id}, plan '#{@membership.name}'")
 
-    mollie_subscription = @customer.subscriptions.create(
+    mollie_subscription = Mollie::Customer::Subscription.create(
+      customer_id: @customer.id,
       amount: {
         currency: "EUR",
         value: format("%.2f", @membership.price)
       },
       interval: @membership.interval,
       description: "#{@membership.name} Plan Subscription",
-      webhook_url: Rails.application.routes.url_helpers.subscriptions_webhook_url
+      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook"
     )
 
-    @user.create_subscription!(
+    @user.subscriptions.create!(
       membership: @membership,
       mollie_customer_id: @customer.id,
       mollie_mandate_id: @mandate.id,

@@ -47,7 +47,11 @@ Rails.application.routes.draw do
   resources :students, only: [:index, :show]
 
   # Subscriptions routes
-  resources :subscriptions, only: [:new, :create]
+  resources :subscriptions, only: [:new, :create] do
+    member do
+      delete :cancel
+    end
+  end
   get "/subscription-success", to: "subscriptions#success"
   post "/subscriptions/webhook", to: "subscriptions#webhook"
 

@@ -1,5 +1,7 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate_user!
+  skip_before_action :authenticate_user!, only: [:webhook]
+  skip_before_action :verify_authenticity_token, only: [:webhook]
 
   def create
     membership = Membership.find(params[:membership_id])
@@ -16,13 +18,13 @@ class SubscriptionsController < ApplicationController
       membership: membership,
       customer_id: customer.id,
       redirect_url: subscription_success_url,
-      webhook_url: subscriptions_webhook_url
+      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook"
     ).call
 
     session[:mollie_customer_id] = customer.id
     session[:selected_membership_id] = membership.id
 
-    redirect_to payment.checkout_url, allow_other_host: true
+    redirect_to payment.checkout_url, allow_other_host: true, status: :see_other
   end
 
   def success
@@ -40,14 +42,36 @@ class SubscriptionsController < ApplicationController
         valid_mandate: valid_mandate
       ).call
 
-      redirect_to root_path, notice: "Subscription active!"
+      redirect_to dashboard_subscriptions_path, notice: "Lidmaatschap is geactiveerd."
     else
-      redirect_to root_path, alert: "Could not start subscription."
+      redirect_to dashboard_subscriptions_path, alert: "Kon lidmaatschap niet activeren."
     end
   end
 
-  skip_before_action :verify_authenticity_token, only: [:webhook]
+  def cancel
+    subscription = current_user.active_subscription
+
+    if subscription.nil?
+      redirect_to dashboard_subscriptions_path, alert: "Geen actief lidmaatschap gevonden."
+      return
+    end
+
+    Mollie::Customer::Subscription.delete(
+      subscription.mollie_subscription_id,
+      customer_id: subscription.mollie_customer_id
+    )
+
+    # if this is not a 200, if will raise and error
+    subscription.update(status: :canceled, cancellation_reason: "user_canceled")
+
+    redirect_to dashboard_subscriptions_path, notice: "Lidmaatschap is geannuleerd."
+  rescue => e
+    Rails.logger.error("[CancelSubscription] Error: #{e.message}")
+    redirect_to dashboard_subscriptions_path, alert: "Er is een fout opgetreden bij het annuleren van het lidmaatschap."
+  end
+
   def webhook
+    Rails.logger.info("Received webhook for payment #{params[:id]}")
     HandleMollieWebhookJob.perform_later(params[:id])
     head :ok
   end

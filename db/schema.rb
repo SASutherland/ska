@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_20_131054) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_31_161247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -147,6 +147,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_131054) do
     t.date "start_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cancellation_reason"
     t.index ["membership_id"], name: "index_subscriptions_on_membership_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
@@ -162,6 +163,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_131054) do
     t.integer "role", default: 0
     t.string "first_name"
     t.string "last_name"
+    t.string "mollie_customer_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

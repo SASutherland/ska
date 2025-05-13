@@ -6,8 +6,9 @@ class CreateMollieCustomer
   def call
     log("Creating Mollie customer for user ##{@user.id}")
     Mollie::Customer.create(
-      name: @user.name,
-      email: @user.email
+      name: @user.full_name,
+      email: @user.email,
+      metadata: {user_id: @user.id}
     )
   rescue => e
     log("Error: #{e.message}")

@@ -15,12 +15,14 @@ class User < ApplicationRecord
   has_many :owned_groups, class_name: "Group", foreign_key: :teacher_id
   has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
-  has_many :subscriptions
+  has_many :subscriptions, dependent: :destroy
   has_many :memberships, through: :subscriptions
 
   scope :students, -> { where(role: :student) }
   scope :teachers, -> { where(role: :teacher) }
   scope :admins, -> { where(role: :admin) }
+
+  validates :first_name, :last_name, presence: true
 
   def full_name
     "#{first_name} #{last_name}"
@@ -31,7 +33,16 @@ class User < ApplicationRecord
   end
 
   def active_subscription
-    subscriptions.find_by(status: "active")
+    subscriptions.find_by(status: :active)
+  end
+
+  def mollie_customer
+    return unless mollie_customer_id
+
+    @mollie_customer ||= Mollie::Customer.get(mollie_customer_id)
+  rescue Mollie::Exception => e
+    Rails.logger.error("Failed to fetch Mollie customer: #{e.message}")
+    nil
   end
 
   def teacher?

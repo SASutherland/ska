@@ -184,3 +184,48 @@
 .users-table {
   font-family: 'Lato', sans-serif; 
 }
+
+// payments
+.payment-history-section {
+  margin-top: 2rem;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.payments-table th, .payments-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.payments-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.paid {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.status-badge.pending {
+  background-color: #fefcbf;
+  color: #975a16;
+}
+
+.status-badge.failed, .status-badge.expired, .status-badge.canceled {
+  background-color: #fed7d7;
+  color: #c53030;
+}

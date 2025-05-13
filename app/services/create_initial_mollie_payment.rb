@@ -14,7 +14,7 @@ class CreateInitialMolliePayment
         currency: "EUR",
         value: format("%.2f", @membership.price)
       },
-      description: "First payment for #{@membership.name} plan",
+      description: "Eerste betaling voor #{@membership.name} lidmaatschap",
       redirect_url: @redirect_url,
       webhook_url: @webhook_url,
       sequence_type: "first",
@@ -22,6 +22,7 @@ class CreateInitialMolliePayment
       metadata: {
         user_id: @user.id,
         membership_id: @membership.id
+
       }
     )
   rescue => e

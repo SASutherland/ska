@@ -9,6 +9,8 @@ ActiveRecord::Base.connection.execute("DELETE FROM group_courses")
 Course.delete_all
 GroupMembership.delete_all
 Group.delete_all
+Subscription.delete_all
+Membership.delete_all
 User.delete_all
 puts "Existing data removed."
 
@@ -709,12 +711,11 @@ end
 
 puts "All students have been registered for all courses."
 
-puts "Creating 3 memberships..."
+puts "Creating 2 memberships..."
 
 Membership.create([
-  {name: "Basic", price: 5.00, interval: "1 month"},
-  {name: "Plus", price: 10.00, interval: "1 month"},
-  {name: "Teacher", price: 20.00, interval: "1 month"}
+  {name: "Basis", price: 5.99, interval: "1 month"},
+  {name: "Docenten", price: 12.99, interval: "1 month"}
 ])
 
 puts "#{Membership.count} Memberships created successfully!"

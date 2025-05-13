@@ -121,6 +121,11 @@ GEM
       railties (>= 6.1)
     erubi (1.13.0)
     execjs (2.9.1)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     faraday (2.12.0)
       faraday-net_http (>= 2.0, < 3.4)
       json
@@ -322,6 +327,7 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  factory_bot_rails
   font-awesome-sass (~> 6.1)
   image_processing (~> 1.2)
   importmap-rails
