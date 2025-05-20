@@ -103,3 +103,13 @@ nl:
     teacher: "docent"
     student: "student"
     admin: "admin"
+
+  payment_status:
+    paid: "Betaald"
+    open: "Openstaand"
+    failed: "Mislukt"
+    expired: "Verlopen"
+    canceled: "Geannuleerd"
+    pending: "In behandeling"
+    authorized: "Geautoriseerd"
+    charged_back: "Teruggeboekt"

@@ -146,7 +146,40 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def subscriptions
+    @current_subscription = current_user.active_subscription
+    @memberships = Membership.all
+
+    @payments = if @current_subscription
+      fetch_payments_from_mollie(subscription_id: @current_subscription.mollie_subscription_id)
+    else
+      []
+    end
+  end
+
   private
+
+  def fetch_payments_from_mollie(subscription_id:)
+    customer_id = current_user.mollie_customer_id
+    return [] unless customer_id.present?
+
+    mollie_customer = Mollie::Customer.get(customer_id)
+    # save payments locally if this becomes to slow
+    mollie_payments = mollie_customer.payments
+
+    # convert to OpenStruct for the view
+    mollie_payments.map do |payment|
+      OpenStruct.new(
+        created_at: payment.created_at,
+        amount: payment.amount,
+        status: payment.status,
+        subscription_type: payment.description
+      )
+    end
+  rescue Mollie::Exception => e
+    Rails.logger.error "Mollie API error: #{e.message}"
+    []
+  end
 
   def authorize_admin
     redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user.admin?

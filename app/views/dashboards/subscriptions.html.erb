@@ -1,0 +1,60 @@
+<div class="dashboard-container d-flex">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <div class="main-content flex-grow-1">
+    <h1>Lidmaatschap</h1>
+
+    <% if @current_subscription.present? %>
+      <p>Je hebt momenteel het lidmaatschap: <%= @current_subscription.membership.name %></p>
+        <%= button_to "Cancel Subscription", cancel_subscription_path(current_user.active_subscription), 
+          method: :delete, 
+          data: { confirm: "Are you sure you want to cancel your subscription?" }, 
+          class: "btn btn-danger" %>
+    <% else %>
+      <p>je hebt nog geen lidmaatschap. Kies hieronder een lidmaatschap: </p>
+      <% @memberships.each do |membership| %>
+        <p><%= membership.name %></p> 
+        <%= form_with url: subscriptions_path, method: :post, data: { turbo: false } do %>
+          <%= hidden_field_tag :membership_id, membership.id %>
+          <%= submit_tag "Kies lidmaatschap" %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <hr>
+
+    <h2>Betalingen</h2>
+
+    <!-- In je dashboard.html.erb -->
+    <div class="payment-history-section">
+      <h2>Betaalgeschiedenis</h2>
+      
+      <% if @payments.present? %>
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>Aangemaakt op</th>
+              <th>Bedrag</th>
+              <th>Status</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @payments.each do |payment| %>
+              <tr>
+                <td><%= payment.created_at.strftime('%d-%m-%Y %H:%M') %></td>
+                <td>€<%= sprintf('%.2f', payment.amount.value) %></td>
+                <td><%= translated_payment_status(payment) %></td>
+                <td><%= payment.subscription_type %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p>Je hebt nog geen betalingen gedaan.</p>
+      <% end %>
+    </div>
+  </div>
+
+</div>

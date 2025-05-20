@@ -31,5 +31,9 @@
         <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Studenten lijst</a>
       </li>
     <% end %>
+
+    <li class="nav-item">
+      <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'subscriptions' %>" href="<%= dashboard_subscriptions_path %>">Lidmaatschap</a>
+    </li>
   </ul>
 </div>

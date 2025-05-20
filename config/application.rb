@@ -27,6 +27,8 @@ module Ska
     # Fallback to English for missing translations in Dutch
     config.i18n.fallbacks = [:en]
 
+    config.active_job.queue_adapter = :sidekiq
+
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
