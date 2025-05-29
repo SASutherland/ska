@@ -151,7 +151,7 @@ class DashboardsController < ApplicationController
     @memberships = Membership.all
 
     @payments = if @current_subscription
-      fetch_payments_from_mollie(subscription_id: @current_subscription.mollie_subscription_id)
+      fetch_payments_from_mollie
     else
       []
     end
@@ -159,7 +159,7 @@ class DashboardsController < ApplicationController
 
   private
 
-  def fetch_payments_from_mollie(subscription_id:)
+  def fetch_payments_from_mollie
     customer_id = current_user.mollie_customer_id
     return [] unless customer_id.present?
 

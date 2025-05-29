@@ -16,8 +16,11 @@ class CreateMollieSubscription
         value: format("%.2f", @membership.price)
       },
       interval: @membership.interval,
-      description: "#{@membership.name} Plan Subscription",
-      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook"
+      description: "#{@membership.name} Plan Subscription – #{Time.current.strftime("%Y%m%d%H%M%S")}",
+      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook",
+      metadata: {
+        user_id: @user.id
+      }
     )
 
     @user.subscriptions.create!(

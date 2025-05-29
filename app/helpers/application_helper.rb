@@ -14,8 +14,8 @@ module ApplicationHelper
     when "charged_back"
       "Teruggeboekt op #{date}"
     when "pending"
-      volgende = l((payment.created_at || Time.current) + 1.month, format: :short)
-      "In behandeling (volgende incasso rond #{volgende})"
+      next_payment_date = l((payment.created_at || Time.current) + 1.month, format: :short)
+      "In behandeling (incasso rond #{next_payment_date})"
     else
       "#{payment.status.humanize} op #{date}"
     end
