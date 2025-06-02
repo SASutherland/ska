@@ -1,17 +1,29 @@
 .dashboard-container {
   display: flex;
-  background-color: #EDF8FC;
+  background-color: #edf8fc;
   min-height: calc(100vh - 66px);
 }
 
 .dashboard-container h1 {
-  color: #70C9E8;
+  color: $sky-blue;
   font-size: 32px;
   margin-bottom: 16px;
 }
 
+.dashboard-container h2 {
+  color: $sky-blue;
+  font-size: 26px;
+  margin-bottom: 16px;
+  font-weight: 800;
+}
+
 .dashboard-container h4 {
   font-size: 16px;
+}
+
+.spinner-waiter {
+  align-items: center;
+  gap: 10px;
 }
 
 .main-content {
@@ -36,7 +48,7 @@
 }
 
 .student-link {
-  color: #5A8FCB;
+  color: #5a8fcb;
   font-size: 18px;
   font-weight: bolder;
   text-decoration: none;
@@ -44,7 +56,7 @@
 }
 
 .student-link:hover {
-  color: #4580C4;
+  color: #4580c4;
 }
 
 .icon-wrapper {
@@ -60,33 +72,33 @@
 }
 
 .fa-solid.fa-plus {
-  color: #6CC680;
+  color: #6cc680;
   font-size: 25px;
   transition: ease 0.3s;
 }
 
 .fa-solid.fa-plus:hover {
-  color: #4FBA66;
+  color: #4fba66;
 }
 
 .fa-solid.fa-pen-to-square {
-  color: #5A8FCB;
+  color: #5a8fcb;
   font-size: 21px;
   transition: ease 0.3s;
 }
 
 .fa-solid.fa-pen-to-square:hover {
-  color: #4580C4;
+  color: #4580c4;
 }
 
 .fa-solid.fa-xmark {
-  color: #EC0B43;
+  color: #ec0b43;
   font-size: 28px;
   transition: ease 0.3s;
 }
 
 .fa-solid.fa-xmark:hover {
-  color: #C30938;
+  color: #c30938;
 }
 
 .course-progress {
@@ -101,9 +113,9 @@
 
 .question-number {
   display: inline-block;
-  border: 2px solid #CCCCCC;
+  border: 2px solid #cccccc;
   border-radius: 8px;
-  color: #CCCCCC;
+  color: #cccccc;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
@@ -114,60 +126,64 @@
 }
 
 .question-number:hover {
-  background-color: #CCCCCC;
+  background-color: #cccccc;
   color: #fff;
 }
 
 .correct-answer {
-  background-color: #6CC680;
-  border-color: #6CC680;
+  background-color: #6cc680;
+  border-color: #6cc680;
   color: white;
 }
 
 .correct-answer:hover {
-  background-color: #4FBA66;
-  border-color: #4FBA66;
+  background-color: #4fba66;
+  border-color: #4fba66;
 }
 
 .question-answered {
-  background-color: #FED766;
-  border-color: #FED766;
+  background-color: #fed766;
+  border-color: #fed766;
   color: white;
 }
 
 .question-answered:hover {
-  background-color: #FECB34;
-  border-color: #FECB34;
+  background-color: #fecb34;
+  border-color: #fecb34;
 }
 
 .incorrect-answer {
-  background-color: #EC0B43;
-  border-color: #EC0B43;
+  background-color: #ec0b43;
+  border-color: #ec0b43;
   color: white;
 }
 
 .incorrect-answer:hover {
-  background-color: #C30938;
-  border-color: #C30938;
+  background-color: #c30938;
+  border-color: #c30938;
 }
 
 #dropdownCourseButton {
   background-color: transparent;
-  border: 2px solid #136F63;
+  border: 2px solid #136f63;
   border-radius: 8px;
-  color: #136F63;
+  color: #136f63;
   font-weight: bold;
   padding: 10px 20px;
   transition: ease 0.3s;
 }
 
+.modal-content {
+  background-color: #edf8fc;
+}
+
 #dropdownCourseButton:hover {
-  background-color: #136F63;
+  background-color: #136f63;
   color: white;
 }
 
 #registerButton {
-  background-color: #5A8FCB;
+  background-color: #5a8fcb;
   border: none;
   color: white;
   font-weight: bold;
@@ -178,11 +194,11 @@
 }
 
 #registerButton:hover {
-  background-color: #4580C4;
+  background-color: #4580c4;
 }
 
 .users-table {
-  font-family: 'Lato', sans-serif; 
+  font-family: "Lato", sans-serif;
 }
 
 // payments
@@ -196,7 +212,8 @@
   margin-top: 1rem;
 }
 
-.payments-table th, .payments-table td {
+.payments-table th,
+.payments-table td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #e2e8f0;
@@ -225,7 +242,9 @@
   color: #975a16;
 }
 
-.status-badge.failed, .status-badge.expired, .status-badge.canceled {
+.status-badge.failed,
+.status-badge.expired,
+.status-badge.canceled {
   background-color: #fed7d7;
   color: #c53030;
 }

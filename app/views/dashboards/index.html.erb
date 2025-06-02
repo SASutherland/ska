@@ -7,7 +7,7 @@
   <div class="main-content flex-grow-1">
 
     <!-- Flexbox for avatar and profile information -->
-    <div class="d-flex align-items-center mb-4">
+    <div class="d-flex align-items-center xmb-4">
       <!-- Avatar image -->
       <div class="me-4">
         <%= image_tag 'avatar-blue.png', alt: 'Avatar', class: 'avatar-large' %>
@@ -17,7 +17,7 @@
       <div>
         <h1>Hi, <%= current_user.first_name %>!</h1>
         <h4><%= current_user.email %></h4>
-        <h4><strong><%= current_user.role.capitalize %></strong></h4>
+        <h4><strong><%= t("roles.#{current_user.role}").capitalize %></strong></h4>
       </div>
     </div>
 

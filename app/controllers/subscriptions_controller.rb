@@ -18,11 +18,8 @@ class SubscriptionsController < ApplicationController
       membership: membership,
       customer_id: customer.id,
       redirect_url: subscription_success_url,
-      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook"
+      webhook_url: subscriptions_webhook_url(host: default_host, protocol: "https", port: nil)
     ).call
-
-    session[:mollie_customer_id] = customer.id
-    session[:selected_membership_id] = membership.id
 
     redirect_to payment.checkout_url, allow_other_host: true, status: :see_other
   end
@@ -30,21 +27,20 @@ class SubscriptionsController < ApplicationController
   def success
     customer_id = session.delete(:mollie_customer_id)
     membership_id = session.delete(:selected_membership_id)
-    membership = Membership.find(membership_id)
-    customer = Mollie::Customer.get(customer_id)
-    valid_mandate = customer.mandates.find { |m| m.status == "valid" }
+    session.delete(:mollie_payment_id)
 
-    if valid_mandate
-      CreateMollieSubscription.new(
-        user: current_user,
-        membership: membership,
-        customer: customer,
-        valid_mandate: valid_mandate
-      ).call
+    session[:payment_processing] = true
 
-      redirect_to dashboard_subscriptions_path, notice: "Lidmaatschap is geactiveerd."
+    session[:payment_poll_customer_id] = customer_id
+    session[:payment_poll_membership_id] = membership_id
+    redirect_to dashboard_subscriptions_path
+  end
+
+  def status
+    if current_user.active_subscription.present?
+      render partial: "subscriptions/status_success"
     else
-      redirect_to dashboard_subscriptions_path, alert: "Kon lidmaatschap niet activeren."
+      render partial: "subscriptions/status_pending"
     end
   end
 
@@ -60,9 +56,9 @@ class SubscriptionsController < ApplicationController
       subscription.mollie_subscription_id,
       customer_id: subscription.mollie_customer_id
     )
+    # if this is not a 200, it will raise and error
 
-    # if this is not a 200, if will raise and error
-    subscription.update(status: :canceled, cancellation_reason: "user_canceled")
+    subscription.update!(status: :canceled, cancellation_reason: "user_canceled")
 
     redirect_to dashboard_subscriptions_path, notice: "Lidmaatschap is geannuleerd."
   rescue => e
@@ -74,5 +70,15 @@ class SubscriptionsController < ApplicationController
     Rails.logger.info("Received webhook for payment #{params[:id]}")
     HandleMollieWebhookJob.perform_later(params[:id])
     head :ok
+  end
+
+  private
+
+  def default_host
+    if Rails.env.development?
+      Rails.application.config.x.default_host || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
+    else
+      Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
+    end
   end
 end

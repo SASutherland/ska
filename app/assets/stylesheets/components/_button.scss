@@ -45,11 +45,17 @@
   color: white;
   background-color: #6CC680;
   border: 1px solid #4FBA66;
-  // border-radius: 50%;
-  // padding: 8px 14px;
 }
 
 #add-question-button:hover {
   color: white;
   background-color: #4FBA66;
+}
+
+.btn-cancel {
+  background-color: #ffc65a;
+  border-radius: 5px;
+  &:hover {
+    background-color: #fcc45c;
+  }
 }

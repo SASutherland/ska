@@ -75,6 +75,6 @@ Rails.application.configure do
   # For Postmark emails. Add API token to .env file and change host site below.
   # Also remember to change @url in `app/mailers/user_mailer.rb`
   config.action_mailer.delivery_method = :postmark
-  config.action_mailer.postmark_settings = {api_token: Rails.application.credentials.dig(:postmark, :api_token)}
+  config.action_mailer.postmark_settings = {api_token: Rails.application.credentials[Rails.env.to_sym].dig(:postmark, :api_token)}
   config.action_mailer.default_url_options = {host: "yourdomain.com"}
 end

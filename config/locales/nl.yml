@@ -102,6 +102,7 @@ nl:
   roles:
     teacher: "docent"
     student: "student"
+    inactive: "inactief"
     admin: "admin"
 
   payment_status:

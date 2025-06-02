@@ -1,9 +1,12 @@
 class CreateMollieSubscription
-  def initialize(user:, membership:, customer:, valid_mandate:)
+  include Rails.application.routes.url_helpers
+
+  def initialize(user:, membership:, customer:, valid_mandate:, host:)
     @user = user
     @membership = membership
     @customer = customer
     @mandate = valid_mandate
+    @host = host
   end
 
   def call
@@ -17,7 +20,7 @@ class CreateMollieSubscription
       },
       interval: @membership.interval,
       description: "#{@membership.name} Plan Subscription – #{Time.current.strftime("%Y%m%d%H%M%S")}",
-      webhook_url: "https://671e-178-224-82-116.ngrok-free.app/subscriptions/webhook",
+      webhook_url: subscriptions_webhook_url(host: @host, protocol: "https", port: nil),
       metadata: {
         user_id: @user.id
       }
@@ -30,6 +33,15 @@ class CreateMollieSubscription
       mollie_subscription_id: mollie_subscription.id,
       status: "active",
       start_date: Date.today
+    )
+
+    puts "ABOUT TO STREAM TO #{@user}"
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      @user,
+      target: "subscription-status",
+      partial: "subscriptions/status_success",
+      locals: {subscription: @user.active_subscription}
     )
 
     log("Subscription created with Mollie ID #{mollie_subscription.id}")

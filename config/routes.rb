@@ -52,6 +52,8 @@ Rails.application.routes.draw do
       delete :cancel
     end
   end
+  get "/subscriptions/processing", to: "subscriptions#processing", as: :processing_subscription
+  get "/subscriptions/status", to: "subscriptions#status"
   get "/subscription-success", to: "subscriptions#success"
   post "/subscriptions/webhook", to: "subscriptions#webhook"
 

@@ -1,0 +1,16 @@
+<% if current_subscription.present? %>
+  <p>Lidmaatschap actief 🎉 <%= membership_message(current_subscription.membership) %></p>
+<% else %>
+  <p>je hebt nog geen lidmaatschap. Kies hieronder een lidmaatschap: </p>
+
+  <div class="d-flex">
+    <% memberships.each do |membership| %>
+      <%= form_with url: subscriptions_path, method: :post, data: { turbo: false } do %>
+        <%= hidden_field_tag :membership_id, membership.id %>
+        <%= submit_tag "#{membership.name} lidmaatschap", class: "btn btn-primary mx-2" %>
+      <% end %>
+    <% end %>
+
+  </div>
+
+<% end %>

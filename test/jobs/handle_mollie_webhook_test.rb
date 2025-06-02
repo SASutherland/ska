@@ -23,28 +23,31 @@ class HandleMollieWebhookTest < ActiveJob::TestCase
 
   def mollie_payment(status, metadata = {user_id: @user.id})
     OpenStruct.new(
+      id: @payment_id,
       paid?: status == "paid",
+      description: "Test Payment",
       status: status,
-      metadata: metadata
+      metadata: metadata,
+      amount: OpenStruct.new(value: "12.99", currency: "EUR"),
+      paid_at: Time.current
     )
   end
 
   test "marks the subscription as active when payment is successful" do
     payment = mollie_payment("paid")
-    mock_subscription = Minitest::Mock.new
-    mock_subscription.expect(:update, true) do |**args|
-      args == {status: :active, cancellation_reason: nil}
-    end
+    subscription = FactoryBot.create(:subscription, status: "pending", user: @user)
 
     Mollie::Payment.stub(:get, payment) do
-      @user.stub(:active_subscription, mock_subscription) do
+      @user.stub(:active_subscription, subscription) do
         User.stub(:find_by, @user) do
           HandleMollieWebhook.new(@payment_id).call
         end
       end
     end
 
-    mock_subscription.verify
+    subscription.reload
+    assert_equal "active", subscription.status
+    assert_nil subscription.cancellation_reason
   end
 
   test 'marks the subscription as canceled with the reason "failed" when payment fails' do

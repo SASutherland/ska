@@ -86,3 +86,5 @@ end
 gem "mollie-api-ruby"
 
 gem "sidekiq"
+
+gem "money-rails"

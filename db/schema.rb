@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_31_161247) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,6 +118,22 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_31_161247) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.string "mollie_id"
+    t.bigint "user_id", null: false
+    t.bigint "subscription_id", null: false
+    t.integer "amount_cents"
+    t.string "amount_currency"
+    t.string "status"
+    t.string "description"
+    t.datetime "paid_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mollie_id"], name: "index_payments_on_mollie_id"
+    t.index ["subscription_id"], name: "index_payments_on_subscription_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "course_id", null: false
     t.string "question_type"
@@ -182,6 +198,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_31_161247) do
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "users"
   add_foreign_key "groups", "users", column: "teacher_id"
+  add_foreign_key "payments", "subscriptions"
+  add_foreign_key "payments", "users"
   add_foreign_key "questions", "courses"
   add_foreign_key "registrations", "courses"
   add_foreign_key "registrations", "users"
