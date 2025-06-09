@@ -1,5 +1,7 @@
 <% if current_subscription.present? %>
   <p>Lidmaatschap actief 🎉 <%= membership_message(current_subscription.membership) %></p>
+<% elsif current_user.admin? %>
+  <p>Dit is een admin account. Geen lidmaatschap nodig.</p>
 <% else %>
   <p>je hebt nog geen lidmaatschap. Kies hieronder een lidmaatschap: </p>
 

@@ -19,12 +19,28 @@ class User < ApplicationRecord
   has_many :memberships, through: :subscriptions
   has_many :payments
 
-  scope :inactives, -> { where(role: :inactive) }
-  scope :students, -> { where(role: :student) }
-  scope :teachers, -> { where(role: :teacher) }
-  scope :admins, -> { where(role: :admin) }
+  scope :inactives, -> { where(role: "inactive") }
+  scope :students, -> { where(role: "student") }
+  scope :teachers, -> { where(role: "teacher") }
+  scope :admins, -> { where(role: "admin") }
 
   validates :first_name, :last_name, presence: true
+
+  def admin?
+    role == "admin"
+  end
+
+  def teacher?
+    role == "teacher"
+  end
+
+  def student?
+    role == "student"
+  end
+
+  def inactive?
+    role == "inactive"
+  end
 
   def full_name
     "#{first_name} #{last_name}"
