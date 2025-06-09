@@ -38,7 +38,7 @@ class SubscriptionsController < ApplicationController
 
   def status
     if current_user.active_subscription.present?
-      render partial: "subscriptions/status_success"
+      render partial: "subscriptions/details", locals: { current_subscription: current_user.active_subscription, memberships: Membership.all }
     else
       render partial: "subscriptions/status_pending"
     end

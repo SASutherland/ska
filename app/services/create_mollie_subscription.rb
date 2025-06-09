@@ -40,8 +40,8 @@ class CreateMollieSubscription
     Turbo::StreamsChannel.broadcast_replace_to(
       @user,
       target: "subscription-status",
-      partial: "subscriptions/status_success",
-      locals: {subscription: @user.active_subscription}
+      partial: "subscriptions/details",
+      locals: { current_subscription: @user.active_subscription, memberships: Membership.all }
     )
 
     log("Subscription created with Mollie ID #{mollie_subscription.id}")
