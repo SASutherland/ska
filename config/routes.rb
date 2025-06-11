@@ -61,5 +61,8 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   require "sidekiq/web"
-  mount Sidekiq::Web => "/sidekiq" if Rails.env.development?
+
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 end
