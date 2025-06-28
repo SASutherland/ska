@@ -26,7 +26,7 @@ class CreateMollieSubscription
       }
     )
 
-    @user.subscriptions.create!(
+    subscription = @user.subscriptions.create!(
       membership: @membership,
       mollie_customer_id: @customer.id,
       mollie_mandate_id: @mandate.id,
@@ -34,8 +34,6 @@ class CreateMollieSubscription
       status: "active",
       start_date: Date.today
     )
-
-    puts "ABOUT TO STREAM TO #{@user}"
 
     Turbo::StreamsChannel.broadcast_replace_to(
       @user,
@@ -45,6 +43,8 @@ class CreateMollieSubscription
     )
 
     log("Subscription created with Mollie ID #{mollie_subscription.id}")
+
+    subscription
   rescue => e
     log("Error: #{e.message}")
     raise

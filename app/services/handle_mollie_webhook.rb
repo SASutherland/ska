@@ -48,15 +48,18 @@ class HandleMollieWebhook
     valid_mandate = customer.mandates.find { |m| m.status == "valid" }
 
     if valid_mandate && mollie_payment.status == "paid"
-      CreateMollieSubscription.new(
-        user: user,
-        membership: membership,
-        customer: customer,
-        valid_mandate: valid_mandate,
-        host: Rails.application.config.x.default_host.presence || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
-      ).call
+      ActiveRecord::Base.transaction do
+        subscription = CreateMollieSubscription.new(
+          user: user,
+          membership: membership,
+          customer: customer,
+          valid_mandate: valid_mandate,
+          host: Rails.application.config.x.default_host.presence || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
+        ).call
+        StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
 
-      log("Subscription created successfully for user #{user.id}")
+        log("Subscription created successfully for user #{user.id}")
+      end
     else
       log("Mandate or payment not valid for first payment")
       PaymentMailer.payment_failed(user, mollie_payment.status).deliver_later
