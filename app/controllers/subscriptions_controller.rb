@@ -75,10 +75,16 @@ class SubscriptionsController < ApplicationController
   private
 
   def default_host
-    if Rails.env.development?
-      Rails.application.config.x.default_host || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
+    host = if Rails.env.development?
+      Rails.application.config.x.default_host || Rails.application.credentials.dig(:development, :default_host)
     else
-      Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
+      Rails.application.credentials.dig(:production, :default_host)
     end
+
+    unless host.is_a?(String)
+      raise "default_host must be a String but got: #{host.inspect}"
+    end
+
+    host
   end
 end

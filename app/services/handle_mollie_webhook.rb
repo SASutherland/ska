@@ -53,7 +53,7 @@ class HandleMollieWebhook
         membership: membership,
         customer: customer,
         valid_mandate: valid_mandate,
-        host: Rails.application.config.x.default_host
+        host: Rails.application.config.x.default_host.presence || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
       ).call
 
       log("Subscription created successfully for user #{user.id}")
