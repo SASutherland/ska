@@ -26,6 +26,11 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
 
+  def email
+    # remove after POSTMARK is configured
+    "email@jouwdomein.nl"
+  end
+
   def admin?
     role == "admin"
   end
