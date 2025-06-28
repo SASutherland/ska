@@ -114,3 +114,13 @@ nl:
     pending: "In behandeling"
     authorized: "Geautoriseerd"
     charged_back: "Teruggeboekt"
+
+  time:
+    formats:
+      short: "%d-%m-%Y %H:%M"
+
+  date:
+    formats:
+      default: "%d-%m-%Y"
+      short: "%d %b"
+      long: "%d %B %Y"
