@@ -57,6 +57,7 @@ class HandleMollieWebhook
           host: Rails.application.config.x.default_host.presence || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
         ).call
         StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
+        PaymentMailer.payment_success(user).deliver_later
 
         log("Subscription created successfully for user #{user.id}")
       end
