@@ -81,6 +81,12 @@ groupB = Group.create(
   teacher: teacher
 )
 
+# Creating levels
+puts "Creating levels... Group 3 t/m 8"
+(3..8).each do |n|
+  Level.create!(name: "Groep #{n}", order: n)
+end
+
 groupA.students << roel
 groupA.students << nour
 

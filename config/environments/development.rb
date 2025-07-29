@@ -76,5 +76,5 @@ Rails.application.configure do
   # Also remember to change @url in `app/mailers/user_mailer.rb`
   config.action_mailer.delivery_method = :postmark
   config.action_mailer.postmark_settings = {api_token: Rails.application.credentials.dig(Rails.env.to_sym, :postmark, :api_token)}
-  config.action_mailer.default_url_options = {host: "yourdomain.com"}
+  config.action_mailer.default_url_options = {host: "ska-leren-fake-development.com"}
 end

@@ -44,8 +44,10 @@ class QuestionsController < ApplicationController
       # Redirect to the next question
       redirect_to course_question_path(@course, next_question)
     else
+      question.course.registrations.find(user: current_user).update(status: :completed)
+
       # If no more questions, redirect to the dashboard
-      redirect_to dashboard_path, notice: "Je heeft alle vragen beantwoord."
+      redirect_to dashboard_path, notice: "Je hebt alle vragen beantwoord."
     end
   end
 

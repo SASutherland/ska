@@ -28,4 +28,11 @@ module ApplicationHelper
       "Je hebt momenteel het #{membership.name} lidmaatschap"
     end
   end
+
+  def builder_for(association, form_builder)
+    form_builder.object.send(association).build
+    form_builder.fields_for(association, form_builder.object.send(association).last, child_index: "NEW_RECORD") do |ff|
+      return ff
+    end
+  end
 end

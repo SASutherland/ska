@@ -1,0 +1,29 @@
+<div class="dashboard-container d-flex">
+
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <!-- Flash messages for validation errors -->
+  <div id="flash-messages">
+    <%= render 'shared/flashes' %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1" data-controller="add-members">
+
+    <h1 class="mb-4">Maak een nieuw niveau aan</h1>
+
+    <div class="card-white p-4">
+
+      <%= simple_form_for @level, data: { turbo: true } do |f| %>
+
+        <!-- Group name -->
+        <div class="field group-form-control">
+          <%= f.input :name, label: "Niveau naam", required: true %>
+        </div>
+
+        <%= f.submit "Opslaan", class: "btn btn-primary mt-4 mb-2", id: "submit-group" %>
+      <% end %>
+    </div>
+  </div>
+</div>

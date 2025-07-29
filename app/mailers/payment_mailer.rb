@@ -1,5 +1,5 @@
 class PaymentMailer < ApplicationMailer
-  default from: "no-reply@jouwdomein.nl"
+  default from: "no-reply@ska-leren.com"
 
   def payment_success(user)
     @user = user

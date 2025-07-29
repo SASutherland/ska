@@ -1,0 +1,55 @@
+<!-- _question_fields.html.erb -->
+<div class="question-fields mb-4">
+  <%= f.hidden_field :question_type, value: question_type %>
+  <h4>
+    <%= f.label :content, "Nieuwe vraag", class: "new-question" %>
+    <button type="button" class="btn remove-question-button text-danger" data-action="click->course-form#removeQuestion">
+      <i class="fa-solid fa-trash-can"></i>
+    </button>
+  </h4>
+
+  <div class="form-group">
+    <%= f.input :content, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <% if question_type == "multiple_choice" || question_type == "multiple_answer" %>
+      <%= f.input :image, as: :file, direct_upload: true %>
+      <% 4.times do |i| %>
+        <%= f.fields_for :answers, f.object.answers[i] || f.object.answers.build do |af| %>
+          <div class="answer-fields d-flex align-items-center mb-2" style="gap: 10px;">
+            <%= af.input :content, 
+                  placeholder: "Antwoord #{i + 1}", 
+                  label: false,
+                  wrapper_html: { class: "answer-input-wrapper" } %>
+
+            <div class="form-check d-flex align-items-center mb-0">
+              <%= af.input :correct, 
+                    as: :boolean, 
+                    label: "Correct", 
+                    wrapper_html: { class: "mb-0" }, 
+                    input_html: { class: "form-check-input ms-2" }, 
+                    label_html: { class: "form-check-label ms-1" } %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% elsif question_type == "open_answer" %>
+      <%= f.input :image, as: :file, direct_upload: true %>
+      <%= f.fields_for :answers, f.object.answers.first || f.object.answers.build do |af| %>
+        <%= af.input :content, class: "form-control" %>
+        <%= af.hidden_field :correct, value: true %>
+      <% end %>
+    <% elsif question_type == "true_false" %>
+      <%= f.input :image, as: :file, direct_upload: true %>
+      <%= f.fields_for :answers, f.object.answers[0] || f.object.answers.build(content: "True") do |af| %>
+        <%= af.hidden_field :content, value: "True" %>
+        <%= af.check_box :correct %> True
+      <% end %>
+      <%= f.fields_for :answers, f.object.answers[1] || f.object.answers.build(content: "False") do |af| %>
+        <%= af.hidden_field :content, value: "False" %>
+        <%= af.check_box :correct %> False
+      <% end %>
+    <% end %>
+  </div>
+</div>

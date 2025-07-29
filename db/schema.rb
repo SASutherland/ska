@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
     t.index ["attempt_id"], name: "index_attempts_answers_on_attempt_id"
   end
 
+  create_table "course_levels", force: :cascade do |t|
+    t.bigint "course_id", null: false
+    t.bigint "level_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_levels_on_course_id"
+    t.index ["level_id"], name: "index_course_levels_on_level_id"
+  end
+
   create_table "courses", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -108,6 +117,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["teacher_id"], name: "index_groups_on_teacher_id"
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -149,6 +165,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "time_spent"
+    t.string "status"
     t.index ["course_id"], name: "index_registrations_on_course_id"
     t.index ["user_id"], name: "index_registrations_on_user_id"
   end
@@ -192,6 +209,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_072129) do
   add_foreign_key "attempts", "users"
   add_foreign_key "attempts_answers", "answers"
   add_foreign_key "attempts_answers", "attempts"
+  add_foreign_key "course_levels", "courses"
+  add_foreign_key "course_levels", "levels"
   add_foreign_key "courses", "users", column: "teacher_id"
   add_foreign_key "group_courses", "courses"
   add_foreign_key "group_courses", "groups"

@@ -71,4 +71,27 @@ class User < ApplicationRecord
   def send_welcome_email
     UserMailer.welcome_email(self).deliver_later
   end
+
+  def has_completed?(course)
+    questions = course.questions
+    total_questions = questions.size
+    total_attempts = attempts.where(question_id: questions.pluck(:id)).size
+
+    total_questions == total_attempts && total_questions > 0
+  end
+
+  def score_for(course)
+    questions = course.questions
+    total_questions = questions.size
+
+    correct_answers = attempts.where(question_id: questions.pluck(:id), correct: true).count
+
+    percentage = total_questions.positive? ? (correct_answers.to_f / total_questions * 100).round : 0
+
+    {
+      correct: correct_answers,
+      total: total_questions,
+      percentage: percentage
+    }
+  end
 end

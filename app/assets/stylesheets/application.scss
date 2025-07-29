@@ -8,18 +8,19 @@
 @import "font-awesome";
 
 // Fonts
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
 
 // Tom Select
-@import url('https://cdn.jsdelivr.net/npm/tom-select@latest/dist/css/tom-select.default.min.css');
+@import url("https://cdn.jsdelivr.net/npm/tom-select@latest/dist/css/tom-select.default.min.css");
 
 body {
-  background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('/assets/banner-annie-spratt.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("/assets/banner-annie-spratt.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -36,7 +37,13 @@ h1 {
   font-weight: bold;
 }
 
-h2, h3, h4, p, li, label, .form-label {
+h2,
+h3,
+h4,
+p,
+li,
+label,
+.form-label {
   font-family: "Lato", sans-serif;
 }
 
@@ -50,7 +57,15 @@ h2, h3, h4, p, li, label, .form-label {
   border-radius: 8px;
 }
 
+.answer-input-wrapper {
+  flex-grow: 1;
+  // margin-bottom: 0 !important;
+}
+
+.answer-fields {
+  max-width: 600px;
+}
+
 .main-content h2 {
   font-size: 22px;
 }
-

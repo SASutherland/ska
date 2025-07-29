@@ -120,6 +120,7 @@ class HandleMollieWebhookTest < ActiveJob::TestCase
         end
       end
     end
+    puts log_output
 
     assert_includes log_output, "[HandleMollieWebhook] No active subscription found for user #{@user.id}, skipping"
   end

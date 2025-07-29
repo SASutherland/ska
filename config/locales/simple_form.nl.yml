@@ -29,7 +29,7 @@ nl:
       answer:
         question_id: "Vraag ID"
         correct: "Correct"
-        content: "Inhoud"
+        content: "Antwoord"
         match: "Match"
         created_at: "Aangemaakt op"
         updated_at: "Bijgewerkt op"
@@ -61,7 +61,8 @@ nl:
       question:
         course_id: "Cursus ID"
         question_type: "Vraagtype"
-        content: "Inhoud"
+        content: "Vraag"
+        image: "Foto"
         created_at: "Aangemaakt op"
         updated_at: "Bijgewerkt op"
       registration:

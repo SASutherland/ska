@@ -82,6 +82,7 @@ class CoursesController < ApplicationController
   def edit
     # @course is already set by set_course
     @groups = current_user.owned_groups
+    @levels = Level.all
   end
 
   def edit_weekly_task
@@ -130,6 +131,7 @@ class CoursesController < ApplicationController
   def new
     @course = Course.new
     @groups = current_user.owned_groups
+    @levels = Level.all
   end
 
   def submit_answer
@@ -240,6 +242,7 @@ class CoursesController < ApplicationController
       :description,
       :weekly_task,
       group_ids: [],
+      level_ids: [],
       questions_attributes: [
         :id,
         :content,

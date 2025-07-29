@@ -44,7 +44,7 @@
               <% User.students.sort_by { |student| [student.first_name, student.last_name] }.each do |student| %>
                 <li class="list-group-item">
                   <span><%= student.full_name %></span>
-                  <%= check_box_tag "group[student_ids][]", student.id, false, class: "student-checkbox", data: { add_members_target: "studentCheckbox" } %>
+                  <%= check_box_tag "group[student_ids][]", student.id, false, class: "member-checkbox", data: { add_members_target: "studentCheckbox" } %>
                 </li>
               <% end %>
             </ul>

@@ -13,43 +13,11 @@
 
     <div class="card-white p-4">
       <%= simple_form_for @course, html: { multipart: true, data: { turbo: true } } do |f| %>
+        <%= render 'form', f: f, course: @course, groups: @groups, levels: @levels %>
 
-        <!-- Course Title -->
-        <%= f.input :title, label: "Naam van de cursus", input_html: { class: 'form-control', style: 'max-width: 600px;' } %>
-
-        <!-- Course Description -->
-        <%= f.input :description,
-              label: "Beschrijving van de cursus",
-              as: :text,
-              input_html: { maxlength: 250, rows: 2, class: 'form-control', style: 'max-width: 600px;' } %> 
-
-        <!-- Group Selection -->
-        <div class="form-group">
-          <label for="groupSelect" class="mb-2">Cursus toevoegen aan groepen</label>
-          <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
+        <div class="d-flex gap-3 mb-5">
+          <%= f.submit "Cursus aanmaken", class: "btn btn-primary mb-2" %>
         </div>
-
-        <!-- Questions Container -->
-        <div id="questions-container" data-course-form-target="questionsContainer">
-          <!-- This container will hold the dynamically added questions -->
-        </div>
-
-        <!-- Question Type Dropdown and Add Question Button -->
-        <div class="d-flex align-items-center my-4">
-          <select id="question-type-dropdown" class="form-select me-3" style="max-width: 300px;" data-course-form-target="questionTypeDropdown">
-            <option value="multiple_choice">Meerkeuze vraag</option>
-            <option value="open_answer">Open vraag</option>
-            <option value="true_false">Goed/fout</option>
-            <option value="multiple_answer">Meerkeuze antwoord</option>
-          </select>
-
-          <button type="button" id="add-question-button" class="btn btn-success" data-action="click->course-form#addQuestion">
-            Vraag toevoegen
-          </button>
-        </div>
-
-        <!-- Submit Button -->
-        <%= f.submit "Cursus aanmaken", class: "btn btn-primary mb-2" %>
       <% end %>
     </div>
   </div>

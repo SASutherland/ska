@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :levels, path: "niveaus"
+
   # Groups routes
   resources :groups, only: [:new, :create, :show, :edit, :update, :destroy] do
     member do

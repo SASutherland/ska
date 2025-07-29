@@ -2,9 +2,13 @@ class Course < ApplicationRecord
   belongs_to :teacher, class_name: "User", foreign_key: :teacher_id
   has_many :questions, dependent: :destroy
   has_many :registrations, dependent: :destroy
+  has_many :users, through: :registrations
 
   has_many :group_courses
   has_many :groups, through: :group_courses
+
+  has_many :course_levels, dependent: :destroy
+  has_many :levels, through: :course_levels
 
   accepts_nested_attributes_for :questions, allow_destroy: true
 

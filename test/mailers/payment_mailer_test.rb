@@ -9,7 +9,7 @@ class PaymentMailerTest < ActionMailer::TestCase
       email.deliver_now
     end
 
-    assert_equal ["no-reply@jouwdomein.nl"], email.from
+    assert_equal ["no-reply@ska-leren.com"], email.from
     assert_equal [user.email], email.to
     assert_equal "Je betaling is geslaagd", email.subject
     assert_includes email.body.to_s, "Je betaling is succesvol ontvangen"
@@ -24,7 +24,7 @@ class PaymentMailerTest < ActionMailer::TestCase
       email.deliver_now
     end
 
-    assert_equal ["no-reply@jouwdomein.nl"], email.from
+    assert_equal ["no-reply@ska-leren.com"], email.from
     assert_equal [user.email], email.to
     assert_equal "Je betaling is mislukt", email.subject
     assert_includes email.body.to_s, "reden: #{reason}"

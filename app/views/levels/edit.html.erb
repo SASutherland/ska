@@ -1,0 +1,24 @@
+i<div class="dashboard-container d-flex">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+
+  <!-- Flash messages for validation errors -->
+  <div id="flash-messages">
+    <%= render 'shared/flashes' %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1" data-controller="add-members">
+    <h1>Niveau wijzigen</h1>
+
+    <%= simple_form_for @level, url: level_path(@level), method: :patch, data: { turbo: true } do |f| %>
+
+      <!-- level Name Input -->
+      <div class="field level-form-control">
+        <%= f.input :name, label: "Naam van het niveau", required: true %> <!-- Pre-fill level name -->
+      </div>
+
+      <%= f.submit "niveau wijzigen", class: "btn btn-primary mt-4 mb-5", id: "submit-level" %>
+    <% end %>
+  </div>
+</div>
