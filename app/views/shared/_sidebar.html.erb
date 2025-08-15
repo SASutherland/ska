@@ -1,42 +1,9 @@
 <div class="sidebar">
   <ul class="nav flex-column">
-    <!-- Dashboard Link -->
-    <li class="nav-item">
-      <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'index' %>" href="<%= dashboard_path %>">Dashboard</a>
-    </li>
-
-    <!-- Manage Users (Admin only) -->
-    <% if current_user.admin? %>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'manage_users' %>" href="<%= dashboard_manage_users_path %>">Gebruikers</a>
-      </li>
+    <% sidebar_links.each do |link| %>
+      <% if link[:roles].nil? || link[:roles].include?(current_user.role.to_sym) %>
+        <li class="nav-item"><%= nav_link(link[:name], link[:path], controller: link[:controller], action: link[:action]) %></li>
+      <% end %>
     <% end %>
-
-    <!-- My Courses (Student) -->
-    <% if current_user.student? %>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'index' %>" href="<%= courses_path %>">Mijn cursusses</a>
-      </li>
-    <% end %>
-
-    <!-- Teachers and Admin Section -->
-    <% if current_user.teacher? || current_user.admin? %>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'my_groups' %>" href="<%= dashboard_my_groups_path %>">Groepen</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'courses' && action_name == 'my_courses' %>" href="<%= my_courses_courses_path %>">Cursusses</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'students' && action_name == 'index' %>" href="<%= students_path %>">Studenten lijst</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'levels' %>" href="<%= levels_path %>">Niveaus</a>
-      </li>
-    <% end %>
-
-    <li class="nav-item">
-      <a class="nav-link <%= 'active' if controller_name == 'dashboards' && action_name == 'subscriptions' %>" href="<%= dashboard_subscriptions_path %>">Lidmaatschap</a>
-    </li>
   </ul>
 </div>

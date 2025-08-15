@@ -5,6 +5,10 @@
   <div class="main-content flex-grow-1">
     <h1>Lidmaatschap</h1>
 
+    <%= render_trial_banner(current_user) %>
+
+    <hr>
+
     <div id="subscription-status">
       <% if session.delete(:payment_processing) %>
         <div class="d-flex">

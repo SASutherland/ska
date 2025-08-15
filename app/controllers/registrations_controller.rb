@@ -1,5 +1,18 @@
 class RegistrationsController < ApplicationController
   before_action :authenticate_user!
+  include EnsuresCourseAccess
+  trial_mode :start
+
+  def create
+    @registration = current_user.registrations.build(registration_params)
+
+    if @registration.save
+      Trial::UsageRecorder.new(current_user).record_course_started!(@registration.course)
+      redirect_to @registration.course, notice: "Succes! De cursus is gestart."
+    else
+      redirect_back fallback_location: courses_path, alert: @registration.errors.full_messages.to_sentence
+    end
+  end
 
   def update_time_spent
     registration = Registration.find_by(user_id: current_user.id, course_id: params[:course_id])
@@ -14,4 +27,11 @@ class RegistrationsController < ApplicationController
       render json: {success: false, error: "Registratie niet gevonden"}, status: :not_found
     end
   end
+
+  private
+
+  def registration_params
+    params.require(:registration).permit(:course_id)
+  end
+
 end

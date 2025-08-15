@@ -56,8 +56,8 @@ class HandleMollieWebhook
           valid_mandate: valid_mandate,
           host: Rails.application.config.x.default_host.presence || Rails.application.credentials.dig(Rails.env.to_sym, :default_host)
         ).call
-        StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
-        PaymentMailer.payment_success(user).deliver_later
+        payment = StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
+        PaymentMailer.payment_success(payment).deliver_later
 
         log("Subscription created successfully for user #{user.id}")
       end
@@ -76,11 +76,11 @@ class HandleMollieWebhook
 
     if mollie_payment.paid?
       ActiveRecord::Base.transaction do
-        StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
+        payment = StoreMolliePayment.new(mollie_payment, user: user, subscription: subscription).call
         subscription.update!(status: :active, cancellation_reason: nil)
+        PaymentMailer.payment_success(payment).deliver_later
         log("Marked subscription as active")
       end
-      PaymentMailer.payment_success(user).deliver_later
     elsif %w[failed expired canceled charged_back].include?(mollie_payment.status)
       ActiveRecord::Base.transaction do
         subscription.update!(status: :canceled, cancellation_reason: mollie_payment.status)

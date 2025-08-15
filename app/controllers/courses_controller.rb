@@ -94,6 +94,10 @@ class CoursesController < ApplicationController
     # Only for students to see their registered courses
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
 
+    @other_courses = Course.where(weekly_task: false)
+      .where.not(id: @registered_courses.map(&:id))
+      .order(updated_at: :desc)
+
     # Sort registered courses by the most recent activity (attempt or registration date)
     @registered_courses_with_attempts = @registered_courses.map do |course|
       # Fetch the most recent attempt for the course
@@ -134,19 +138,6 @@ class CoursesController < ApplicationController
     @levels = Level.all
   end
 
-  def submit_answer
-    question = Question.find(params[:id])
-
-    if question.question_type == "open_answer"
-      handle_open_answer_submission(question)
-    else
-      chosen_answer = question.answers.find(params[:answer])
-      attempt = current_user.attempts.find_or_initialize_by(question: question)
-      attempt.update(chosen_answer: chosen_answer, correct: chosen_answer.correct?)
-    end
-
-    redirect_to course_question_path(question.course, question.next_question)
-  end
 
   def update
     # Store current group ids before updating the course

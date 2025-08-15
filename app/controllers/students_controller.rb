@@ -7,7 +7,7 @@ class StudentsController < ApplicationController
       return
     end
 
-    @students = User.where(role: "student")
+    @students = User.where(role: [:student, :inactive]).order(created_at: :desc)
   end
 
   def show

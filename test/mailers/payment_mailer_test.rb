@@ -2,8 +2,8 @@ require "test_helper"
 
 class PaymentMailerTest < ActionMailer::TestCase
   test "payment_success" do
-    user = create(:user)
-    email = PaymentMailer.payment_success(user)
+    payment = create(:payment, user: user)
+    email = PaymentMailer.payment_success(payment)
 
     assert_emails 1 do
       email.deliver_now

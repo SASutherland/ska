@@ -126,16 +126,6 @@ class DashboardsController < ApplicationController
     end
   end
 
-  def register_for_course
-    course = Course.find(params[:selected_course_id])
-    if current_user.registrations.exists?(course: course)
-      redirect_to dashboard_path, alert: "You are already registered for #{course.title}."
-    else
-      current_user.registrations.create(course: course)
-      redirect_to dashboard_path, notice: "You have successfully registered for #{course.title}."
-    end
-  end
-
   def update_user_profile
     @user = User.find(params[:id])
     if @user.update(user_params)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_15_133759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -145,7 +145,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
     t.datetime "paid_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "public_id"
     t.index ["mollie_id"], name: "index_payments_on_mollie_id"
+    t.index ["public_id"], name: "index_payments_on_public_id", unique: true
     t.index ["subscription_id"], name: "index_payments_on_subscription_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
@@ -167,6 +169,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
     t.integer "time_spent"
     t.string "status"
     t.index ["course_id"], name: "index_registrations_on_course_id"
+    t.index ["user_id", "course_id"], name: "index_registrations_on_user_and_course_unique", unique: true
     t.index ["user_id"], name: "index_registrations_on_user_id"
   end
 
@@ -185,6 +188,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
+  create_table "trial_starts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "course_id", null: false
+    t.string "source"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_trial_starts_on_course_id"
+    t.index ["user_id", "course_id"], name: "index_trial_starts_on_user_id_and_course_id", unique: true
+    t.index ["user_id"], name: "index_trial_starts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -197,6 +211,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
     t.string "first_name"
     t.string "last_name"
     t.string "mollie_customer_id"
+    t.integer "trial_courses_count"
+    t.boolean "trial_active"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -224,4 +240,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_29_130738) do
   add_foreign_key "registrations", "users"
   add_foreign_key "subscriptions", "memberships"
   add_foreign_key "subscriptions", "users"
+  add_foreign_key "trial_starts", "courses"
+  add_foreign_key "trial_starts", "users"
 end

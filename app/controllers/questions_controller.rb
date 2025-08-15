@@ -21,6 +21,14 @@ class QuestionsController < ApplicationController
     @course = Course.find(params[:course_id])
     @question = @course.questions.find(params[:id])
 
+    # Gate only if the current user is the student
+    unless Trial::Gate.new(current_user).allowed_to_engage?(@question.course)
+      redirect_to dashboard_subscriptions_path, alert: "Je proefperiode is op. Kies een lidmaatschap om verder te gaan." and return
+    end
+
+    # First activity? If user has a registration already, recorder will no-op on duplicates.
+    Trial::UsageRecorder.new(current_user).record_course_started!(@question.course, source: "first_attempt")
+
     if @question.question_type == "open_answer"
       handle_open_answer_submission(@question)
     elsif @question.question_type == "multiple_answer"

@@ -6,5 +6,7 @@ FactoryBot.define do
     first_name { "John" }
     last_name { "Doe" }
     mollie_customer_id { "cus_test123" }
+    trial_active { true } 
+    trial_courses_count { 2 }
   end
 end

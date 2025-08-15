@@ -18,6 +18,7 @@
         <h1>Hi, <%= current_user.first_name %>!</h1>
         <h4><%= current_user.email %></h4>
         <h4><strong><%= t("roles.#{current_user.role}").capitalize %></strong></h4>
+        <%= trial_badge(current_user) %>
       </div>
     </div>
 
@@ -87,7 +88,7 @@
                 </div>
               </div>
             <% else %>
-              <p>No students are currently registered for this weekly task.</p>
+              <p>Er zijn geen studenten geregistreerd voor deze weektaak</p>
             <% end %>
           <% end %>
 
@@ -121,7 +122,7 @@
         </div>
       <% end %>
     <% else %>
-      <h1>Weektaak</h1>
+      <h1 class="my-3">Weektaak</h1>
       <p>Er is nog geen weektaak.</p>
 
       <!-- Button to Create New Weekly Task (Only If No Task Exists) -->
@@ -135,6 +136,10 @@
     <!-- Recent Courses -->
     <div class="card-white p-4">
       <h1>Recente Cursussen</h1>
+
+      <% if @registered_courses_with_attempts.empty? %>
+        <p>Je bent nog niet begonnen met een cursus.</p>
+      <% end %>
 
       <% @registered_courses_with_attempts.each do |course_with_attempt| %>
         <% course = course_with_attempt[:course] %>

@@ -35,4 +35,23 @@ module ApplicationHelper
       return ff
     end
   end
+
+  def nav_link(name, path, controller: nil, action: nil)
+    active = 'active' if (controller.nil? || controller_name == controller) &&
+                         (action.nil? || action_name == action)
+    link_to name, path, class: "nav-link #{active}"
+  end
+
+  def sidebar_links
+    [
+      { name: 'Dashboard', path: dashboard_path, controller: 'dashboards', action: 'index' },
+      { name: 'Gebruikers', path: dashboard_manage_users_path, controller: 'dashboards', action: 'manage_users', roles: [:admin] },
+      { name: 'Mijn cursussen', path: courses_path, controller: 'courses', action: 'index' },
+      { name: 'Groepen', path: dashboard_my_groups_path, controller: 'dashboards', action: 'my_groups', roles: [:teacher, :admin] },
+      { name: 'Cursussen', path: my_courses_courses_path, controller: 'courses', action: 'my_courses', roles: [:teacher, :admin] },
+      { name: 'Studenten lijst', path: students_path, controller: 'students', action: 'index', roles: [:teacher, :admin] },
+      { name: 'Niveaus', path: levels_path, controller: 'dashboards', action: 'levels', roles: [:teacher, :admin] },
+      { name: 'Lidmaatschap', path: dashboard_subscriptions_path, controller: 'dashboards', action: 'subscriptions' }
+    ]
+  end
 end

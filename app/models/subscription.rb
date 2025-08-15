@@ -4,6 +4,7 @@ class Subscription < ApplicationRecord
   has_many :payments
 
   after_commit :update_user_role_based_on_subscription
+  after_commit :disable_trial_if_active_subscription
 
   enum status: {
     pending: "pending",
@@ -29,5 +30,11 @@ class Subscription < ApplicationRecord
     end
 
     user.update(role: new_role) if user.role != new_role
+  end
+
+  def disable_trial_if_active_subscription
+    return unless saved_change_to_status?
+    return unless active?
+    user.update(trial_active: false)
   end
 end

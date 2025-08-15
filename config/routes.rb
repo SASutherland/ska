@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :users
+  # devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
   # Dashboard routes
   get "dashboard", to: "dashboards#index", as: "dashboard"
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
   get "dashboard/subscriptions", to: "dashboards#subscriptions", as: "dashboard_subscriptions"
   patch "dashboard/manage_users/:id", to: "dashboards#update_user_profile", as: "dashboard_update_user_profile"
   delete "dashboard/manage_users/:id", to: "dashboards#destroy_user", as: "dashboard_delete_user"
-  post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
+  # post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
 
   # Courses routes
   resources :courses, only: [:new, :create, :index, :edit, :update, :destroy] do
@@ -41,7 +42,7 @@ Rails.application.routes.draw do
   end
 
   # Registrations routes
-  resources :registrations, only: [] do
+  resources :registrations, only: :create do
     patch :update_time_spent, on: :collection
   end
 
@@ -64,7 +65,11 @@ Rails.application.routes.draw do
 
   require "sidekiq/web"
 
-  authenticate :user, ->(u) { u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
+  if Rails.env.development?
+    mount Sidekiq::Web => "/sidekiq"
+  else
+    authenticate :user, ->(u) { u.admin? } do
+      mount Sidekiq::Web => "/sidekiq"
+    end
   end
 end

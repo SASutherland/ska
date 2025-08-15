@@ -1,22 +1,18 @@
 require "postmark-rails/templated_mailer"
 
-class UserMailer < ApplicationMailer
+class TrialMailer < ApplicationMailer
   include PostmarkRails::TemplatedMailerMixin
 
-  def welcome_email(user)
+  def trial_limit_reached(user)
     @user = user
 
     self.template_model = {
       name:         @user.first_name,
       sender_name:  "Nour el Ghezaoui",
       product_name: "Stichting Kansen Academie",
-      trial_days:   3,
-      support_email:'support@ska-leren.com',
-      action_url:   root_url
+      action_url:   dashboard_subscriptions_url
     }
 
-    mail to: user.email, postmark_template_alias: "welcome"
+    mail to: user.email, postmark_template_alias: "trial_expired"
   end
 end
-
-

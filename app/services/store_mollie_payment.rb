@@ -17,6 +17,8 @@ class StoreMolliePayment
     payment.description = @mollie_payment.description
     payment.paid_at = @mollie_payment.paid_at
     payment.save!
+
+    payment
   end
 
   private

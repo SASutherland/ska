@@ -28,7 +28,7 @@ class User < ApplicationRecord
 
   def email
     # remove after POSTMARK is configured
-    "email@jouwdomein.nl"
+    "test@blackhole.postmarkapp.com"
   end
 
   def admin?
@@ -51,12 +51,28 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def start_trial!
+    update(role: :student, trial_active: true, trial_courses_count: 0)
+  end
+
+  def increment_trial_courses!
+    increment!(:trial_courses_count) if trial_active?
+  end
+
+  def trial_limit_reached?
+    trial_active? && trial_courses_count >= TrialConfig::TRIAL_LIMIT
+  end
+
+  def trial?
+    trial_active? && active_subscription.nil?
+  end
+
   def set_default_role
-    self.role ||= :inactive
+    self.role ||= "inactive"
   end
 
   def active_subscription
-    subscriptions.find_by(status: :active)
+    subscriptions.find_by(status: "active")
   end
 
   def mollie_customer
