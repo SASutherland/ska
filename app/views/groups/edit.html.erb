@@ -40,8 +40,8 @@
             <% User.students.each do |student| %>
               <li class="list-group-item">
                 <span><%= student.full_name %></span>
-                <!-- Pre-check the checkbox if the student is already in the group -->
-                <%= check_box_tag "group[student_ids][]", student.id, @group.students.include?(student), class: "member-checkbox", data: { add_members_target: "studentCheckbox" } %>
+                <!-- Pre-check the checkbox if the student is already in the group (only check non-deleted students) -->
+                <%= check_box_tag "group[student_ids][]", student.id, @group.students.not_deleted.include?(student), class: "member-checkbox", data: { add_members_target: "studentCheckbox" } %>
               </li>
             <% end %>
           </ul>

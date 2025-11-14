@@ -4,7 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable
 
-  after_commit :send_welcome_email, on: :create
+  before_save :auto_approve_admins
+  after_commit :notify_admins_of_new_signup, on: :create
+  after_commit :send_welcome_email, on: :update, if: :saved_change_to_approved?
   after_initialize :set_default_role, if: :new_record?
 
   enum role: {inactive: 0, student: 1, teacher: 2, admin: 3}
@@ -21,13 +23,16 @@ class User < ApplicationRecord
   has_many :trial_starts, dependent: :destroy
   has_many :activity_logs, dependent: :nullify
 
-  scope :inactives, -> { where(role: "inactive") }
-  scope :students, -> { where(role: "student") }
-  scope :teachers, -> { where(role: "teacher") }
-  scope :admins, -> { where(role: "admin") }
+  scope :not_deleted, -> { where(deleted_at: nil) }
+  scope :inactives, -> { not_deleted.where(role: "inactive") }
+  scope :students, -> { not_deleted.where(role: "student") }
+  scope :teachers, -> { not_deleted.where(role: "teacher") }
+  scope :admins, -> { not_deleted.where(role: "admin") }
+  scope :approved, -> { where(approved: true) }
+  scope :pending_approval, -> { where(approved: false) }
 
   validates :first_name, :last_name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: { conditions: -> { where(deleted_at: nil) } }
 
   def email
     # remove after POSTMARK is configured
@@ -78,6 +83,10 @@ class User < ApplicationRecord
     self.role ||= "inactive"
   end
 
+  def auto_approve_admins
+    self.approved = true if admin? && !approved?
+  end
+
   def active_subscription
     subscriptions.find_by(status: "active")
   end
@@ -92,8 +101,15 @@ class User < ApplicationRecord
   end
 
   def send_welcome_email
-    puts "sending welcome email to #{email}"
+    return unless approved? && saved_change_to_approved?
+    
+    puts "sending welcome email to #{read_attribute(:email)}"
     UserMailer.welcome_email(self).deliver_later
+  end
+
+  def notify_admins_of_new_signup
+    return if admin? # Don't notify for admin accounts
+    AdminMailer.new_signup_request(self).deliver_later
   end
 
   def has_completed?(course)
@@ -117,5 +133,29 @@ class User < ApplicationRecord
       total: total_questions,
       percentage: percentage
     }
+  end
+
+  def soft_delete
+    update_column(:deleted_at, Time.current)
+  end
+
+  def destroy
+    soft_delete
+    true
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  # Prevent deleted users and unapproved users from authenticating
+  def active_for_authentication?
+    super && !deleted? && approved?
+  end
+
+  def inactive_message
+    return :deleted_account if deleted?
+    return :unapproved_account unless approved?
+    super
   end
 end

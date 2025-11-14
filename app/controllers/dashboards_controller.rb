@@ -3,7 +3,7 @@ class DashboardsController < ApplicationController
   before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile, :logbook]
 
   def destroy_user
-    @user = User.find(params[:id])
+    @user = User.not_deleted.find(params[:id])
     user_snapshot = { id: @user.id, email: @user.read_attribute(:email), name: @user.full_name }
 
     if @user.destroy
@@ -36,6 +36,7 @@ class DashboardsController < ApplicationController
       # Get the most recent weekly tasks for Admin
       @weekly_tasks = Course.where(weekly_task: true)
         .where("created_at >= ?", 7.days.ago)
+        .includes(:questions, active_registrations: :user)
         .order(created_at: :desc)
 
     else
@@ -74,6 +75,7 @@ class DashboardsController < ApplicationController
         # Get all weekly tasks created by the teacher that are still active
         @weekly_tasks = current_user.courses.where(weekly_task: true)
           .where("created_at >= ?", 7.days.ago)
+          .includes(:questions, active_registrations: :user)
           .order(created_at: :desc)
 
       else
@@ -93,8 +95,8 @@ class DashboardsController < ApplicationController
   end
 
   def manage_users
-    # Always initialize @users as an empty array if User.all is nil
-    @users = User.all || []
+    # Always initialize @users as an empty array if User.not_deleted is nil
+    @users = User.not_deleted || []
 
     # Handle sorting logic
     case params[:sort]
@@ -133,7 +135,7 @@ class DashboardsController < ApplicationController
   end
 
   def update_user_profile
-    @user = User.find(params[:id])
+    @user = User.not_deleted.find(params[:id])
     if @user.update(user_params)
       ActivityLogger.log_user_updated(actor: current_user, user: @user)
       redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol bijgewerkt."
@@ -156,10 +158,10 @@ class DashboardsController < ApplicationController
   end
 
   def find_user
-    @user = User.find(params[:id])
+    @user = User.not_deleted.find(params[:id])
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :role)
+    params.require(:user).permit(:first_name, :last_name, :email, :role, :approved)
   end
 end

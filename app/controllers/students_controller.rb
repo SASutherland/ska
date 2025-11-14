@@ -27,7 +27,7 @@ class StudentsController < ApplicationController
   private
 
   def set_student
-    @student = User.find(params[:id])
+    @student = User.not_deleted.find(params[:id])
     unless @student.student?
       redirect_to root_path, alert: "Deze gebruiker is geen student"
     end

@@ -1,4 +1,4 @@
-<% registrations.includes(:user).sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
+<% registrations.sort_by { |r| [r.user.first_name, r.user.last_name] }.each do |registration| %>
   <div class="d-flex justify-content-between align-items-center">
     <!-- Student Name -->
     <div class="col-3">

@@ -128,10 +128,10 @@ class CoursesController < ApplicationController
   def my_courses
     if current_user.admin?
       # Admins can see all courses, ordered by the most recent update
-      @created_courses = Course.includes(:questions, registrations: :user).order(updated_at: :desc)
+      @created_courses = Course.includes(:questions, active_registrations: :user).order(updated_at: :desc)
     elsif current_user.teacher?
       # Teachers can only see the courses they have created
-      @created_courses = current_user.courses.includes(:questions, registrations: :user).order(updated_at: :desc)
+      @created_courses = current_user.courses.includes(:questions, active_registrations: :user).order(updated_at: :desc)
     else
       redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
     end
@@ -335,7 +335,7 @@ class CoursesController < ApplicationController
     groups = Group.where(id: group_ids)
 
     groups.each do |group|
-      group.students.each do |student|
+      group.students.not_deleted.each do |student|
         Registration.find_or_create_by(user_id: student.id, course_id: @course.id)
       end
     end

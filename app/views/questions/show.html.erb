@@ -9,7 +9,7 @@
 
     <!-- Back button -->
     <% if params[:student_id] %>
-      <% student = User.find(params[:student_id]) %>
+      <% student = User.not_deleted.find(params[:student_id]) %>
       <%= link_to student_path(student), class: "back-btn" do %>
         <p><i class="fa-solid fa-arrow-left mx-1"></i><span class="ms-2">Terug naar <%= student.first_name %>'s profiiel</span></p>
       <% end %>
@@ -40,7 +40,7 @@
       <!-- Retrieve the student's attempt -->
       <% if params[:student_id] %>
         <% student_attempt = Attempt.find_by(user_id: params[:student_id], question_id: @question.id) %>
-        <% student = User.find(params[:student_id]) %>
+        <% student = User.not_deleted.find(params[:student_id]) %>
       <% end %>
 
       <%= form_with url: submit_answer_course_question_path(@course, @question), method: :post, local: true, data: { answer_target: "form" } do |f| %>

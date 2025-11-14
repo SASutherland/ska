@@ -10,10 +10,10 @@ class GroupsController < ApplicationController
     # If groups were selected in the "Select all students from an existing group" dropdown
     if params[:group_ids].present?
       selected_groups = Group.where(id: params[:group_ids])
-      selected_students = selected_groups.flat_map(&:students).uniq # Get all students from the selected groups
+      selected_students = selected_groups.flat_map { |g| g.students.not_deleted }.uniq # Get only non-deleted students from the selected groups
       
       # Filter out students who are already manually selected in the checkboxes
-      manually_selected_students = User.where(id: params[:group][:student_ids])
+      manually_selected_students = User.not_deleted.where(id: params[:group][:student_ids])
       remaining_students = selected_students - manually_selected_students
       
       @group.students += remaining_students # Add only non-duplicated students to the new group
@@ -70,8 +70,8 @@ class GroupsController < ApplicationController
     # If groups were selected in the "Select all students from an existing group" dropdown
     if params[:group_ids].present?
       selected_groups = Group.where(id: params[:group_ids])
-      selected_students = selected_groups.flat_map(&:students).uniq # Get all students from the selected groups
-      manually_selected_students = User.where(id: params[:group][:student_ids])
+      selected_students = selected_groups.flat_map { |g| g.students.not_deleted }.uniq # Get only non-deleted students from the selected groups
+      manually_selected_students = User.not_deleted.where(id: params[:group][:student_ids])
       remaining_students = selected_students - manually_selected_students
   
       @group.students += remaining_students # Add only non-duplicated students to the group

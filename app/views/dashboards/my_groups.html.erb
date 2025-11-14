@@ -32,7 +32,7 @@
 
           <!-- Students Section -->
           <ul>
-            <% group.students.sort_by { |student| [student.first_name, student.last_name] }.each do |student| %>
+            <% group.students.not_deleted.sort_by { |student| [student.first_name, student.last_name] }.each do |student| %>
               <li>
                 <!-- Link to student's profile -->
                 <%= link_to "#{student.first_name} #{student.last_name}", student_path(student), class: 'student-link' %>
