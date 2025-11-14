@@ -4,10 +4,11 @@ Rails.application.routes.draw do
 
   # Dashboard routes
   get "dashboard", to: "dashboards#index", as: "dashboard"
-  get "dashboard/groepen", to: "dashboards#my_groups", as: "dashboard_my_groups"
+  get "dashboard/leerlingenlijsten", to: "dashboards#my_groups", as: "dashboard_my_groups"
   get "dashboard/manage_users", to: "dashboards#manage_users", as: "dashboard_manage_users"
   get "dashboard/manage_users/:id/edit", to: "dashboards#edit_user_profile", as: "dashboard_edit_user_profile"
   get "dashboard/subscriptions", to: "dashboards#subscriptions", as: "dashboard_subscriptions"
+  get "dashboard/logboek", to: "dashboards#logbook", as: "dashboard_logbook"
   patch "dashboard/manage_users/:id", to: "dashboards#update_user_profile", as: "dashboard_update_user_profile"
   delete "dashboard/manage_users/:id", to: "dashboards#destroy_user", as: "dashboard_delete_user"
   # post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
@@ -59,6 +60,9 @@ Rails.application.routes.draw do
   get "/subscriptions/status", to: "subscriptions#status"
   get "/subscription-success", to: "subscriptions#success"
   post "/subscriptions/webhook", to: "subscriptions#webhook"
+  
+  # Postmark webhook
+  post "/postmark/webhook", to: "postmark_webhooks#webhook"
 
   # Root route
   root to: "pages#home"
