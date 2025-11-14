@@ -2,12 +2,15 @@ class StudentsController < ApplicationController
   before_action :set_student, only: [:show]
 
   def index
-    unless current_user.admin? || current_user.teacher?
-      redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
-      return
-    end
+    # Not in use: leerlingen kunnen geclusterd worden in de leerlingenlijst 
+    redirect_to root_path and return
 
-    @students = User.where(role: [:student, :inactive]).order(created_at: :desc)
+    # unless current_user.admin? || current_user.teacher?
+    #   redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
+    #   return
+    # end
+
+    # @students = User.where(role: [:student, :inactive]).order(created_at: :desc)
   end
 
   def show
