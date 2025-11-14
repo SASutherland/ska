@@ -4,7 +4,7 @@ class Course < ApplicationRecord
   has_many :registrations, dependent: :destroy
   has_many :users, through: :registrations
 
-  has_many :group_courses
+  has_many :group_courses, dependent: :destroy  
   has_many :groups, through: :group_courses
 
   has_many :course_levels, dependent: :destroy
