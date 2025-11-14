@@ -55,7 +55,7 @@ nl:
         updated_at: "Bijgewerkt op"
       group_membership:
         user_id: "Gebruiker ID"
-        group_id: "Groep ID"
+        group_id: "Leerlingenlijst ID"
         created_at: "Aangemaakt op"
         updated_at: "Bijgewerkt op"
       question:

@@ -9,7 +9,7 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1" data-controller="add-members">
-    <h1>Groep wijzigen</h1>
+    <h1>Leerlingenlijst wijzigen</h1>
 
     <%= simple_form_for @group, url: group_path(@group), method: :patch, data: { turbo: true } do |f| %>
 
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <%= f.submit "Groep wijzigen", class: "btn btn-primary mt-4 mb-5", id: "submit-group" %>
+      <%= f.submit "Leerlingenlijst wijzigen", class: "btn btn-primary mt-4 mb-5", id: "submit-group" %>
     <% end %>
   </div>
 </div>

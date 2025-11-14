@@ -15,12 +15,12 @@ class Group < ApplicationRecord
   private
 
   def must_have_students
-    errors.add(:base, "Groepen moeten ten minste één student bevatten") if student_ids.empty?
+    errors.add(:base, "Leerlingenlijsten moeten ten minste één student bevatten") if student_ids.empty?
   end
 
   def owner_must_be_authorized
     unless teacher&.teacher? || teacher&.admin?
-      errors.add(:base, "Alleen leraren en admins mogen groepen maken")
+      errors.add(:base, "Alleen leraren en admins mogen leerlingenlijsten maken")
     end
   end
 end

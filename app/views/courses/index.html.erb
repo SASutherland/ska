@@ -10,7 +10,7 @@
         <% course = course_with_attempt[:course] %> <!-- Extract the course from the data structure -->
         <div class="card-white mb-4 p-4 d-flex">
           <div>
-            <h2><%= course.title %></h2>
+            <h2><%= course.title %> <%= levels_list(course) %></h2>
             <p><%= course.description %></p>
             <div class="course-content d-flex align-items-start justify-content-between">
               <!-- Questions progress -->
@@ -32,7 +32,7 @@
     <h2>Beschikbare cursussen</h2>
     <% @other_courses.each do |course| %>
       <div class="card-white mb-4 p-4">
-        <h2><%= course.title %></h2>
+        <h2><%= course.title  %> <%= levels_list(course) %></h2>
         <p><%= course.description %></p>
         <div class="course-content d-flex align-items-start justify-content-between">
           <div class="action-buttons">

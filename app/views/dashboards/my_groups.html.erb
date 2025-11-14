@@ -4,9 +4,9 @@
 
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-    <h1 class="mb-4">Mijn groepen</h1>
+    <h1 class="mb-4">Mijn leerlingenlijsten</h1>
 
-    <%= link_to "Groep aanmaken", new_group_path, class: "btn btn-primary mb-4" %>
+    <%= link_to "Leerlingenlijst aanmaken", new_group_path, class: "btn btn-primary mb-4" %>
 
     <% if @groups.any? %>
       <% @groups.each do |group| %>
@@ -19,7 +19,7 @@
             <!-- Action Buttons (Edit/Delete) -->
             <div class="d-flex align-items-center">
               <!-- Edit Button -->
-              <%= link_to edit_group_path(group), class: 'me-4', title: 'Groep wijzigen' do %>
+              <%= link_to edit_group_path(group), class: 'me-4', title: 'Leerlingenlijst wijzigen' do %>
                 <i class="fa-solid fa-pen-to-square icon-aligned"></i>
               <% end %>
 
@@ -42,7 +42,7 @@
         </div>
       <% end %>
     <% else %>
-      <p>Je hebt nog geen groepen.</p>
+      <p>Je hebt nog geen leerlingenlijsten.</p>
     <% end %>
   </div>
 </div>

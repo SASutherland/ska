@@ -16,7 +16,7 @@
         
         <!-- Group Selection -->
         <div class="form-group">
-          <label for="groupSelect" class="mb-2">Weektaak toevoegen aan deze groepen</label>
+          <label for="groupSelect" class="mb-2">Weektaak toevoegen aan deze leerlingenlijsten</label>
           <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control", id: "groupSelect", data: { controller: "tom-select" } %>
         </div>
 

@@ -11,7 +11,7 @@
   <!-- Main Content -->
   <div class="main-content flex-grow-1" data-controller="add-members">
 
-    <h1 class="mb-4">Create a New Group</h1>
+    <h1 class="mb-4">Nieuwe Leerlingenlijst</h1>
 
     <div class="card-white p-4">
 
@@ -19,18 +19,18 @@
 
         <!-- Group name -->
         <div class="field group-form-control">
-          <%= f.input :name, label: "Group name", required: true %>
+          <%= f.input :name, label: "Naam van de lijst", required: true %>
         </div>
 
         <!-- Select groups for pre-selecting students -->
         <div class="form-group">
-          <label for="groupSelect">Select all students from an existing group (optional)</label>
+          <label for="groupSelect">Selecteer de leerlingen van een bestaande lijst (optioneel)</label>
           <%= select_tag "group_ids[]", options_from_collection_for_select(@groups, "id", "name"), multiple: true, class: "form-control mt-2 mb-3", id: "groupSelect", data: { controller: "tom-select" } %>
         </div>
 
         <!-- Student checkboxes -->
         <div class="field">
-          <%= f.label "Select students to add to the group" %>
+          <%= f.label "Selecteer leerlingen voor deze lijst" %>
 
           <!-- List all students with checkboxes -->
           <div class="student-list mt-2">
@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <%= f.submit "Create Group", class: "btn btn-primary mt-4 mb-2", id: "submit-group" %>
+        <%= f.submit "Maak lijst aan", class: "btn btn-primary mt-4 mb-2", id: "submit-group" %>
       <% end %>
     </div>
   </div>
