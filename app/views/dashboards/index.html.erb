@@ -73,7 +73,7 @@
 
           <% if current_user.teacher? || current_user.admin? %>
             <!-- List of Students Registered for the Weekly Task -->
-            <% if weekly_task.registrations.any? %>
+            <% if weekly_task.active_registrations.any? %>
               <!-- Headers Row -->
               <div class="students-list-wrapper mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-2" style="font-weight: bold;">
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="students-list">
-                  <%= render partial: 'shared/registration_list', locals: { registrations: weekly_task.registrations, questions: weekly_task.questions } %>
+                  <%= render partial: 'shared/registration_list', locals: { registrations: weekly_task.active_registrations, questions: weekly_task.questions } %>
                 </div>
               </div>
             <% else %>

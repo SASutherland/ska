@@ -9,6 +9,8 @@ class Registration < ApplicationRecord
     completed: "completed"
   }
 
+  scope :with_active_users, -> { joins(:user).where(users: { deleted_at: nil }) }
+
   private
 
   def user_not_already_registered

@@ -14,6 +14,8 @@ nl:
       timeout: "Je sessie is verlopen. Log opnieuw in om verder te gaan."
       unauthenticated: "Je moet inloggen of registreren voordat je verder kunt gaan."
       unconfirmed: "Je moet je e-mailadres bevestigen voordat je verder kunt gaan."
+      unapproved_account: "Je account wacht nog op goedkeuring van een beheerder."
+      deleted_account: "Je account is verwijderd."
     mailer:
       confirmation_instructions:
         subject: "Bevestigingsinstructies"

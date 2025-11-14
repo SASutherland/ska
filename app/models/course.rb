@@ -3,6 +3,7 @@ class Course < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :registrations, dependent: :destroy
   has_many :users, through: :registrations
+  has_many :active_registrations, -> { with_active_users }, class_name: "Registration"
 
   has_many :group_courses, dependent: :destroy  
   has_many :groups, through: :group_courses

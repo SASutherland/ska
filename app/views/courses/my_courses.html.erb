@@ -42,7 +42,7 @@
           </div>
 
           <!-- List of Students Registered for the Course -->
-          <% if course.registrations.any? %>
+          <% if course.active_registrations.any? %>
             <!-- Headers Row -->
             <div class="students-list-wrapper">
               <div class="d-flex justify-content-between align-items-center mb-2" style="font-weight: bold;">
@@ -53,7 +53,7 @@
               </div>
 
               <div class="students-list">
-                <%= render partial: 'shared/registration_list', locals: { registrations: course.registrations, questions: course.questions } %>
+                <%= render partial: 'shared/registration_list', locals: { registrations: course.active_registrations, questions: course.questions } %>
               </div>
             </div>
           <% else %>

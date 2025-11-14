@@ -29,6 +29,7 @@
 
       <% if current_user.admin? %>
         <%= f.input :role, as: :select, label: "#{@user.first_name} is een", collection: [['Student', 'student'], ['Docent', 'teacher']], selected: @user.role %>
+        <%= f.input :approved, as: :boolean, label: "Account goedgekeurd" %>
       <% end %>
 
 
