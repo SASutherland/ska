@@ -47,11 +47,13 @@ module ApplicationHelper
       { name: 'Dashboard', path: dashboard_path, controller: 'dashboards', action: 'index' },
       { name: 'Gebruikers', path: dashboard_manage_users_path, controller: 'dashboards', action: 'manage_users', roles: [:admin] },
       { name: 'Mijn cursussen', path: courses_path, controller: 'courses', action: 'index' },
-      { name: 'Groepen', path: dashboard_my_groups_path, controller: 'dashboards', action: 'my_groups', roles: [:teacher, :admin] },
+      { name: 'Leerlingenlijst', path: dashboard_my_groups_path, controller: 'dashboards', action: 'my_groups', roles: [:teacher, :admin] },
+      
       { name: 'Cursussen', path: my_courses_courses_path, controller: 'courses', action: 'my_courses', roles: [:teacher, :admin] },
-      { name: 'Studenten lijst', path: students_path, controller: 'students', action: 'index', roles: [:teacher, :admin] },
-      { name: 'Niveaus', path: levels_path, controller: 'dashboards', action: 'levels', roles: [:teacher, :admin] },
-      { name: 'Lidmaatschap', path: dashboard_subscriptions_path, controller: 'dashboards', action: 'subscriptions' }
+      # { name: 'Studenten lijst', path: students_path, controller: 'students', action: 'index', roles: [:teacher, :admin] },
+      { name: 'Niveaus/Groepen', path: levels_path, controller: 'dashboards', action: 'levels', roles: [:teacher, :admin] },
+      { name: 'Lidmaatschap', path: dashboard_subscriptions_path, controller: 'dashboards', action: 'subscriptions' },
+      { name: 'Logboek', path: dashboard_logbook_path, controller: 'dashboards', action: 'logbook', roles: [:admin] }
     ]
   end
 end
