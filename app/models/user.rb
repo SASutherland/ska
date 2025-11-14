@@ -18,6 +18,8 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :memberships, through: :subscriptions
   has_many :payments
+  has_many :trial_starts, dependent: :destroy
+  has_many :activity_logs, dependent: :nullify
 
   scope :inactives, -> { where(role: "inactive") }
   scope :students, -> { where(role: "student") }
@@ -25,6 +27,7 @@ class User < ApplicationRecord
   scope :admins, -> { where(role: "admin") }
 
   validates :first_name, :last_name, presence: true
+  validates :email, presence: true, uniqueness: true
 
   def email
     # remove after POSTMARK is configured
@@ -49,6 +52,10 @@ class User < ApplicationRecord
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def display_identifier
+    [full_name.presence, read_attribute(:email)].compact.join(" - ")
   end
 
   def start_trial!
@@ -85,6 +92,7 @@ class User < ApplicationRecord
   end
 
   def send_welcome_email
+    puts "sending welcome email to #{email}"
     UserMailer.welcome_email(self).deliver_later
   end
 
