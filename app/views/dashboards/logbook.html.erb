@@ -1,0 +1,37 @@
+<h1></h1>
+<div class="dashboard-container d-flex">
+  <!-- Sidebar -->
+  <%= render 'shared/sidebar' %>
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1">
+    <div class="container mt-4">
+      <h1>Logboek</h1>
+      <% if @activity_logs.any? %>
+        <table class="table table-striped mt-3">
+          <thead>
+            <tr>
+              <th scope="col">Tijdstip</th>
+              <th scope="col">Gebruiker</th>
+              <th scope="col">Actie</th>
+              <th scope="col">Omschrijving</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @activity_logs.each do |log| %>
+              <tr>
+                <td><%= l(log.created_at, format: :short) %></td>
+                <td><%= log.user&.display_identifier || "Onbekende gebruiker" %></td>
+                <td><%= I18n.t("activity_logs.actions.#{log.action}", default: log.action.humanize) %></td>
+                <td><%= log.message %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="alert alert-info mt-4">
+          Er zijn nog geen logboekitems beschikbaar.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
