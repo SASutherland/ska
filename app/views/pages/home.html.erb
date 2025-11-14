@@ -9,38 +9,69 @@
       <%= link_to "REGISTREREN", new_user_registration_path, class: "btn btn-azure" %>
     </div>
   </div>
-
-  <div class="container home-container">
-    <%= image_tag "ska-logo.png", class: "left-logo", alt: "Stichting Kansen Academie logo" %>
-    <div class="home-text">
-      <h3>Ons aanbod</h3>
-      <h4>Abonnementen</h4>
-      <p>Je kunt een abonnement particulier aanschaffen of namens een school.</p>
-              
-      <p>
-        <ul>
-          <li>        
-            Basis: €5,99 per maand
-            Toegang tot alle basismodules voor de perfecte ontwikkeling van het kind.
-          </li>
-          <li>
-            Docenten account: €12,99 per maand
-            Speciaal voor scholen en docenten. Inclusief toegang voor meerdere leerlingen en inzicht in hun voortgang.
-          </li>
-        </ul>
-      </p>
-
-      <h4>Hoe werkt het?</h4>
-      <p>
-        <ol>
-          <li>Meld je aan: Maak een gratis account aan en probeer onze website.</li>
-          <li>Kies jouw abonnement: Upgrade eenvoudig om toegang te krijgen tot extra mogelijkheden.</li>
-          <li>Ontwikkel je talenten: Oefen, leer en groei op jouw eigen tempo!</li>
-        </ol>
-      </p>
-      <p>
-        Start vandaag nog! Samen maken we leren leuk en effectief.
-      </p>
+  <div class="container home-container home-text">
+    <div class="row my-5">
+      <div class="col-lg-4 text-center">
+        <%= image_tag "ska-logo.png", class: "left-logo", alt: "Stichting Kansen Academie logo" %>
+      </div>
+      <div class="col-lg-8">
+        <div>
+          <h3>Ons aanbod</h3>
+          <p>Groot aanbod aan leuke en leerzame oefeningen voor elk kind.</p>
+          <p>Op onze website vind je honderden interactieve opdrachten waarmee kinderen uit groep 3 t/m 8 op hun eigen niveau kunnen oefenen. Van rekenen en taal tot begrijpend lezen, alles is ontwikkeld om leren leuk, visueel en toegankelijk te maken.</p>
+          <p>De opdrachten zijn verdeeld per groep en onderwerp , zodat ieder kind stap voor stap kan groeien in zelfvertrouwen en kennis. Of je nu oefent voor school, de Cito-toets of gewoon omdat leren leuk is bij Stichting Kansen Academie helpen we je om het beste uit jezelf te halen.</p>
+          <p>Kies je groep en ga direct aan de slag!</p>
+          <% [3,4,5,6,7].each do |n| %>
+            <%= link_to new_user_registration_path(groep: n) do %>
+              <%= image_tag "groep-#{n}.jpg", class: "home-level-image" %>
+            <% end %>
+          <% end %>
+        </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row justify-content-center my-5">
+          <div class="col-6">
+            <div class="d-flex flex-column align-items-center">
+              <%= image_tag "home-example-bullets.jpeg", class: "home-example-image" %>
+            </div>
+          </div>
+          <div class="col-6">
+            <h3>Hoe werkt het?</h3>
+            <p>
+              <ol>
+                <li>Meld je aan: Maak een gratis account aan en probeer onze website.</li>
+                <li>Kies jouw abonnement: Upgrade eenvoudig om toegang te krijgen tot extra mogelijkheden.</li>
+                <li>Ontwikkel je talenten: Oefen, leer en groei op jouw eigen tempo!</li>
+              </ol>
+            </p>
+            <p>
+              Start vandaag nog! Samen maken we leren leuk en effectief.
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center my-5">
+          <div class="col-6">
+            <h3>Abonnementen</h3>
+            <p>Je kunt een abonnement particulier aanschaffen of namens een school.</p>
+            <p>
+              <ul>
+                <li>
+                  Basis: €5,99 per maand
+                  Toegang tot alle basismodules voor de perfecte ontwikkeling van het kind.
+                </li>
+                <li>
+                  Docenten account: €12,99 per maand
+                  Speciaal voor scholen en docenten. Inclusief toegang voor meerdere leerlingen en inzicht in hun voortgang.
+                </li>
+              </ul>
+            </p>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column align-items-center">
+              <%= image_tag "home-example-questions.jpeg", class: "home-example-image" %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
