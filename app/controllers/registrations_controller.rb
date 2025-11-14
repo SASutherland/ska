@@ -8,6 +8,7 @@ class RegistrationsController < ApplicationController
 
     if @registration.save
       Trial::UsageRecorder.new(current_user).record_course_started!(@registration.course)
+      ActivityLogger.log_registration_created(user: current_user, registration: @registration)
       redirect_to @registration.course, notice: "Succes! De cursus is gestart."
     else
       redirect_back fallback_location: courses_path, alert: @registration.errors.full_messages.to_sentence

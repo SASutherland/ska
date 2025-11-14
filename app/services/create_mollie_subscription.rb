@@ -35,6 +35,8 @@ class CreateMollieSubscription
       start_date: Date.today
     )
 
+    ActivityLogger.log_subscription_created(user: @user, subscription: subscription)
+
     Turbo::StreamsChannel.broadcast_replace_to(
       @user,
       target: "subscription-status",

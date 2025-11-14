@@ -22,6 +22,7 @@ class CoursesController < ApplicationController
         end
       end
 
+      ActivityLogger.log_course_created(user: current_user, course: @course)
       flash[:notice] = "Cursus is aangemaakt!"
       redirect_to dashboard_path
     else
@@ -46,6 +47,7 @@ class CoursesController < ApplicationController
     if @course.save
       # Register students from selected groups if groups are present
       register_students_from_groups(params[:group_ids]) if params[:group_ids].present?
+      ActivityLogger.log_course_created(user: current_user, course: @course)
       flash[:notice] = "Weektaak is aangemaakt!"
       redirect_to dashboard_path # Redirect to dashboard after successful creation
     else
@@ -70,7 +72,10 @@ class CoursesController < ApplicationController
     end
 
     # Finally, destroy the course
+    course_title = @course.title
+    weekly_task = @course.weekly_task?
     if @course.destroy
+      ActivityLogger.log_course_deleted(user: current_user, course_title: course_title, weekly_task: weekly_task)
       flash[:notice] = "Cursus is verwijderd."
       redirect_to request.referer || my_courses_courses_path
     else
@@ -162,6 +167,7 @@ class CoursesController < ApplicationController
       # Explicitly touch the course to update the `updated_at` timestamp
       @course.touch
 
+      ActivityLogger.log_course_updated(user: current_user, course: @course)
       flash[:notice] = "Cursus is bijgewerkt."
       redirect_to my_courses_courses_path
     else
@@ -190,6 +196,7 @@ class CoursesController < ApplicationController
       removed_groups = previous_group_ids - new_group_ids
       unregister_students_from_groups(removed_groups)
 
+      ActivityLogger.log_course_updated(user: current_user, course: @course)
       flash[:notice] = "Weektaak is bijgewerkt."
       redirect_to dashboard_path
     else
@@ -306,6 +313,7 @@ class CoursesController < ApplicationController
 
       # Update the attempt with the user's written answer and correctness
       attempt.update(written_answer: user_answer_content, correct: is_correct)
+      ActivityLogger.log_attempt_created(user: current_user, attempt: attempt)
     else
       flash[:alert] = "Er is geen correct antwoord gevonden voor deze vraag."
       redirect_to course_question_path(question.course, question)

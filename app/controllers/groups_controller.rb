@@ -20,6 +20,7 @@ class GroupsController < ApplicationController
     end
     
     if @group.save
+      ActivityLogger.log_group_created(user: current_user, group: @group)
       redirect_to dashboard_my_groups_path, notice: "Group created successfully!"
     else
       flash.now[:alert] = @group.errors.full_messages.join(", ")
@@ -36,6 +37,7 @@ class GroupsController < ApplicationController
     @group.courses.clear
     
     if @group.destroy
+      ActivityLogger.log_group_deleted(user: current_user, group_name: @group.name)
       flash[:notice] = "Group deleted successfully."
       redirect_to request.referer || dashboard_my_groups_path
     else
@@ -78,6 +80,7 @@ class GroupsController < ApplicationController
     # Update the group name and manually selected students
     if @group.update(group_params)
       @group.touch # Explicitly update the `updated_at` field to reflect this update
+      ActivityLogger.log_group_updated(user: current_user, group: @group)
       redirect_to dashboard_my_groups_path, notice: "Group updated successfully!"
     else
       flash.now[:alert] = @group.errors.full_messages.join(", ")

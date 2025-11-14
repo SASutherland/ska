@@ -100,6 +100,24 @@ nl:
       destroy:
         notice: "%{resource} is succesvol verwijderd."
 
+  activity_logs:
+    actions:
+      course_created: "Cursus aangemaakt"
+      course_updated: "Cursus bijgewerkt"
+      course_deleted: "Cursus verwijderd"
+      group_created: "Groep aangemaakt"
+      group_updated: "Groep bijgewerkt"
+      group_deleted: "Groep verwijderd"
+      user_updated: "Gebruiker bijgewerkt"
+      user_deleted: "Gebruiker verwijderd"
+      subscription_created: "Lidmaatschap aangemaakt"
+      subscription_updated: "Lidmaatschap bijgewerkt"
+      registration_created: "Inschrijving aangemaakt"
+      attempt_created: "Poging aangemaakt"
+      answer_created: "Antwoord aangemaakt"
+      answer_updated: "Antwoord bijgewerkt"
+      email_delivered: "E-mail afgeleverd"
+
   roles:
     teacher: "docent"
     student: "student"

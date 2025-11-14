@@ -74,6 +74,7 @@ class QuestionsController < ApplicationController
 
     # Update or create the attempt
     attempt.update(chosen_answer_id: chosen_answer_id, correct: is_correct)
+    ActivityLogger.log_attempt_created(user: current_user, attempt: attempt)
   end
 
   # Handle submission for open_answer questions
@@ -95,6 +96,7 @@ class QuestionsController < ApplicationController
 
     # Update the attempt with the user's written answer and correctness
     attempt.update(written_answer: user_answer_content, correct: is_correct)
+    ActivityLogger.log_attempt_created(user: current_user, attempt: attempt)
   end
 
   # Handle submission for multiple_answer questions
@@ -113,5 +115,6 @@ class QuestionsController < ApplicationController
     # Update the attempt with the chosen answers and whether they are correct
     attempt.chosen_answers = Answer.where(id: chosen_answer_ids)
     attempt.update(correct: is_correct)
+    ActivityLogger.log_attempt_created(user: current_user, attempt: attempt)
   end
 end

@@ -59,6 +59,7 @@ class SubscriptionsController < ApplicationController
     # if this is not a 200, it will raise and error
 
     subscription.update!(status: :canceled, cancellation_reason: "user_canceled")
+    ActivityLogger.log_subscription_updated(user: current_user, subscription: subscription, status: subscription.status)
 
     redirect_to dashboard_subscriptions_path, notice: "Lidmaatschap is geannuleerd."
   rescue => e

@@ -23,6 +23,7 @@ class AttemptsController < ApplicationController
       attempt.chosen_answer_id = user_answer.id
       attempt.correct = is_correct
       attempt.save!
+      ActivityLogger.log_attempt_created(user: current_user, attempt: attempt)
     end
 
     redirect_to next_question_path(@course, @question)

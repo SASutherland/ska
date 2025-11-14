@@ -80,12 +80,14 @@ class HandleMollieWebhook
         subscription.update!(status: :active, cancellation_reason: nil)
         PaymentMailer.payment_success(payment).deliver_later
         log("Marked subscription as active")
+        ActivityLogger.log_subscription_updated(user: user, subscription: subscription, status: subscription.status)
       end
     elsif %w[failed expired canceled charged_back].include?(mollie_payment.status)
       ActiveRecord::Base.transaction do
         subscription.update!(status: :canceled, cancellation_reason: mollie_payment.status)
         PaymentMailer.payment_failed(user, mollie_payment.status).deliver_later
         log("Marked subscription as canceled (#{mollie_payment.status})")
+        ActivityLogger.log_subscription_updated(user: user, subscription: subscription, status: subscription.status)
       end
     else
       log("Unhandled status: #{mollie_payment.status}")

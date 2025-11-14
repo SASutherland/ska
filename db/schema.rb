@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_15_133759) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_09_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_15_133759) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "activity_logs", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "action", null: false
+    t.string "subject_type"
+    t.bigint "subject_id"
+    t.text "message", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_activity_logs_on_created_at"
+    t.index ["subject_type", "subject_id"], name: "index_activity_logs_on_subject_type_and_subject_id"
+    t.index ["user_id"], name: "index_activity_logs_on_user_id"
   end
 
   create_table "answers", force: :cascade do |t|
@@ -219,6 +233,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_15_133759) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activity_logs", "users", on_delete: :nullify
   add_foreign_key "answers", "questions"
   add_foreign_key "attempts", "answers", column: "chosen_answer_id"
   add_foreign_key "attempts", "questions"

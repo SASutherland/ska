@@ -1,11 +1,13 @@
 class DashboardsController < ApplicationController
   before_action :find_user, only: [:edit_user_profile, :update_user_profile]
-  before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile]
+  before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile, :logbook]
 
   def destroy_user
     @user = User.find(params[:id])
+    user_snapshot = { id: @user.id, email: @user.read_attribute(:email), name: @user.full_name }
 
     if @user.destroy
+      ActivityLogger.log_user_deleted(actor: current_user, user_snapshot: user_snapshot)
       redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol verwijderd."
     else
       redirect_to dashboard_manage_users_path, alert: "Er was een probleem bij het verwijderen van de gebruiker."
@@ -111,6 +113,10 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def logbook
+    @activity_logs = ActivityLog.includes(:user).recent.limit(200)
+  end
+
   def my_groups
     unless current_user.admin? || current_user.teacher?
       redirect_to root_path, alert: "Je bent niet gemachtigd om deze pagina te bekijken."
@@ -129,6 +135,7 @@ class DashboardsController < ApplicationController
   def update_user_profile
     @user = User.find(params[:id])
     if @user.update(user_params)
+      ActivityLogger.log_user_updated(actor: current_user, user: @user)
       redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol bijgewerkt."
     else
       flash.now[:alert] = "Er was een probleem bij het bijwerken van de gebruiker."

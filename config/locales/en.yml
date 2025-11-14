@@ -31,3 +31,21 @@
 
 en:
   hello: "Hello world"
+
+  activity_logs:
+    actions:
+      course_created: "Course created"
+      course_updated: "Course updated"
+      course_deleted: "Course deleted"
+      group_created: "Group created"
+      group_updated: "Group updated"
+      group_deleted: "Group deleted"
+      user_updated: "User updated"
+      user_deleted: "User deleted"
+      subscription_created: "Subscription created"
+      subscription_updated: "Subscription updated"
+      registration_created: "Course registration created"
+      attempt_created: "Attempt created"
+      answer_created: "Answer created"
+      answer_updated: "Answer updated"
+      email_delivered: "Email delivered"
