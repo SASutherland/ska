@@ -9,5 +9,4 @@ class Answer < ApplicationRecord
   def remove_attempts_with_chosen_answer
     Attempt.where(chosen_answer_id: self.id).destroy_all
   end
-
 end
