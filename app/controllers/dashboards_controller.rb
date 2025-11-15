@@ -81,6 +81,21 @@ class DashboardsController < ApplicationController
       else
         # For Students: Load weekly tasks assigned to them
         @weekly_tasks = @registered_courses.select { |course| course.weekly_task && course.created_at >= 7.days.ago }
+
+        # Find courses matching students's levels
+        user_level_ids = current_user.levels.pluck(:id)
+        if user_level_ids.any?
+          @level_courses = Course.where(weekly_task: false)
+            .joins(:course_levels)
+            .where(course_levels: { level_id: user_level_ids })
+            .distinct
+        
+          # Exclude courses user is already registered for 
+          registered_course_ids = current_user.registrations.pluck(:course_id)
+          @level_courses = @level_courses.where.not(id: registered_course_ids) if registered_course_ids.any?
+          
+          @level_courses = @level_courses.order(updated_at: :desc)
+        end
       end
 
       # Sort by last activity (descending order)

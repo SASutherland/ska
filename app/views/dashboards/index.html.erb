@@ -1,18 +1,14 @@
 <div class="dashboard-container d-flex" data-controller="add-course">
-
   <!-- Sidebar -->
   <%= render 'shared/sidebar' %>
-
   <!-- Main Content -->
   <div class="main-content flex-grow-1">
-
     <!-- Flexbox for avatar and profile information -->
     <div class="d-flex align-items-center xmb-4">
       <!-- Avatar image -->
       <div class="me-4">
         <%= image_tag 'avatar-blue.png', alt: 'Avatar', class: 'avatar-large' %>
       </div>
-
       <!-- Profile information -->
       <div>
         <h1>Hi, <%= current_user.first_name %>!</h1>
@@ -21,16 +17,15 @@
         <%= trial_badge(current_user) %>
       </div>
     </div>
-
+    <%= level_selection_section %>
     <!-- Weekly Tasks -->
     <% if @weekly_tasks.any? %>
       <% @weekly_tasks.each do |weekly_task| %>
-        <div class="card-white p-4 my-4">
+        <div class="card-white p-4 my-5">
           <!-- Flexbox for Task Title and Action Buttons -->
           <div class="d-flex justify-content-between align-items-center mb-4">
             <!-- Weekly Task Title -->
-            <h1 class="mb-0"><%= weekly_task.title %></h1>
-
+            <h2 class="mb-0"><%= weekly_task.title %></h2>
             <!-- Action Buttons -->
             <% if current_user.teacher? || current_user.admin? %>
               <div class="d-flex align-items-center">
@@ -40,14 +35,12 @@
                     <i class="fa-solid fa-plus icon-aligned"></i>
                   </div>
                 <% end %>
-
                 <!-- Edit Button -->
                 <%= link_to edit_weekly_task_course_path(weekly_task), class: 'me-2', title: 'Edit this task' do %>
                   <div class="icon-wrapper">
                     <i class="fa-solid fa-pen-to-square icon-aligned"></i>
                   </div>
                 <% end %>
-
                 <!-- Delete Button -->
                 <%= link_to course_path(weekly_task), method: :delete, data: { confirm: "Weet je zeker dat je deze weektaak wilt verwijderen? Dit kan niet ongedaan gemaakt worden.", turbo: false }, class: 'me-2', title: 'Weektaak verwijderen' do %>
                   <div class="icon-wrapper">
@@ -57,20 +50,20 @@
               </div>
             <% end %>
           </div>
-
           <!-- Calculate and display the Due Date countdown -->
           <% due_date = weekly_task.created_at + 7.days %>
           <% remaining_time = due_date - Time.current %>
-
           <% if remaining_time > 0 %>
             <% days = (remaining_time / 1.day).to_i %>
             <% hours = ((remaining_time % 1.day) / 1.hour).to_i %>
-            <p class="text-muted"><strong>Due</strong>: <%= "#{days} day#{'s' if days != 1} #{hours} hour#{'s' if hours != 1}" %></p>
+            <p class="text-muted">
+              <strong>Verloopt over</strong>:
+              <%= "#{days} dag#{'en' if days != 1} #{hours} uur" %>
+            </p>
           <% else %>
             <% weekly_task.update(weekly_task: false) %>
-            <p class="text-danger"><strong>Due</strong>: Task is overdue</p>
+            <p class="text-danger"><strong>Vervallen</strong>: Taak is verlopen</p>
           <% end %>
-
           <% if current_user.teacher? || current_user.admin? %>
             <!-- List of Students Registered for the Weekly Task -->
             <% if weekly_task.active_registrations.any? %>
@@ -82,7 +75,6 @@
                   <div class="col-2 text-center">Score</div>
                   <div class="col-3 text-center">Bstede tijd</div>
                 </div>
-
                 <div class="students-list">
                   <%= render partial: 'shared/registration_list', locals: { registrations: weekly_task.active_registrations, questions: weekly_task.questions } %>
                 </div>
@@ -91,9 +83,8 @@
               <p>Er zijn geen studenten geregistreerd voor deze weektaak</p>
             <% end %>
           <% end %>
-
           <!-- Questions Section -->
-          <h4 class="mt-4 mb-3">Questions</h4>
+          <h4 class="mt-4 mb-3">Vragen</h4>
           <div class="course-content d-flex align-items-start justify-content-between">
             <!-- Questions Display -->
             <div class="questions-list">
@@ -122,9 +113,8 @@
         </div>
       <% end %>
     <% else %>
-      <h1 class="my-3">Weektaak</h1>
+      <h2 class="my-3">Weektaak</h2>
       <p>Er is nog geen weektaak.</p>
-
       <!-- Button to Create New Weekly Task (Only If No Task Exists) -->
       <% if current_user.teacher? || current_user.admin? %>
         <div class="d-flex align-items-center my-4">
@@ -132,20 +122,16 @@
         </div>
       <% end %>
     <% end %>
-
     <!-- Recent Courses -->
     <div class="card-white p-4">
-      <h1>Recente Cursussen</h1>
-
+      <h2>Lopende Cursussen</h2>
       <% if @registered_courses_with_attempts.empty? %>
         <p>Je bent nog niet begonnen met een cursus.</p>
       <% end %>
-
       <% @registered_courses_with_attempts.each do |course_with_attempt| %>
         <% course = course_with_attempt[:course] %>
         <div class="course-progress mb-4">
           <h4><%= course.title %></h4>
-
           <!-- Questions progress -->
           <div class="questions-progress">
             <% course.questions.each_with_index do |question, index| %>
@@ -172,5 +158,21 @@
         </div>
       <% end %>
     </div>
+    <% if @level_courses && @level_courses.any? %>
+      <div class="my-5">
+        <h2>Cursussen voor <%= current_user.levels.map(&:name).join(", ") %></h2>
+        <% @level_courses.each do |course| %>
+          <div class="card-white mb-4 p-4">
+            <h2><%= course.title  %> <%= levels_list(course) %></h2>
+            <p><%= course.description %></p>
+            <div class="course-content d-flex align-items-start justify-content-between">
+              <div class="action-buttons">
+                <%= button_to 'Inschrijven', registrations_path({ registration: { course_id: course.id }}), method: :post, class: 'btn btn-primary' %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

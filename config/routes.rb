@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   patch "dashboard/manage_users/:id", to: "dashboards#update_user_profile", as: "dashboard_update_user_profile"
   patch "dashboard/manage_users/:id/approve", to: "dashboards#approve_user", as: "dashboard_approve_user"
   delete "dashboard/manage_users/:id", to: "dashboards#destroy_user", as: "dashboard_delete_user"
+  
+  # User levels routes
+  post "user_levels", to: "user_levels#create", as: "user_levels"
+  delete "user_levels", to: "user_levels#destroy", as: "destroy_user_levels"
   # post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
 
   # Courses routes

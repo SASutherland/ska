@@ -11,6 +11,6 @@ module CoursesHelper
   def levels_list(course)
     return "" if course.levels.empty?
 
-    "(#{course.levels.map(&:name).join(", ")})"
+    "(voor #{course.levels.map(&:name).join(", ")})"
   end
 end

@@ -14,7 +14,7 @@ class Registration < ApplicationRecord
   private
 
   def user_not_already_registered
-    if Registration.exists?(user_id: user_id, course_id: course_id)
+    if Registration.where(user_id: user_id, course_id: course_id).where.not(id: id).exists?
       errors.add(:base, "Je bent al ingeschreven voor deze cursus")
     end
   end

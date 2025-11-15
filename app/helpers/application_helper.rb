@@ -56,4 +56,36 @@ module ApplicationHelper
       { name: 'Logboek', path: dashboard_logbook_path, controller: 'dashboards', action: 'logbook', roles: [:admin] }
     ]
   end
+
+  def level_selection_section
+    return unless current_user.student?
+
+    user_levels = current_user.levels
+    
+    if user_levels.any?
+      # User has a level, show the level image and edit button
+      level = user_levels.first
+      level_number = level.name.scan(/\d+/).first&.to_i
+      
+      content_tag :div, class: "my-5" do
+        content_tag(:h2, "Kies je groep en ga direct aan de slag!") +
+        content_tag(:div, class: "d-flex align-items-center flex-wrap gap-3") do
+          image_tag("groep-#{level_number}.jpg", class: "home-level-image") +
+          button_to("Groep wijzigen", destroy_user_levels_path, method: :delete, class: "btn btn-secondary", data: { confirm: "Weet je zeker dat je je groep wilt wijzigen?" })
+        end
+      end
+    else
+      # User has no level, show all levels to pick from
+      content_tag :div, class: "my-5" do
+        content_tag(:h2, "Kies je groep en ga direct aan de slag!") +
+        content_tag(:div) do
+          [3, 4, 5, 6, 7].map do |n|
+            button_to(user_levels_path, method: :post, params: { level_number: n }, form: { style: "display: inline-block; margin: 0;" }, class: "level-selection-button", style: "border: none; background: none; padding: 0; cursor: pointer;") do
+              image_tag("groep-#{n}.jpg", class: "home-level-image")
+            end
+          end.join.html_safe
+        end
+      end
+    end
+  end
 end

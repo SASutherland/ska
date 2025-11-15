@@ -12,6 +12,7 @@ Group.delete_all
 Subscription.delete_all
 Membership.delete_all
 User.delete_all
+Level.delete_all
 puts "Existing data removed."
 
 # Create teachers
@@ -83,7 +84,7 @@ groupB = Group.create(
 
 # Creating levels
 puts "Creating levels... Group 3 t/m 8"
-(3..8).each do |n|
+(3..7).each do |n|
   Level.create!(name: "Leerlingenlijst #{n}", order: n)
 end
 
