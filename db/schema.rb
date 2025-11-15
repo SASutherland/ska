@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_14_142325) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_15_092031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -213,6 +213,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_14_142325) do
     t.index ["user_id"], name: "index_trial_starts_on_user_id"
   end
 
+  create_table "user_levels", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "level_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["level_id"], name: "index_user_levels_on_level_id"
+    t.index ["user_id", "level_id"], name: "index_user_levels_on_user_id_and_level_id", unique: true
+    t.index ["user_id"], name: "index_user_levels_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -228,6 +238,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_14_142325) do
     t.integer "trial_courses_count"
     t.boolean "trial_active"
     t.datetime "deleted_at"
+    t.boolean "approved", default: false, null: false
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -259,4 +270,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_14_142325) do
   add_foreign_key "subscriptions", "users"
   add_foreign_key "trial_starts", "courses"
   add_foreign_key "trial_starts", "users"
+  add_foreign_key "user_levels", "levels"
+  add_foreign_key "user_levels", "users"
 end

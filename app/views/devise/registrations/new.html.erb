@@ -36,6 +36,10 @@
                   required: true,
                   input_html: { autocomplete: "new-password" } %>
 
+      <% if params[:groep].present? %>
+        <%= hidden_field_tag :group_number, params[:groep] %>
+      <% end %>
+
   
       <%#= f.input :role, as: :select, label: "Ik ben een", collection: [['Student', 'student'], ['Docent', 'teacher']], selected: 'student' %>
 
