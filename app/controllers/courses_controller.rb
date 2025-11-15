@@ -99,10 +99,6 @@ class CoursesController < ApplicationController
     # Only for students to see their registered courses
     @registered_courses = current_user.registrations.includes(course: :questions).map(&:course).uniq
 
-    @other_courses = Course.where(weekly_task: false)
-      .where.not(id: @registered_courses.map(&:id))
-      .order(updated_at: :desc)
-
     # Sort registered courses by the most recent activity (attempt or registration date)
     @registered_courses_with_attempts = @registered_courses.map do |course|
       # Fetch the most recent attempt for the course

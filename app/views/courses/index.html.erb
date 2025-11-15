@@ -29,17 +29,5 @@
     <% else %>
       <p>Je bent nog geen lid van een cursus.</p>
     <% end %>
-    <h2>Beschikbare cursussen</h2>
-    <% @other_courses.each do |course| %>
-      <div class="card-white mb-4 p-4">
-        <h2><%= course.title  %> <%= levels_list(course) %></h2>
-        <p><%= course.description %></p>
-        <div class="course-content d-flex align-items-start justify-content-between">
-          <div class="action-buttons">
-            <%= button_to 'Inschrijven', registrations_path({ registration: { course_id: course.id }}), method: :post, class: 'btn btn-primary' %>
-          </div>
-        </div>
-      </div>
-    <% end %>
   </div>
 </div>
