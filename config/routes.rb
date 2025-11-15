@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "dashboard/subscriptions", to: "dashboards#subscriptions", as: "dashboard_subscriptions"
   get "dashboard/logboek", to: "dashboards#logbook", as: "dashboard_logbook"
   patch "dashboard/manage_users/:id", to: "dashboards#update_user_profile", as: "dashboard_update_user_profile"
+  patch "dashboard/manage_users/:id/approve", to: "dashboards#approve_user", as: "dashboard_approve_user"
   delete "dashboard/manage_users/:id", to: "dashboards#destroy_user", as: "dashboard_delete_user"
   # post "register_for_course", to: "dashboards#register_for_course", as: "register_for_course"
 

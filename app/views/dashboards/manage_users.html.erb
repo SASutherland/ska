@@ -60,6 +60,7 @@
                   <% end %>
                 </div>
               </th>
+              <th style="width: 12%;">Goedgekeurd</th>
               <th style="width: 20%;">Acties</th>
             </tr>
           </thead>
@@ -70,6 +71,13 @@
                 <td><%= user.last_name %></td>
                 <td><%= user.email %></td>
                 <td><%= t("roles.#{user.role}").capitalize %></td>
+                <td style="text-align: center;">
+                  <% if user.approved? %>
+                    <i class="fa-solid fa-check text-success" style="font-size: 1.2em;" title="Goedgekeurd"></i>
+                  <% else %>
+                    <%= button_to "Goedkeuren", dashboard_approve_user_path(user), method: :patch, class: "btn btn-success btn-sm", style: "font-family: 'Work Sans', sans-serif;", form: { style: "display: inline-block; margin: 0;" }, title: "Klik om account goed te keuren" %>
+                  <% end %>
+                </td>
                 <td>
                   <% if current_user != user %>
                     <%= link_to "Aanpassen", dashboard_edit_user_profile_path(user), class: "btn btn-primary", style: "font-family: 'Work Sans', sans-serif;" %>

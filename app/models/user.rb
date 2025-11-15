@@ -22,6 +22,8 @@ class User < ApplicationRecord
   has_many :payments
   has_many :trial_starts, dependent: :destroy
   has_many :activity_logs, dependent: :nullify
+  has_many :user_levels, dependent: :destroy
+  has_many :levels, through: :user_levels
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :inactives, -> { not_deleted.where(role: "inactive") }
@@ -34,10 +36,6 @@ class User < ApplicationRecord
   validates :first_name, :last_name, presence: true
   validates :email, presence: true, uniqueness: { conditions: -> { where(deleted_at: nil) } }
 
-  def email
-    # remove after POSTMARK is configured
-    "test@blackhole.postmarkapp.com"
-  end
 
   def admin?
     role == "admin"

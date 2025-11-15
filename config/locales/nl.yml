@@ -109,6 +109,7 @@ nl:
       group_updated: "Groep bijgewerkt"
       group_deleted: "Groep verwijderd"
       user_updated: "Gebruiker bijgewerkt"
+      user_approved: "Gebruiker goedgekeurd"
       user_deleted: "Gebruiker verwijderd"
       subscription_created: "Lidmaatschap aangemaakt"
       subscription_updated: "Lidmaatschap bijgewerkt"

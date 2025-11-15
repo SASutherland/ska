@@ -42,6 +42,7 @@ nl:
       signed_up_but_inactive: "Je hebt je succesvol geregistreerd. We konden je echter niet inloggen omdat je account nog niet is geactiveerd."
       signed_up_but_locked: "Je hebt je succesvol geregistreerd. We konden je echter niet inloggen omdat je account is vergrendeld."
       signed_up_but_unconfirmed: "Een bericht met een bevestigingslink is naar je e-mailadres gestuurd. Volg de link om je account te activeren."
+      signed_up_but_unapproved_account: "Je account is succesvol aangemaakt. Je ontvangt een e-mail zodra een beheerder je account heeft goedgekeurd."
       update_needs_confirmation: "Je account is succesvol bijgewerkt, maar we moeten je nieuwe e-mailadres verifiëren. Controleer je e-mail en volg de bevestigingslink om je nieuwe e-mailadres te bevestigen."
       updated: "Je account is succesvol bijgewerkt."
       updated_but_not_signed_in: "Je account is succesvol bijgewerkt, maar omdat je wachtwoord is gewijzigd, moet je opnieuw inloggen."

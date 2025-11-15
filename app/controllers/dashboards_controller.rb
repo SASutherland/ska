@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
-  before_action :find_user, only: [:edit_user_profile, :update_user_profile]
-  before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile, :logbook]
+  before_action :find_user, only: [:edit_user_profile, :update_user_profile, :approve_user]
+  before_action :authorize_admin, only: [:manage_users, :destroy_user, :edit_user_profile, :update_user_profile, :approve_user, :logbook]
 
   def destroy_user
     @user = User.not_deleted.find(params[:id])
@@ -134,10 +134,29 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def approve_user
+    @user = User.not_deleted.find(params[:id])
+    unless @user.approved?
+      if @user.update(approved: true)
+        ActivityLogger.log_user_approved(actor: current_user, user: @user)
+        redirect_to dashboard_manage_users_path, notice: "Gebruiker #{@user.full_name} is goedgekeurd."
+      else
+        redirect_to dashboard_manage_users_path, alert: "Er was een probleem bij het goedkeuren van de gebruiker."
+      end
+    else
+      redirect_to dashboard_manage_users_path, notice: "Gebruiker is al goedgekeurd."
+    end
+  end
+
   def update_user_profile
     @user = User.not_deleted.find(params[:id])
+    was_approved = @user.approved?
     if @user.update(user_params)
       ActivityLogger.log_user_updated(actor: current_user, user: @user)
+      # Log approval if it changed
+      if !was_approved && @user.approved?
+        ActivityLogger.log_user_approved(actor: current_user, user: @user)
+      end
       redirect_to dashboard_manage_users_path, notice: "Gebruiker is succesvol bijgewerkt."
     else
       flash.now[:alert] = "Er was een probleem bij het bijwerken van de gebruiker."

@@ -80,6 +80,16 @@ class ActivityLogger
       )
     end
 
+    def log_user_approved(actor:, user:)
+      log!(
+        user: actor,
+        action: "user_approved",
+        subject: user,
+        message: "Gebruiker #{identifier_for(actor)} heeft gebruiker #{describe_user(user)} goedgekeurd.",
+        metadata: { target_user_id: user.id, target_user_email: raw_email(user), target_user_role: user.role }
+      )
+    end
+
     def log_user_deleted(actor:, user_snapshot:)
       log!(
         user: actor,
